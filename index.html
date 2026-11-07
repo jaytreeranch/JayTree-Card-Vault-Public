@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1929">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Browse the JayTree trading card collection: football, baseball, cards and owner price estimates.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>JayTree Card Vault · The Collection</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="shell navline">
+    <a class="wordmark" href="./" aria-label="JayTree Card Vault"><span class="symbol">JT</span><span>JayTree <b>Card Vault</b><small>THE COLLECTION</small></span></a>
+    <nav aria-label="Main navigation"><a href="#collection">Collection</a><a href="#about">About</a><span class="readonly">Public showcase · read-only</span></nav>
+  </div>
+</header>
+<main>
+  <section class="hero shell" aria-labelledby="headline">
+    <div class="intro">
+      <p class="kicker">A personal archive · curated over time</p>
+      <h1 id="headline">Every card<br>has a <em>story.</em></h1>
+      <p>Explore the JayTree collection. Browse by player, team, year or set, discover what's available, and follow how estimates change over time.</p>
+      <a class="primary" href="#collection">Explore the cards <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="heroart" aria-hidden="true">
+      <div class="outlinecard one"><span>J</span></div>
+      <div class="outlinecard two"><span>T</span></div>
+      <div class="artlabel"><span>JAYTREE</span><b>PRIVATE COLLECTION / PUBLIC GALLERY</b></div>
+    </div>
+  </section>
+  <section class="stats-wrap"><div class="shell stats">
+    <div><span id="stat-count" class="stat-value">—</span><span class="stat-label">Cards on display</span></div>
+    <div><span id="stat-estimate" class="stat-value">—</span><span class="stat-label">Total owner estimates*</span></div>
+    <div><span id="stat-sale" class="stat-value">—</span><span class="stat-label">Open to offers</span></div>
+    <div><span id="stat-update" class="stat-value stat-date">—</span><span class="stat-label">Catalog published</span></div>
+  </div></section>
+  <section id="collection" class="collection shell" aria-label="Trading card collection">
+    <div class="sectionhead"><div><p class="kicker">EXPLORE THE ARCHIVE</p><h2>The collection</h2></div><p class="sectionnote" id="result-count" aria-live="polite">Loading the gallery…</p></div>
+    <div class="toolbar">
+      <label class="search"><span class="sr-only">Search cards</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" type="search" placeholder="Search player, team, brand, set…" autocomplete="off"></label>
+      <label class="select"><span class="sr-only">Filter sport</span><select id="sport"><option value="">All sports</option></select></label>
+      <label class="select"><span class="sr-only">Sort collection</span><select id="sort"><option value="name">Name A–Z</option><option value="value-high">Highest estimate</option><option value="value-low">Lowest estimate</option><option value="new">Newest cards</option><option value="old">Oldest cards</option></select></label>
+      <label class="select"><span class="sr-only">Filter review status</span><select id="review"><option value="">All review statuses</option><option value="Verified">Verified</option><option value="Needs review">Needs review</option></select></label>
+      <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
+    </div>
+    <p class="review-explain">Cards labeled Needs review have provisional names, sets, and parallels. You can help identify errors; feedback is reviewed privately and cannot change collection records directly.</p>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <div class="empty" id="empty" hidden><h3>No cards to show yet.</h3><p>Try another search or check back as more cards are approved for display.</p></div>
+    <p class="disclaimer">*Prices are collection-owner estimates, not live quotes, completed sales or guaranteed sale prices. Published cards are individually approved; the private Vault is never accessible from this website.</p>
+  </section>
+  <section class="aboutwrap" id="about"><div class="shell about"><div><p class="kicker">A COLLECTION IN PROGRESS</p><h2>Collected, cataloged,<br><em>and cared for.</em></h2></div><div><p>JayTree Card Vault showcases selected cards from a private collection. More cards, new details and weekly value-history snapshots will be added as they are reviewed.</p><p>Cards marked “Open to offers” may become available. If an official eBay listing exists, you’ll find its link on the card. No purchases or inventory changes happen on this site.</p></div></div></section>
+</main>
+<dialog id="details" aria-label="Card details"><div class="detail-wrap"><button id="close" class="close" aria-label="Close card details">×</button><div id="detail-content"></div></div></dialog>
+<footer><div class="shell footer"><span>© JayTree Card Vault · A curated personal collection</span><span>View-only public gallery</span></div></footer>
+</body>
+</html>

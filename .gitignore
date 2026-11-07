@@ -1,0 +1,12 @@
+/.env
+*.sqlite*
+*.db
+*.pem
+*.key
+*.p12
+*.pfx
+/private/
+/backups/
+/secrets/
+/credentials/
+*.zip
