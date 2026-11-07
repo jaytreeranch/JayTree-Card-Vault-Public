@@ -29,3 +29,11 @@ Rollback: baseline SHA bef6554140d1c2e5ad7929b0564c8a045299c720, protected origi
 1. Complete protected rollback and all regression QC; deploy isolated public branch and fast-forward main only if no concurrent update; verify Pages, live browser and docs acceptance.
 2. LAN checklist approvals and private inventory remain solely with LAN workstream; test safe stale-card links if approved one-way data changes later.
 3. Physical Android and cellular public site validation, formal assistive-technology audit and manual external GitHub issue/email tests when available.
+
+## LIVE SOURCE acceptance and evidence
+- Public source release SHA 2d0829f981baa4afafcfad4c3ebe51b14adc57e7 pushed and independent exact remote SHA verified on both public main and feature branch. Git working tree clean.
+- Custom HTTPS production byte parity 8/8 exact committed files: index.html, wantlist.js, wantlist.css, app.js, checklist-coverage.js, catalog.json, set-checklists.json and CNAME; approved catalog/checklist data and DNS unchanged.
+- Actual live Chrome at 320, 390, 1366: opens new form, rejects unsafe photo links and private-LAN URL, prefills condition/price/variation/photo/note correctly into email and GitHub links, requires public GitHub consent, keeps nested card modal functional, closes and clears input state and has no horizontal overflow. Public private owner/editor routes /api/cards and /owner/private are HTTP 404.
+- Node tests 43/43 and all nine current+legacy local Chrome regression suites PASS. GitHub issue form YAML validated with ten unique field IDs. No authenticated GitHub issue was submitted and no email was actually sent.
+- GitHub Actions workflow status endpoint repeatedly returned HTTP 504 Gateway Timeout; therefore exact GitHub Pages workflow conclusion NOT independently observed yet. The custom-domain production release is nonetheless verified by exact live bytes and real browser execution. Continue attempting Pages status verification and do not claim workflow SUCCESS without evidence.
+- Full original and candidate source, SHA256 and rollback preserved under protected LAN CardVault/PublicShowcase/receipts/PUBLIC_V0911_OFFER_BUILDER_20261107. Next documentation-only Git checkpoint may change main SHA but not runtime; verify both independently.
