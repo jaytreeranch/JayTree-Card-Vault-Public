@@ -11,9 +11,10 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="wantlist.css">
   <script src="card-features.js" defer></script>
+  <!-- Subscribe to both published-data events before either async loader can fire. -->
+  <script src="checklist-coverage.js" defer></script>
   <script src="app.js" defer></script>
   <script src="wantlist.js" defer></script>
-  <script src="checklist-coverage.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -139,6 +140,49 @@
     </div>
     <ul id="wantlist-missing-list" class="want-missing-list"></ul>
     <div class="want-more-wrap"><button type="button" id="wantlist-more" hidden>Show more missing cards</button></div>
+  </div>
+</dialog>
+<dialog id="offer-dialog" aria-labelledby="offer-dialog-title" aria-describedby="offer-privacy">
+  <div class="offer-body">
+    <button type="button" id="offer-close" class="offer-close" aria-label="Close card inquiry">Close</button>
+    <p class="want-set-meta">HELP COMPLETE THE COLLECTION</p>
+    <h2 id="offer-dialog-title">I have this missing card</h2>
+    <p id="offer-card-heading" class="offer-card-heading"></p>
+    <p id="offer-privacy" class="offer-privacy">Prepare an inquiry only; no purchase, reservation or inventory update happens here. Details stay in this page until you choose an email draft or a public GitHub issue. GitHub requires sign-in, and anything you submit there is public. Do not include addresses, phone numbers or payment details.</p>
+    <form id="offer-form" novalidate autocomplete="off">
+      <div class="offer-fields">
+        <label>Approximate condition
+          <select id="offer-condition" required>
+            <option value="Unknown / need to inspect">Unknown / need to inspect</option>
+            <option value="Near Mint or better">Near Mint or better</option>
+            <option value="Excellent">Excellent</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Good">Good</option>
+            <option value="Poor">Poor</option>
+          </select>
+        </label>
+        <label>Variant or parallel (optional)
+          <input id="offer-variation" type="text" maxlength="100" placeholder="e.g. base, silver, orange" />
+        </label>
+        <label>Asking price (optional)
+          <input id="offer-asking-price" type="text" maxlength="64" placeholder="e.g. $5 plus shipping" />
+        </label>
+        <label>Public card photo link (optional)
+          <input id="offer-photo-url" type="url" inputmode="url" maxlength="400" placeholder="https://example.com/card-photo" aria-describedby="offer-photo-help" />
+        </label>
+      </div>
+      <p id="offer-photo-help" class="offer-help">Use a publicly shareable HTTPS link only. Photos are not uploaded here. Do not link to private folders or personal information.</p>
+      <label class="offer-note-label">Other card details (optional)
+        <textarea id="offer-note" rows="3" maxlength="350" placeholder="Mention the printed number, card back, or any condition concerns. Avoid personal details."></textarea>
+      </label>
+      <label class="offer-consent"><input id="offer-public-ok" type="checkbox" /> I understand GitHub issues are public; I will review all fields before submitting.</label>
+    </form>
+    <p id="offer-error" class="offer-error" aria-live="polite"></p>
+    <div class="offer-actions">
+      <a id="offer-email-out" href="#" class="offer-email-out">Create email draft</a>
+      <a id="offer-github-out" class="offer-github-out" role="link" target="_blank" rel="noopener noreferrer" aria-disabled="true">Continue on GitHub</a>
+    </div>
+    <p class="offer-help">Neither option sends or submits an offer automatically. Your email application or GitHub will open for review. GitHub prefilled fields should be checked before submission.</p>
   </div>
 </dialog>
 

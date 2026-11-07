@@ -1,3 +1,6 @@
+## Public v0.9.11 visitor missing-card inquiry builder (2026-11-07)
+Newest handoff: docs/HANDOFF_20261107_PUBLIC_CARD_INQUIRY_V0911.md. Public-only read-only form for condition, variation, asking price, public HTTPS photo link and notes; prepares email or public GitHub issue, never sends automatically. GitHub requires explicit public-warning consent. No private photos, LAN/Android code, card data or owner API changes. Coverage event listener now precedes data-loader scripts, eliminating an observed race. Test and protect GitHub/LAN checkpoints.
+
 ## Public v0.9.10 source-backed set completion priorities (2026-11-07)
 Newest handoff: docs/HANDOFF_20261107_PUBLIC_SET_PRIORITIES_V0910.md. Sourced, issued-numbered sets only: show the three fewest remaining sets and existing 27 sets filterable by 1-2, 3-10 and 11+ remaining; highest completion sorting. Never invent remaining counts for the 21 unsourced catalog groups, count duplicates or parallel variants as new numbered spots. Private LAN, Android and publisher unaffected. Run QC, verify remote SHA/Pages, preserve protected LAN receipt.
 

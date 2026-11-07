@@ -70,6 +70,103 @@ function emailLink(s,card){
  ].join("\n");
  return "mailto:jaytreebooks@gmail.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
 }
+// Client-only inquiry builder. Fields are transient and never posted to the Vault.
+let currentOffer=null;
+function offerValues(){
+ const condition=$("offer-condition").value;
+ const variation=$("offer-variation").value.trim();
+ const price=$("offer-asking-price").value.trim();
+ const photo=$("offer-photo-url").value.trim();
+ const note=$("offer-note").value.trim();
+ const lines=[
+  "Condition: "+condition,
+  "Variant / parallel: "+(variation||"Not specified"),
+  "Asking price: "+(price||"Not specified"),
+  "Public photo: "+(photo||"Not provided"),
+  "Notes: "+(note||"None")
+ ];
+ return {condition,variation,price,photo,note,details:lines.join("\n")};
+}
+function validateOfferPhoto(url){
+ if(!url)return true;
+ try{
+  const parsed=new URL(url);
+  const host=parsed.hostname.toLowerCase();
+  // Avoid accidentally publishing a private LAN photo-service address.
+  const privateHost=host==="localhost"||host.endsWith(".localhost")||
+   host.endsWith(".local")||host.endsWith(".lan")||
+   host.endsWith(".internal")||host.includes(":")||
+   /^\d+(?:\.\d+){3}$/.test(host);
+  return parsed.protocol==="https:"&&!!host&&!privateHost&&
+   !parsed.username&&!parsed.password;
+ }catch{return false;}
+}
+function refreshOfferLinks(){
+ if(!currentOffer)return;
+ const {set:s,card:c}=currentOffer,v=offerValues();
+ const photoInput=$("offer-photo-url");
+ const photoOK=validateOfferPhoto(v.photo);
+ photoInput.setCustomValidity(photoOK?"":"Enter a public HTTPS photo link, without a username or password.");
+ const valid=photoOK&&$("offer-form").checkValidity();
+ const email=$("offer-email-out"),github=$("offer-github-out");
+ email.removeAttribute("href");
+ github.removeAttribute("href");
+ github.setAttribute("aria-disabled","true");
+ if(!valid){
+  $("offer-error").textContent="Enter a valid public HTTPS photo URL, or leave that field empty.";
+  return;
+ }
+ const emailBody=[
+  "Hello JayTree,",
+  "I may have a card from your public want list.",
+  "Set: "+title(s),
+  "Printed number: #"+c.number,
+  "Name: "+(c.player||"Not independently verified"),
+  "Public missing card: "+cardUrl(s,c),
+  "",
+  v.details,
+  "",
+  "This is a nonbinding inquiry only. Please confirm card identity and variation."
+ ].join("\n");
+ const emailUrl="mailto:jaytreebooks@gmail.com?subject="+encodeURIComponent(
+  "Card Vault missing #"+c.number+" - "+s.set)+
+  "&body="+encodeURIComponent(emailBody);
+ const params=new URL(issueLink(s,c));
+ params.searchParams.set("condition",v.condition);
+ params.searchParams.set("variation",v.variation);
+ params.searchParams.set("asking-price",v.price);
+ params.searchParams.set("photo-url",v.photo);
+ params.searchParams.set("offer-details",v.details);
+ const issueUrl=params.toString();
+ if(emailUrl.length<=4000)email.href=emailUrl;
+ if($("offer-public-ok").checked&&issueUrl.length<=3500){
+  github.href=issueUrl;
+  github.setAttribute("aria-disabled","false");
+ }
+ $("offer-error").textContent=issueUrl.length>3500?
+  "Shorten the details for GitHub, or choose email.":
+  emailUrl.length>4000?"Shorten the details to create an email draft.":"";
+}
+function openOffer(s,card){
+ if(!s||!card||!s.missing_cards.some(c=>c.number===card.number))return;
+ currentOffer={set:s,card};
+ $("offer-form").reset();
+ $("offer-photo-url").setCustomValidity("");
+ $("offer-card-heading").textContent=title(s)+" ? #"+card.number+
+  (card.player?" ? "+card.player:" ? Player name not independently verified");
+ refreshOfferLinks();
+ $("offer-dialog").showModal();
+ $("offer-condition").focus();
+}
+function bindOfferLink(link,s,card){
+ // Keep original GitHub href as a fallback if JavaScript interaction fails.
+ link.setAttribute("aria-haspopup","dialog");
+ link.addEventListener("click",event=>{
+  if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();
+  openOffer(s,card);
+ });
+}
 // The top three opportunities are based ONLY on vetted, issued-numbered totals.
 function renderPriorities(){
  const panel=$("want-priority"),grid=$("want-priority-grid");
@@ -163,6 +260,7 @@ function renderMissing(){
   const links=text(row,"div","","want-missing-actions");
   const issue=text(links,"a","I have this card","want-offer-link");
   issue.href=issueLink(s,c);issue.target="_blank";issue.rel="noopener noreferrer";
+  bindOfferLink(issue,s,c);
   const email=text(links,"a","Email owner","want-email-link");
   email.href=emailLink(s,c);
   addCardShare(links,s,c);
@@ -223,6 +321,7 @@ function renderGlobalMissing(){
   const email=text(actions,"a","Email owner","want-email-link");email.href=emailLink(s,c);
   const issue=text(actions,"a","I have this card","want-offer-link");
   issue.href=issueLink(s,c);issue.target="_blank";issue.rel="noopener noreferrer";
+  bindOfferLink(issue,s,c);
  }
  $("want-global-count").textContent=fmt(visible)+" of "+fmt(matches.length)+
   " matching missing numbered cards shown. Identifications may be provisional.";
@@ -353,6 +452,28 @@ $("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$(
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());
 $("wantlist-dialog").addEventListener("click",e=>{if(e.target===$("wantlist-dialog"))$("wantlist-dialog").close();});
+for(const name of ["offer-condition","offer-variation","offer-asking-price","offer-photo-url","offer-note","offer-public-ok"]){
+ $(name).addEventListener("input",refreshOfferLinks);
+ $(name).addEventListener("change",refreshOfferLinks);
+}
+$("offer-email-out").addEventListener("click",e=>{
+ if(!$("offer-email-out").hasAttribute("href"))e.preventDefault();
+});
+$("offer-github-out").addEventListener("click",e=>{
+ if(!$("offer-github-out").hasAttribute("href"))e.preventDefault();
+});
+$("offer-close").addEventListener("click",()=>$("offer-dialog").close());
+$("offer-dialog").addEventListener("click",e=>{
+ if(e.target===$("offer-dialog"))$("offer-dialog").close();
+});
+$("offer-dialog").addEventListener("close",()=>{
+ currentOffer=null;
+ $("offer-form").reset();
+ $("offer-error").textContent="";
+ $("offer-email-out").removeAttribute("href");
+ $("offer-github-out").removeAttribute("href");
+ $("offer-github-out").setAttribute("aria-disabled","true");
+});
 window.addEventListener("hashchange",()=>{if(state.sets.length)parseHash();});
 loadWantList();
 })();

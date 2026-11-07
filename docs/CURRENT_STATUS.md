@@ -1,3 +1,11 @@
+## Public v0.9.11 inquiry builder PRE-RELEASE development checkpoint (2026-11-07)
+- New native on-page modal for I have this card in global search and per-set missing rows. Optional variant, price, public HTTPS photo link, notes plus condition. Owner-context exact set/card number. Prepares email draft or GitHub issue form with matching public field IDs, but never sends automatically.
+- GitHub issue requires explicit public-warning consent before outgoing link activates. Optional photo URL must be HTTPS, must not embed credentials and must not use private IP/localhost/.local/.lan/.internal. Fields reset on close, no storage/API.
+- Existing direct issue href still serves as non-JavaScript fallback. Issue template gains optional variation, asking-price, photo-url identifiers. Published public catalog/checklists, photos, private LAN, Android, values and DNS unchanged.
+- Fixed intermittent older checklist coverage missed-event bug: move checklist-coverage.js before data-loader app.js and wantlist.js, all defer. Static test protects subscription order.
+- Initial 43/43 Node tests and real Chrome 320/390/1366 form/HTTPS validation/consent/email/GitHub prefill/nested dialog PASS. Full legacy and Pages verification still required.
+- Isolated feature/public-offer-inquiry-builder-v0911-20261107 based on bef6554140d1c2e5ad7929b0564c8a045299c720. Handoff docs/HANDOFF_20261107_PUBLIC_CARD_INQUIRY_V0911.md.
+
 ## Public v0.9.10 sourced set completion priorities ? pre-release checkpoint 2026-11-07
 - New closest-to-complete three-card highlight from only the independently sourced 27 complete numbered checklists. Current leading set 1985 Topps Circle K 31/33, 2 missing, 94%; next Chain Reaction 8 missing, My House! 9 missing. No invented denominators for the 21 unsourced set groups.
 - Added remaining-count filter 1?2 (one set), 3?10 (two sets), 11+ (24 sets), and highest-completion sort. Underlying existing search, sport and verified-name filters, shared card link and modal kept.
