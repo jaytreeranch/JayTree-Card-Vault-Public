@@ -1,3 +1,7 @@
+## Latest public site v0.9.5: searchable/sortable native set picker
+Read docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md before editing.
+Branch: feature/public-set-picker-search-sort-20261107; baseline main SHA 5efc70bb49c9e5e5d57989ecde8038c44f9dfc42. Set finder adds a text search, year/closest/completion/A?Z sorting and missing-card link to the existing 48-set selector. No public catalog or checklist changes and no private LAN edits. Verify deployed status/commit from latest handoff before assuming a candidate is live.
+
 ## LATEST 2026-11-07 public v0.9.4 - set fractions in collection dropdown
 Read docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md first. Public set selector matches fully qualified sport/year/brand/set to the sourced numbered want-list and shows owned distinct issued spots / total as the leading label (e.g. 138/200 for Panini Absolute). Sourced completion also appears in selected-set summary, with missing-card deep link. Unsourced sets explicitly say 'total unknown.' Real Chrome tests include 27 sourced and 21 unsourced groups, failure fallback and async race. PUBLIC LIVE source release 4ed1606505934c4f5d2f0bc0dbcbe7ccb82815c4: GitHub Pages SUCCESS, 7/7 live source/data files exact Git byte parity and 10/10 live Chrome DOM checks. Public-only change; private LAN unchanged. See newest handoff and LAN receipt.
 

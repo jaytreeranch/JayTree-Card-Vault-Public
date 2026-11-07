@@ -65,3 +65,16 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 /* Sourced numbered-set completion fractions and direct missing-card links. */
 .set-summary strong{color:#f0c584}
 .set-summary a{color:#f0c584;text-underline-offset:3px;font-weight:700}
+
+/* Narrow the native set dropdown without replacing its keyboard-accessible select. */
+.set-finder-search { display:flex;align-items:center;flex:1 1 235px;min-width:190px;border:1px solid #35576b;border-radius:7px;background:#0e2536; }
+.set-finder-search input { width:100%;min-height:43px;background:transparent;border:0;padding:10px 13px;color:var(--ink);font:inherit;outline-offset:2px; }
+.set-finder-search input::placeholder { color:#87a6b8; }
+.set-finder-sort select { min-width:185px; }
+.set-finder-status { color:#adc7d4;font-size:12px;line-height:1.5;margin:-14px 0 24px; }
+.set-finder-status a { color:#f0c584;text-underline-offset:3px; }
+.set-finder-search:focus-within { border-color:#cfa36c; }
+@media(max-width:600px) {
+ .set-finder-search,.set-finder-sort{flex:1 1 100%;min-width:0;}
+ .set-finder-search input,.set-finder-sort select{width:100%;}
+}

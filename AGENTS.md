@@ -1,3 +1,7 @@
+## Public v0.9.5 ? native set finder (2026-11-07)
+Latest handoff: docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md.
+When changing the public set dropdown preserve exact sourced checklist/unique-count semantics. Keep native select keyboard accessible, maintain selection while search narrows options, and retain an unknown-total fallback. Public static source only; never edit LAN inventory, images or private publisher in this repo. Follow the standing GitHub and handoff continuity policy.
+
 ## LATEST public dropdown fractions v0.9.4 - 2026-11-07
 Read docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md before editing. Sourced numbered checklists show UNIQUE OWNED issued-number spots out of checklist total in the public set dropdown; unknown totals are explicitly unknown. Do not count duplicate card rows or parallels as additional set completion. The public site remains read-only; private LAN inventory/review/publisher are managed in separate work. Keep safe source/tests/docs on remote-verified GitHub and private release/rollback receipts on JayTree LAN.
 

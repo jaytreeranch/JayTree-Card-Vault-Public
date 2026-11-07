@@ -35,3 +35,8 @@ The Collection's 'All cataloged sets' dropdown lists UNIQUE owned issued checkli
 A set without a sourced complete numbered checklist shows e.g. 3 unique / total unknown; no denominator, missing count or completion percentage is invented. Identifications under Needs review remain provisional. The public site remains read-only, and raw quantities/parallels never increase numbered-set completion.
 
 Quality gates: node --test tests/*.cjs; python tests/public_browser_interaction_smoke.py; python tests/public_set_completion_browser_smoke.py. Read docs/START_HERE.md and docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md.
+
+
+## Find and sort sets in the public collection (v0.9.5)
+
+The Collection native set selector remains keyboard accessible and displays owned unique checklist spots / sourced set total (or unknown where unsourced). A separate set-name search narrows its choices by sport, year, brand or title without replacing the selected card filter. Sort choices by newest, fewest missing, highest completion percent, or name A-Z. Sets without a sourced total follow known sets in missing/completion sorts. The link below the filters opens the existing missing-card want-list. No changes to private inventory or public snapshots.

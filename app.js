@@ -22,11 +22,43 @@ function setOptionLabel(key,group){
  if(list)return list.owned+"/"+list.total+" owned ("+Math.round(100*list.owned/list.total)+ "%) \u00b7 "+setTitle(group);
  return group.numbers.size+" unique / total unknown \u00b7 "+setTitle(group);
 }
+// Narrow choices without changing the currently selected card filter.
 function refreshSetOptionLabels(){
- for(const option of $("set").options){
-  const group=state.sets.get(option.value);
-  if(group)option.textContent=setOptionLabel(option.value,group);
+ const select=$("set"),selected=select.value;
+ const search=$("set-finder").value.trim().toLocaleLowerCase();
+ const order=$("set-sort").value;
+ const all=[...state.sets.entries()];
+ const searchText=g=>[g.sport,g.year,g.brand,g.set].filter(Boolean).join(" ").toLocaleLowerCase();
+ const matched=all.filter(([,g])=>!search||searchText(g).includes(search));
+ const shown=matched.filter(([key])=>key!==selected);
+ if(selected&&state.sets.has(selected))shown.push([selected,state.sets.get(selected)]);
+ const byTitle=(a,b)=>setTitle(a[1]).localeCompare(setTitle(b[1]));
+ const yearSort=(a,b)=>String(b[1].year||"").localeCompare(String(a[1].year||""))||
+   String(a[1].brand||"").localeCompare(String(b[1].brand||""))||byTitle(a,b);
+ shown.sort((a,b)=>{
+  if(order==="az")return byTitle(a,b);
+  const x=state.checklists.get(a[0]),y=state.checklists.get(b[0]);
+  if(order==="closest")return (x?.missing??Infinity)-(y?.missing??Infinity)||yearSort(a,b);
+  if(order==="percent")return (y?y.owned/y.total:-1)-(x?x.owned/x.total:-1)||yearSort(a,b);
+  return yearSort(a,b);
+ });
+ const frag=document.createDocumentFragment();
+ const allOption=document.createElement("option");
+ allOption.value="";allOption.textContent="All cataloged sets";frag.appendChild(allOption);
+ for(const [key,group] of shown){
+  const opt=document.createElement("option");opt.value=key;
+  opt.textContent=setOptionLabel(key,group);frag.appendChild(opt);
  }
+ select.replaceChildren(frag);
+ select.value=selected&&state.sets.has(selected)?selected:"";
+ const retained=selected&&!matched.some(([key])=>key===selected);
+ const status=$("set-finder-status");
+ status.textContent=search?matched.length+" of "+state.sets.size+" set names match your search"+
+  (retained?"; current selected set retained.":"."):
+  state.sets.size+" cataloged sets. Sort by missing cards or completion; unknown totals appear last.";
+ status.appendChild(document.createTextNode(" "));
+ const link=document.createElement("a");link.href="#wantlist";link.textContent="Browse missing-card lists";
+ status.appendChild(link);
 }
 
 const $ = (id) => document.getElementById(id);
@@ -230,15 +262,7 @@ async function load(){
    if(String(card.number||"").trim())group.numbers.add(String(card.number).trim());
    state.sets.set(key,group);
   }
-  const groups=[...state.sets.entries()].sort((a,b)=>
-   String(b[1].year||"").localeCompare(String(a[1].year||""))||
-   String(a[1].brand||"").localeCompare(String(b[1].brand||""))||
-   String(a[1].set||"").localeCompare(String(b[1].set||"")));
-  for(const [key,group] of groups){
-   const opt=document.createElement("option");opt.value=key;
-   opt.textContent=setOptionLabel(key,group);
-   $("set").appendChild(opt);
-  }
+  refreshSetOptionLabels();
   refreshFeatureCounts();
   filtered();
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
@@ -306,6 +330,8 @@ $("feature-clear").addEventListener("click",()=>{
  document.querySelectorAll('input[data-feature]').forEach(cb=>cb.checked=false);
  filtered();
 });
+$("set-finder").addEventListener("input",refreshSetOptionLabels);
+$("set-sort").addEventListener("change",refreshSetOptionLabels);
 ["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 $("close").addEventListener("click",()=>$("details").close());

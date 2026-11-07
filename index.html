@@ -50,8 +50,11 @@
       <label class="select"><span class="sr-only">Filter review status</span><select id="review"><option value="">All review statuses</option><option value="Verified">Verified</option><option value="Needs review">Needs review</option></select></label>
       <label class="select"><span class="sr-only">Filter year</span><select id="year"><option value="">All years</option></select></label>
       <label class="select"><span class="sr-only">Filter owned set</span><select id="set"><option value="">All cataloged sets</option></select></label>
+      <label class="set-finder-search"><span class="sr-only">Search cataloged set names</span><input id="set-finder" type="search" placeholder="Find a set (year, brand, title)" autocomplete="off" aria-describedby="set-finder-status"></label>
+      <label class="select set-finder-sort"><span class="sr-only">Sort cataloged set choices</span><select id="set-sort"><option value="year">Newest sets first</option><option value="closest">Fewest missing first</option><option value="percent">Highest completion %</option><option value="az">Set name A-Z</option></select></label>
       <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
     </div>
+    <p id="set-finder-status" class="set-finder-status" aria-live="polite">Loading set choices. <a href="#wantlist">Browse missing-card lists</a>.</p>
     <fieldset class="feature-filters" aria-describedby="feature-help">
       <legend>Card features <span class="feature-optional">? select any combination</span></legend>
       <div class="feature-filter-options" id="feature-options">

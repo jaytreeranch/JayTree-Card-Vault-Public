@@ -1,3 +1,10 @@
+## Public v0.9.5 candidate ? set picker search/sort (2026-11-07)
+- New native set dropdown helpers: search sport/year/brand/set; sort newest, fewest missing, highest completion percent or A-Z. Existing selected set and gallery card filter remain unchanged by searching or sorting; unknown-total sets follow sourced lists in completion sorts.
+- Existing 48 catalog set groups, 27 sourced checklists and 21 unknown totals are preserved. Source catalog, photos, owner approval and static data are unchanged.
+- In isolated branch feature/public-set-picker-search-sort-20261107 based on 5efc70bb49c9e5e5d57989ecde8038c44f9dfc42.
+- Node 22/22 PASS; old set completion Chrome and new interactive Chrome search/sort PASS; final public Pages deployment and physical Android/cellular checks to be verified independently.
+- Dated handoff: docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md.
+
 ## 2026-11-07 v0.9.4 public set completion dropdown
 Current handoff: docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md.
 - Public catalog: 1,006 records across 48 cataloged set groups; 27 groups have sourced numbered checklists; 21 lack full totals.
