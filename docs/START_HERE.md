@@ -1,3 +1,7 @@
+## v0.9.6 responsive navigation and touch targets (2026-11-07)
+Read docs/HANDOFF_20261107_PUBLIC_MOBILE_NAV_V096.md for the latest milestone.
+This public-only release fixes header nav overflow at 320px with a wrapped second row and adds accessible small-screen navigation/offer-link hit areas. No private LAN or catalog changes. Chrome local preview test covers 320,360,390,768,1366 and 320px missing-card modal and focus. Source branch feature/public-mobile-nav-qc-20261107 based on main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd. Remote deployment must be checked before claiming live.
+
 ## Latest public site v0.9.5: searchable/sortable native set picker
 Read docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md before editing.
 Branch: feature/public-set-picker-search-sort-20261107; baseline main SHA 5efc70bb49c9e5e5d57989ecde8038c44f9dfc42. Set finder adds a text search, year/closest/completion/A?Z sorting and missing-card link to the existing 48-set selector. No public catalog or checklist changes and no private LAN edits. Source release 2946dec4a19628732bcd16b6e87c3a69dcf0cc68 is LIVE: Pages SUCCESS, 7/7 asset byte parity and real Chrome live search/sort PASS. Future docs-only commits may advance main; see dated handoff and LAN receipt.

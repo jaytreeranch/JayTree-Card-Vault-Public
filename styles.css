@@ -78,3 +78,18 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
  .set-finder-search,.set-finder-sort{flex:1 1 100%;min-width:0;}
  .set-finder-search input,.set-finder-sort select{width:100%;}
 }
+
+
+/* Small-screen accessible header and missing-card offer targets (v0.9.6). */
+@media(max-width:490px) {
+ nav a { display:inline-flex; align-items:center; min-height:32px; }
+ .want-offer-link,.want-email-link {
+  display:inline-flex; align-items:center; min-height:34px; padding:5px 8px;
+ }
+ .want-missing-actions { gap:6px; }
+}
+@media(max-width:350px) {
+ .navline { flex-wrap:wrap; justify-content:center; gap:4px; padding-top:10px; padding-bottom:10px; }
+ .navline nav { width:100%; justify-content:center; flex-wrap:nowrap; gap:18px; }
+ .navline nav a { white-space:nowrap; }
+}

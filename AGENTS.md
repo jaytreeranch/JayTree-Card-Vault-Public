@@ -1,3 +1,6 @@
+## Public v0.9.6 responsive header / accessibility (2026-11-07)
+See docs/HANDOFF_20261107_PUBLIC_MOBILE_NAV_V096.md. Preserve 320px mobile layout without horizontal scroll, keyboard-focus access and 34px missing-card offer links. Public-only CSS and browser tests; LAN inventory, private exporter, photos, catalog and checklist data are untouched. Keep all safe work and rollback/handoff checkpoints in GitHub and protected LAN receipts.
+
 ## Public v0.9.5 ? native set finder (2026-11-07)
 Latest handoff: docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md.
 When changing the public set dropdown preserve exact sourced checklist/unique-count semantics. Keep native select keyboard accessible, maintain selection while search narrows options, and retain an unknown-total fallback. Public static source only; never edit LAN inventory, images or private publisher in this repo. Follow the standing GitHub and handoff continuity policy.

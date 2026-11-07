@@ -1,3 +1,11 @@
+## Public v0.9.6 ? mobile accessibility QC (2026-11-07)
+- Public site audit identified 320px physical viewport rendering as 337px CSS layout viewport due to header NAV extension to x=337. Header logo ended at x=152 and the rightmost nav link ended at 337.
+- Minimal mobile-only fix: under 350px wrap site header into two rows; nav links stay visible at all inspected sizes. Up to 490px links use >=32px vertical targets; mobile missing-card offer/email actions >=34px.
+- Chrome local preview checks PASS: 320/360/390/768/1366 all have exact viewport/scroll width and visible header nav; 320px missing-card dialog fits, Close button receives focus, visible offer/email link heights at least 34px. Existing set finder and fractions preserved.
+- Changes: styles.css plus new tests/public_mobile_narrow_browser_smoke.py only at runtime; no public card data, checklist, images or private files touched.
+- Source branch feature/public-mobile-nav-qc-20261107 based on public main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd. Deploy/remote verification must be checked after commits; physical Android 17/cellular remains UNTESTED.
+- Latest handoff: docs/HANDOFF_20261107_PUBLIC_MOBILE_NAV_V096.md.
+
 ## Public v0.9.5 candidate ? set picker search/sort (2026-11-07)
 - New native set dropdown helpers: search sport/year/brand/set; sort newest, fewest missing, highest completion percent or A-Z. Existing selected set and gallery card filter remain unchanged by searching or sorting; unknown-total sets follow sourced lists in completion sorts.
 - Existing 48 catalog set groups, 27 sourced checklists and 21 unknown totals are preserved. Source catalog, photos, owner approval and static data are unchanged.

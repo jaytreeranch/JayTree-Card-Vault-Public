@@ -40,3 +40,8 @@ Quality gates: node --test tests/*.cjs; python tests/public_browser_interaction_
 ## Find and sort sets in the public collection (v0.9.5)
 
 The Collection native set selector remains keyboard accessible and displays owned unique checklist spots / sourced set total (or unknown where unsourced). A separate set-name search narrows its choices by sport, year, brand or title without replacing the selected card filter. Sort choices by newest, fewest missing, highest completion percent, or name A-Z. Sets without a sourced total follow known sets in missing/completion sorts. The link below the filters opens the existing missing-card want-list. No changes to private inventory or public snapshots.
+
+
+## Responsive mobile header and missing-card offers (v0.9.6)
+
+On narrow phones (320px), the site header navigation now uses two rows to prevent horizontal viewport expansion and invisible navigation links. Other phone/tablet/desktop layouts remain usable. Navigation links have larger hit areas on phones; missing-card offer/email links have at least 34px vertical hit areas. No private LAN or public catalog data changes. Local Chrome browser QC: python tests/public_mobile_narrow_browser_smoke.py.
