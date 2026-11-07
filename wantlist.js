@@ -50,9 +50,20 @@ function renderTiles(){
  const list=$("wantlist-sets");list.replaceChildren();
  const search=$("wantlist-search").value.trim().toLowerCase();
  const sport=$("wantlist-sport").value;
+ const named=$("wantlist-named").value;
+ const order=$("wantlist-sort").value;
  let matches=state.sets.filter(s=>(!sport||s.sport===sport)&&
+  (!named||s.reference_player_names_complete===true)&&
   (!search||title(s).toLowerCase().includes(search)||s.sport.toLowerCase().includes(search)));
- $("wantlist-count").textContent=fmt(matches.length)+" numbered sets with sourced checklists";
+ const byTitle=(a,b)=>title(a).localeCompare(title(b));
+ matches.sort((a,b)=>{
+  if(order==="most")return b.missing-a.missing||byTitle(a,b);
+  if(order==="year")return Number(b.year)-Number(a.year)||byTitle(a,b);
+  if(order==="az")return byTitle(a,b);
+  return a.missing-b.missing||b.progress_percent-a.progress_percent||byTitle(a,b);
+ });
+ const remaining=matches.reduce((n,s)=>n+s.missing,0);
+ $("wantlist-count").textContent=fmt(matches.length)+" sourced numbered sets • "+fmt(remaining)+" missing numbered spots";
  $("wantlist-empty").hidden=matches.length>0;
  for(const s of matches){
   const card=document.createElement("article");card.className="want-set-card";
@@ -153,6 +164,8 @@ async function loadWantList(){
 }
 $("wantlist-search").addEventListener("input",renderTiles);
 $("wantlist-sport").addEventListener("change",renderTiles);
+$("wantlist-sort").addEventListener("change",renderTiles);
+$("wantlist-named").addEventListener("change",renderTiles);
 $("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$("wantlist-missing-list").replaceChildren();renderMissing();});
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());

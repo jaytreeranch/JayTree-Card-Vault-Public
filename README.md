@@ -14,4 +14,4 @@ Only approved front-card photos and public fields are in this repo. Private data
 
 ## Set-completion want list
 
-26 sourced numbered checklists, 22 with complete named-player references. Numbered spots (not physical copies) are counted: if you own duplicates or different parallels with the same printed number, that number is counted once toward completion. Visitors may submit a public GitHub Issue or a separate email to offer a missing card; these are unapproved inquiries only.
+27 sourced numbered checklists, 23 with complete named-player references, and 6,513 missing issued-number spots. Numbered spots (not physical copies) are counted: if you own duplicates or different parallels with the same printed number, that number is counted once toward completion. Visitors may submit a public GitHub Issue or a separate email to offer a missing card; these are unapproved inquiries only.
