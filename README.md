@@ -26,3 +26,12 @@ An edition label like /325 does NOT establish the exact serial stamp of the owne
 
 ## Stamped copy number (public projection only)
 The read-only gallery may show an exact stamped copy such as 42/325 only after explicit owner verification and publication approval from the private LAN. The print-run edition /325 is not the owned numerator. Invalid or conflicting public copy stamps remain hidden for review and never alter estimated prices. See docs/PUBLIC_SERIAL_COPY_CONTRACT_20261107.md; the LAN edit requirement is tracked separately in the private repository.
+
+
+## Owned / total set checklist counts (public v0.9.4)
+
+The Collection's 'All cataloged sets' dropdown lists UNIQUE owned issued checklist numbers / sourced set total FIRST, not the number of physical copies or catalog records. For example, 2025 Panini Absolute - Base Set (Football, Panini) has 245 catalog records spanning 138 distinct numbered spots out of a sourced 200-number checklist; its public option shows 138/200 owned (69%). Selecting that set also shows 62 missing spots and a link to the matching set's missing-card list. The 1985 Topps Circle K set similarly shows 31/33, not the 32 catalog records that include a duplicate number.
+
+A set without a sourced complete numbered checklist shows e.g. 3 unique / total unknown; no denominator, missing count or completion percentage is invented. Identifications under Needs review remain provisional. The public site remains read-only, and raw quantities/parallels never increase numbered-set completion.
+
+Quality gates: node --test tests/*.cjs; python tests/public_browser_interaction_smoke.py; python tests/public_set_completion_browser_smoke.py. Read docs/START_HERE.md and docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md.

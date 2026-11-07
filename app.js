@@ -1,6 +1,6 @@
 "use strict";
 const PAGE_SIZE = 48;
-const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map() };
+const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map() };
 const features=window.JayTreeCardFeatures;
 const selectedFeatures=()=>[...document.querySelectorAll('input[data-feature]:checked')].map(n=>n.value);
 function refreshFeatureCounts(){
@@ -13,7 +13,22 @@ function refreshFeatureCounts(){
  }
 }
 
-const setKey = (c) => JSON.stringify([String(c.year||""),String(c.brand||""),String(c.set||"")]);
+// Sport is part of checklist identity; never match by a similar set title alone.
+const setKey = (c) => JSON.stringify([String(c.sport||""),String(c.year||""),String(c.brand||""),String(c.set||"")]);
+const setTitle = (group) => [group.year,group.brand,group.set].filter(Boolean).join(" \u00b7 ");
+function setOptionLabel(key,group){
+ const list=state.checklists.get(key);
+ // Numerator is unique issued checklist spots, never card quantities or parallel copies.
+ if(list)return list.owned+"/"+list.total+" owned ("+Math.round(100*list.owned/list.total)+ "%) \u00b7 "+setTitle(group);
+ return group.numbers.size+" unique / total unknown \u00b7 "+setTitle(group);
+}
+function refreshSetOptionLabels(){
+ for(const option of $("set").options){
+  const group=state.sets.get(option.value);
+  if(group)option.textContent=setOptionLabel(option.value,group);
+ }
+}
+
 const $ = (id) => document.getElementById(id);
 const fmtUSD = (v) => typeof v === "number" && Number.isFinite(v) ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(v) : "Not valued";
 const safeImage = (path) => typeof path === "string" && /^assets\/[a-f0-9]{24}\.jpg$/.test(path) ? path : "";
@@ -209,10 +224,10 @@ async function load(){
   for(const year of years){const opt=document.createElement("option");opt.value=year;opt.textContent=year;$("year").appendChild(opt);}
   for(const card of state.cards){
    if(!card.year&&!card.brand&&!card.set)continue;
-   const key=setKey(card), group=state.sets.get(key)||{year:card.year,brand:card.brand,set:card.set,total:0,verified:0,numbers:new Set()};
+   const key=setKey(card), group=state.sets.get(key)||{sport:card.sport,year:card.year,brand:card.brand,set:card.set,total:0,verified:0,numbers:new Set()};
    group.total++;
    if(card.review_status==="Verified")group.verified++;
-   if(card.number)group.numbers.add(String(card.number));
+   if(String(card.number||"").trim())group.numbers.add(String(card.number).trim());
    state.sets.set(key,group);
   }
   const groups=[...state.sets.entries()].sort((a,b)=>
@@ -221,7 +236,7 @@ async function load(){
    String(a[1].set||"").localeCompare(String(b[1].set||"")));
   for(const [key,group] of groups){
    const opt=document.createElement("option");opt.value=key;
-   opt.textContent=[group.year,group.brand,group.set].filter(Boolean).join(" · ")+" ("+group.total+" cards)";
+   opt.textContent=setOptionLabel(key,group);
    $("set").appendChild(opt);
   }
   refreshFeatureCounts();
@@ -235,13 +250,57 @@ async function load(){
  }
 }
 function renderSetSummary(){
+ const box=$("set-summary");
  const value=$("set").value;
- if(!value){$("set-summary").textContent="Browse "+state.sets.size+" cataloged set groups. Owned-card counts do not imply manufacturer checklist completion.";return;}
+ if(!value){
+  box.textContent="Browse "+state.sets.size+" cataloged set groups \u00b7 "+state.checklists.size+
+   " with sourced numbered checklists. Counts show unique printed numbers, not duplicate physical copies.";
+  return;
+ }
  const group=state.sets.get(value);
- if(!group){$("set-summary").textContent="Set not found in approved public catalog.";return;}
- const count=group.numbers.size;
- $("set-summary").textContent="In this set: "+group.total+" cataloged cards · "+group.verified+" Verified · "+(group.total-group.verified)+" Needs review · "+count+" distinct numbered entries. Missing cards require a verified manufacturer checklist.";
+ if(!group){box.textContent="Set not found in the published collection.";return;}
+ const checklist=state.checklists.get(value);
+ if(!checklist){
+  box.textContent="No sourced total checklist yet \u00b7 "+group.numbers.size+
+   " distinct numbered entries across "+group.total+" catalog entries ("+group.verified+" Verified, "+
+   (group.total-group.verified)+" Needs review). Set total, missing count and completion percentage are unknown.";
+  return;
+ }
+ const pct=Math.round(100*checklist.owned/checklist.total);
+ const lead=document.createElement("strong");
+ lead.textContent=checklist.owned+" / "+checklist.total+" owned ("+pct+"% complete)";
+ box.replaceChildren(lead);
+ box.appendChild(document.createTextNode(" \u00b7 "+checklist.missing+" missing \u00b7 "+group.total+
+  " catalog entries representing "+checklist.owned+" distinct issued numbers. Repeated numbers and parallels count once."));
+ if(group.total>group.verified)box.appendChild(document.createTextNode(
+  " "+(group.total-group.verified)+" entries still need review, so identification is provisional."));
+ if(checklist.missing){
+  const link=document.createElement("a");
+  link.href="#want-set="+encodeURIComponent(JSON.stringify(checklist.key));
+  link.textContent="See "+checklist.missing+" missing numbered cards";
+  box.appendChild(document.createTextNode(" \u00b7 "));
+  box.appendChild(link);
+ }
 }
+// Use the same checked public want-list snapshot, without an extra data request.
+document.addEventListener("jaytree:checklists-ready",event=>{
+ const sets=event.detail;
+ if(!Array.isArray(sets))return;
+ const next=new Map();
+ for(const s of sets){
+  if(!s||!Array.isArray(s.key)||s.key.length!==4||
+     !s.key.every(v=>typeof v==="string")||
+     !Number.isSafeInteger(s.total)||s.total<1||
+     !Number.isSafeInteger(s.owned)||s.owned<0||s.owned>s.total||
+     !Number.isSafeInteger(s.missing)||s.missing!==s.total-s.owned)continue;
+  next.set(JSON.stringify(s.key),s);
+ }
+ state.checklists=next;
+ if(state.sets.size){
+  refreshSetOptionLabels();
+  renderSetSummary();
+ }
+});
 document.querySelectorAll('input[data-feature]').forEach(cb=>cb.addEventListener("change",filtered));
 $("feature-clear").addEventListener("click",()=>{
  document.querySelectorAll('input[data-feature]').forEach(cb=>cb.checked=false);

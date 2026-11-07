@@ -183,6 +183,8 @@ async function loadWantList(){
      !count(data.named_set_count)||data.named_set_count!==namedTotal)
    throw new Error("Checklist summary does not match details");
   state.sets=data.sets;
+  // Share this vetted public numbered-checklist snapshot with the collection dropdown.
+  document.dispatchEvent(new CustomEvent("jaytree:checklists-ready",{detail:state.sets}));
   $("wantlist-intro").textContent="Browse "+fmt(data.supported_set_count)+" independently sourced numbered checklists, including "+fmt(data.named_set_count)+" with verified player names. Missing cards are numbered spots not currently recorded in the public collection. Catalog snapshot: "+String(data.generated_at_utc||"date unavailable").slice(0,10)+".";
   const sports=[...new Set(state.sets.map(s=>s.sport))].sort();
   for(const sport of sports){const opt=document.createElement("option");opt.value=sport;opt.textContent=sport;$("wantlist-sport").appendChild(opt);}

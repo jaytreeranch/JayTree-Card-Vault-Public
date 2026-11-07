@@ -1,3 +1,12 @@
+## 2026-11-07 v0.9.4 public set completion dropdown
+Current handoff: docs/HANDOFF_20261107_PUBLIC_SET_FRACTIONS_V094.md.
+- Public catalog: 1,006 records across 48 cataloged set groups; 27 groups have sourced numbered checklists; 21 lack full totals.
+- Example: 2025 Panini Absolute - Base Set (Panini / Football): 245 catalog records, 138 unique issued-number spots owned, 200 total, 62 missing. Dropdown must show 138/200, not 245/200.
+- 1985 Topps Circle K: 32 records represent 31/33 numbered spots, two missing; unissued #31 is not a missing card.
+- Public-only UI update: sourced fraction FIRST in select labels; otherwise unique numbered entries / total unknown; selected-set summary includes missing-card link and explains duplicate rows; feature filters remain intact.
+- Source branch feature/public-set-completion-labels-20261107 from public main 32233b68f62cceedb845db0481ffe72c69afc8b0.
+- At this writing: local QC Node 22/22 PASS; existing Chrome feature/serial PASS; 3 new Chrome completion cases PASS (normal, checklist unavailable, slower catalog). Remote deployment and physical Android cellular acceptance must be checked independently.
+
 ## 2026-11-07 public serial projection follow-up (v0.9.3 candidate)
 Current: docs/HANDOFF_20261107_PUBLIC_SERIAL_SCHEMA_QC_V093.md. Copy-stamp projection must be owner-approved in the private LAN; malformed or partially invalid published serials now suppress all copy stamps pending review. Physical-copy editor tracked in private repo issue #15. Public main remains read-only and LAN review stays separate.
 

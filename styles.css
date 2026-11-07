@@ -60,3 +60,8 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 
 /* Public-only stamped copy identity (private edits stay on the LAN Vault). */
 .card-serial { color:#e9bb71; font-weight:650; font-size:.83rem; margin:.28rem 0 0; }
+
+
+/* Sourced numbered-set completion fractions and direct missing-card links. */
+.set-summary strong{color:#f0c584}
+.set-summary a{color:#f0c584;text-underline-offset:3px;font-weight:700}
