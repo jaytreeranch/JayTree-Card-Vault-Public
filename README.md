@@ -62,3 +62,8 @@ The public want-list section now searches all 27 vetted numbered-set lists by pl
 ## Share an individual missing card (public v0.9.9)
 
 Visitors can select **Copy card link** beside any missing numbered card in either the cross-set search or a sourced set's numbered want list. Links use only the published sport/year/brand/set plus the printed checklist number, never a physical-copy ID or serialized stamp. Opening a link in a fresh browser automatically opens the correct sourced set filtered to that one numbered spot. Older set-sharing links keep working, and the offer email/GitHub issue includes the same card-specific link. Invalid links do not create records or claim a card is missing. If browser clipboard access is blocked, a read-only input lets visitors manually select/copy the link. This is static client-side functionality, not an inventory editing or visitor submission API.
+
+
+## Closest-to-complete sourced numbered sets (public v0.9.10)
+
+A compact priority dashboard on the public wantlist shows the three approved numbered sets with the fewest missing cards and links directly into the existing missing-number dialog. A new remaining-count control filters sourced checklists by 1?2, 3?10 or 11+ missing; "Highest completion first" adds a percentage sort. Current published snapshot: 1985 Topps Circle K 31/33, only two numbered cards missing; 2025 Donruss Optic Chain Reaction eight missing and My House! nine missing. Only sourced issued-numbered checklist slots count; parallel versions, duplicates and unsourced sets never inflate denominators. All data is the original public static snapshot, with no private API or backend changes.

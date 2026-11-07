@@ -87,10 +87,21 @@
     <p class="sectionnote" id="wantlist-count" aria-live="polite">Loading numbered checklists…</p>
   </div>
   <p id="wantlist-intro" class="wantlist-intro">Browse numbered sets and find the cards I'm missing.</p>
+  <section id="want-priority" class="want-priority" aria-labelledby="want-priority-title" hidden>
+    <div class="want-priority-head">
+      <div>
+        <h3 id="want-priority-title">Closest to completing</h3>
+        <p>Priority sets from complete, sourced numbered checklists. Owned numbers are unique printed spots, not duplicate cards or parallels; some card identifications still need review.</p>
+      </div>
+      <p id="want-priority-summary" class="want-priority-summary" aria-live="polite"></p>
+    </div>
+    <div id="want-priority-grid" class="want-priority-grid"></div>
+  </section>
   <div class="wantlist-toolbar">
     <label><span class="sr-only">Search numbered sets</span><input id="wantlist-search" type="search" placeholder="Find a year, brand or set" autocomplete="off"></label>
     <label><span class="sr-only">Filter sport</span><select id="wantlist-sport"><option value="">All sports</option></select></label>
-    <label><span class="sr-only">Sort checklist sets</span><select id="wantlist-sort"><option value="closest">Fewest missing first</option><option value="most">Most missing first</option><option value="year">Newest sets first</option><option value="az">Set name A to Z</option></select></label>
+    <label><span class="sr-only">Sort checklist sets</span><select id="wantlist-sort"><option value="closest">Fewest missing first</option><option value="percent">Highest completion first</option><option value="most">Most missing first</option><option value="year">Newest sets first</option><option value="az">Set name A to Z</option></select></label>
+    <label><span class="sr-only">Filter sets by missing numbered cards</span><select id="wantlist-gap"><option value="">All remaining counts</option><option value="1-2">Only 1?2 missing</option><option value="3-10">Only 3?10 missing</option><option value="11+">11 or more missing</option></select></label>
     <label><span class="sr-only">Filter checklist coverage</span><select id="wantlist-named"><option value="">All sourced checklists</option><option value="named">Verified player names only</option></select></label>
   </div>
   <section class="want-global" aria-labelledby="want-global-title">

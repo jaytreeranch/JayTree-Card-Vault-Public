@@ -1,3 +1,10 @@
+## Public v0.9.10 sourced set completion priorities ? pre-release checkpoint 2026-11-07
+- New closest-to-complete three-card highlight from only the independently sourced 27 complete numbered checklists. Current leading set 1985 Topps Circle K 31/33, 2 missing, 94%; next Chain Reaction 8 missing, My House! 9 missing. No invented denominators for the 21 unsourced set groups.
+- Added remaining-count filter 1?2 (one set), 3?10 (two sets), 11+ (24 sets), and highest-completion sort. Underlying existing search, sport and verified-name filters, shared card link and modal kept.
+- All counts derive from published unique issued numbered spots only, not physical duplicate cards, serial numbers, parallels or quantities. No new data fetch, LAN database, publisher, Android, public catalog.json/set-checklists.json, images or DNS edits.
+- Initial 38/38 Node and Chrome local 320/390/1366 PASS: correct highlights, filters, percent sort, modal, existing global missing search, no horizontal overflow. Full legacy regression/release verification still needed.
+- Source branch feature/public-set-priorities-v0910-20261107, baseline public main 0ae81ba5b3869a7c61c748862d47591bc6c948fe; handoff docs/HANDOFF_20261107_PUBLIC_SET_PRIORITIES_V0910.md.
+
 ## Public v0.9.9 individual missing-card link development (2026-11-07)
 - Added read-only shareable link to one missing numbered card, not to an owner physical copy: #want-card=encoded JSON array of [sport,year,brand,set,printed_number]. Copy buttons in across-all-sets search and each set's missing rows; existing email/GitHub inquiries now prefill the specific card URL instead of set-only link.
 - Cold-loading a valid card URL opens the proper sourced set and prefilters the numbered list to its single exact printed number; stale/unknown/malformed numbers fail closed. Legacy #want-set links unaffected. Clipboard permission failure shows a selectable manual link, never a false copy success.

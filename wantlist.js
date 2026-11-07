@@ -70,17 +70,53 @@ function emailLink(s,card){
  ].join("\n");
  return "mailto:jaytreebooks@gmail.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
 }
+// The top three opportunities are based ONLY on vetted, issued-numbered totals.
+function renderPriorities(){
+ const panel=$("want-priority"),grid=$("want-priority-grid");
+ const ranked=state.sets.filter(s=>s.missing>0).sort((a,b)=>
+  a.missing-b.missing||b.progress_percent-a.progress_percent||
+  title(a).localeCompare(title(b))).slice(0,3);
+ grid.replaceChildren();
+ panel.hidden=ranked.length===0;
+ if(!ranked.length)return;
+ const near=state.sets.filter(s=>s.missing>=1&&s.missing<=2).length;
+ $("want-priority-summary").textContent=fmt(near)+" sourced "+(near===1?"set":"sets")+" with 1?2 cards left";
+ for(const [i,s] of ranked.entries()){
+  const card=text(grid,"article","","want-priority-card");
+  text(card,"p","PRIORITY "+(i+1)+" ? "+s.sport+" ? "+s.year,"want-set-meta");
+  text(card,"h4",s.set,"want-priority-title");
+  const row=text(card,"div","","want-priority-stats");
+  text(row,"strong",fmt(s.missing)+" "+(s.missing===1?"card":"cards")+" missing");
+  text(row,"span",fmt(s.owned)+" of "+fmt(s.total)+" ? "+s.progress_percent+"% complete");
+  const track=text(card,"div","","want-track");
+  track.setAttribute("role","progressbar");
+  track.setAttribute("aria-label",s.set+" set completion");
+  track.setAttribute("aria-valuemin","0");
+  track.setAttribute("aria-valuemax","100");
+  track.setAttribute("aria-valuenow",String(s.progress_percent));
+  text(track,"div","","want-track-fill").style.width=Math.min(100,Math.max(0,s.progress_percent))+"%";
+  const btn=text(card,"button","View "+fmt(s.missing)+" missing "+(s.missing===1?"card":"cards"),"want-priority-open");
+  btn.type="button";btn.addEventListener("click",()=>openSet(s));
+ }
+}
 function renderTiles(){
  const list=$("wantlist-sets");list.replaceChildren();
  const search=$("wantlist-search").value.trim().toLowerCase();
  const sport=$("wantlist-sport").value;
  const named=$("wantlist-named").value;
  const order=$("wantlist-sort").value;
+ const gap=$("wantlist-gap").value;
+ const inGap=m=>!gap||
+  (gap==="1-2"&&m>=1&&m<=2)||
+  (gap==="3-10"&&m>=3&&m<=10)||
+  (gap==="11+"&&m>=11);
  let matches=state.sets.filter(s=>(!sport||s.sport===sport)&&
   (!named||s.reference_player_names_complete===true)&&
+  inGap(s.missing)&&
   (!search||title(s).toLowerCase().includes(search)||s.sport.toLowerCase().includes(search)));
  const byTitle=(a,b)=>title(a).localeCompare(title(b));
  matches.sort((a,b)=>{
+  if(order==="percent")return b.progress_percent-a.progress_percent||a.missing-b.missing||byTitle(a,b);
   if(order==="most")return b.missing-a.missing||byTitle(a,b);
   if(order==="year")return Number(b.year)-Number(a.year)||byTitle(a,b);
   if(order==="az")return byTitle(a,b);
@@ -292,6 +328,7 @@ async function loadWantList(){
   $("wantlist-intro").textContent="Browse "+fmt(data.supported_set_count)+" independently sourced numbered checklists, including "+fmt(data.named_set_count)+" with verified player names. Missing cards are numbered spots not currently recorded in the public collection. Catalog snapshot: "+String(data.generated_at_utc||"date unavailable").slice(0,10)+".";
   const sports=[...new Set(state.sets.map(s=>s.sport))].sort();
   for(const sport of sports){const opt=document.createElement("option");opt.value=sport;opt.textContent=sport;$("wantlist-sport").appendChild(opt);}
+  renderPriorities();
   renderTiles();
   searchAllMissing();
   parseHash();
@@ -305,6 +342,7 @@ async function loadWantList(){
 $("wantlist-search").addEventListener("input",renderTiles);
 $("wantlist-sport").addEventListener("change",()=>{renderTiles();searchAllMissing();});
 $("wantlist-sort").addEventListener("change",renderTiles);
+$("wantlist-gap").addEventListener("change",renderTiles);
 $("wantlist-named").addEventListener("change",()=>{renderTiles();searchAllMissing();});
 $("want-global-search").addEventListener("input",searchAllMissing);
 $("want-global-more").addEventListener("click",()=>{

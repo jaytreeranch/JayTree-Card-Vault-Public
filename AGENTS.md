@@ -1,3 +1,6 @@
+## Public v0.9.10 source-backed set completion priorities (2026-11-07)
+Newest handoff: docs/HANDOFF_20261107_PUBLIC_SET_PRIORITIES_V0910.md. Sourced, issued-numbered sets only: show the three fewest remaining sets and existing 27 sets filterable by 1-2, 3-10 and 11+ remaining; highest completion sorting. Never invent remaining counts for the 21 unsourced catalog groups, count duplicates or parallel variants as new numbered spots. Private LAN, Android and publisher unaffected. Run QC, verify remote SHA/Pages, preserve protected LAN receipt.
+
 ## Public v0.9.9 individual missing-card links ? 2026-11-07
 Newest handoff: docs/HANDOFF_20261107_PUBLIC_MISSING_CARD_LINKS_V099.md. Public site only: immutable 5-string URL fragment (exact 4-part sourced set key + printed checklist number), copy link from global search and set modal, preserve existing #want-set links, fail closed for stale/malformed cards. No private copy_id/serial stamp, new checklist source, LAN or Android modifications. Run source+Chrome/Pages QC and leave protected LAN/Git rollback.
 
