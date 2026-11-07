@@ -1,6 +1,6 @@
 ## v0.9.6 responsive navigation and touch targets (2026-11-07)
 Read docs/HANDOFF_20261107_PUBLIC_MOBILE_NAV_V096.md for the latest milestone.
-This public-only release fixes header nav overflow at 320px with a wrapped second row and adds accessible small-screen navigation/offer-link hit areas. No private LAN or catalog changes. Chrome local preview test covers 320,360,390,768,1366 and 320px missing-card modal and focus. Source branch feature/public-mobile-nav-qc-20261107 based on main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd. Remote deployment must be checked before claiming live.
+This public-only release fixes header nav overflow at 320px with a wrapped second row and adds accessible small-screen navigation/offer-link hit areas. No private LAN or catalog changes. Chrome local preview test covers 320,360,390,768,1366 and 320px missing-card modal and focus. Source branch feature/public-mobile-nav-qc-20261107 based on main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd. Source commit f12002652798c5216d3ea2e0a42f8a53de9533ad is deployed and verified live: Pages SUCCESS, custom-domain asset byte parity, real Chrome 320/360/390/768/1366 responsive and missing-card modal PASS. Future docs-only commits may advance main; see handoff and LAN receipt.
 
 ## Latest public site v0.9.5: searchable/sortable native set picker
 Read docs/HANDOFF_20261107_PUBLIC_SET_FINDER_V095.md before editing.

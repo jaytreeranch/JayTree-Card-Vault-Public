@@ -3,7 +3,7 @@
 - Minimal mobile-only fix: under 350px wrap site header into two rows; nav links stay visible at all inspected sizes. Up to 490px links use >=32px vertical targets; mobile missing-card offer/email actions >=34px.
 - Chrome local preview checks PASS: 320/360/390/768/1366 all have exact viewport/scroll width and visible header nav; 320px missing-card dialog fits, Close button receives focus, visible offer/email link heights at least 34px. Existing set finder and fractions preserved.
 - Changes: styles.css plus new tests/public_mobile_narrow_browser_smoke.py only at runtime; no public card data, checklist, images or private files touched.
-- Source branch feature/public-mobile-nav-qc-20261107 based on public main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd. Deploy/remote verification must be checked after commits; physical Android 17/cellular remains UNTESTED.
+- LIVE public source release f12002652798c5216d3ea2e0a42f8a53de9533ad on main and isolated feature branch, exact remote SHA verified; Pages deployment completed SUCCESS. Live custom HTTPS source bytes matched Git, Chrome responsive 320/360/390/768/1366 all PASS; modal focus and offer touch targets PASS. Physical Android 17/cellular remains UNTESTED.
 - Latest handoff: docs/HANDOFF_20261107_PUBLIC_MOBILE_NAV_V096.md.
 
 ## Public v0.9.5 candidate ? set picker search/sort (2026-11-07)

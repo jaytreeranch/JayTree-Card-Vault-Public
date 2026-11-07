@@ -21,3 +21,12 @@ Add public CSS-only narrow-viewport (<=350px) two-row center-aligned brand and h
 ## Rollback and next actions
 Preserve prior public main 752af9d1a7aa72dcfc2bbc71678afa7e9526cbdd in protected LAN receipt baseline_source with SHA-256 checksums. Commit and push only safe source/tests/docs, verify remote SHA. Conditional non-force fast-forward to main only if unchanged. Verify Pages success plus custom HTTPS asset byte parity and live Chrome 320/390 UI acceptance. A rollback uses a NEW regular Git revert commit after concurrent-work review, never force-push.
 Next priorities after release: real Android/cellular review; checklist coverage expansion only with independently sourced manufacturer numbers; evaluate accessibility with screen-reader/keyboard. Keep noindex/nofollow policy unchanged absent owner decision.
+
+## Verified production acceptance
+- Source release commit: f12002652798c5216d3ea2e0a42f8a53de9533ad; pushed to feature/public-mobile-nav-qc-20261107 and public main, remote SHAs verified.
+- GitHub Pages workflow for that commit completed SUCCESS.
+- Custom HTTPS: styles.css, index.html, app.js, catalog.json and set-checklists.json bytes exactly match Git HEAD; catalog and checklist were unchanged from the protected previous release.
+- Real Chrome headless on the LIVE public URL at widths 320,360,390,768,1366: full viewport width, no horizontal overflow, all nav links inside bounds, expected 48 set groups and 27 sourced want lists PASS.
+- LIVE 320px missing-card dialog within viewport, Close has initial focus, offer/email links >=34px. PASS.
+- Prior Chrome local interactive set finder / 22 Node regression tests PASS.
+- Real Android hardware and cellular delivery remain open, as does a full automated or manual screen-reader WCAG audit. No noindex/nofollow changes.
