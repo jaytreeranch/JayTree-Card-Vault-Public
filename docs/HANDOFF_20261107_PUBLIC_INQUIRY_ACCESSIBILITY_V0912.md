@@ -29,3 +29,10 @@ Public index.html, wantlist.js, wantlist.css, tests and safe docs only. No added
 1. Perform full QC, protected LAN source backup, guarded GitHub/Pages release and live browser privacy/accessibility checks; commit updated docs and verify final remote SHA.
 2. Coordinate approved new numbered checklist static exports solely with LAN owner; public code preserves unique printed-number and needs-review caveats.
 3. Obtain a physical Android browser/cellular and real screen-reader evaluation before claiming full assistive technology/real-device acceptance. No automated public offer submission without user intent.
+
+## Live source deployment ? independently verified
+- Source release e95aaaac86a540fc3955ebd3bc9f47e1d7c465e0 pushed and exact GitHub remote feature/public-main SHA verified; worktree clean at source milestone.
+- Custom public HTTPS eight HTML/JS/CSS/data/CNAME bytes exact committed Git, approved catalog.json and set-checklists.json unchanged. Real Chrome against https://cards.jaytreebooks.com/#wantlist widths 320,390,1366 PASSED keyboard Tab focus on disabled GitHub/email actions, accessible link names/descriptions via Chrome Accessibility.getFullAXTree, aria-invalid/photo validation, dynamic action help/reset, earlier inquiry behavior, no overflow. Private /api/cards and /owner/private still HTTP 404.
+- All 46/46 Node tests, prior browser regressions (10 suites total), and JS syntax/staged whitespace gates PASS. Source/previous rollback files and SHA-256 verified on JayTree LAN.
+- At final source observation, GitHub Pages workflow API still showed in_progress even though the live app was already serving exact source bytes. Do not call Pages workflow SUCCESS without a new successful observation; follow with separately dated evidence/receipt.
+- Physical Android17/cellular and real NVDA/TalkBack/VoiceOver remain UNTESTED; Chrome's accessibility tree and emulation do not replace those. No offer issue submitted or email sent.
