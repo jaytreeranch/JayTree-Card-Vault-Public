@@ -26,3 +26,12 @@ Private LAN Coordination/Requests/20261107_PUBLIC_to_LAN_checklist_sources_batch
 1. Finish full test suite, safe LAN backup, remote SHA and public live acceptance; update receipt.
 2. LAN checks independent sources, set-size/number anomalies, card backs and original photos before future approved static checklist export. Public should not edit their work.
 3. Physical Android/cellular public website usability and keyboard/screen-reader review; preserve known/unknown distinction.
+
+## FINAL verified source deployment (post-publication)
+- Source release commit b633e7cfda77fd319c01d02f5c5e88bc1df6f7c8 pushed and verified on public main and feature/public-unsourced-checklist-coverage-20261107. GitHub Pages completed SUCCESS.
+- Live custom HTTPS 8/8 source/data bytes match committed Git: index.html, app.js, checklist-coverage.js, wantlist.css, wantlist.js, styles.css, catalog.json and set-checklists.json. Public GitHub checklist-source.yml issue template retrieved via GitHub API, not mistaken for a served Pages asset.
+- Chrome CDP against ACTUAL https://cards.jaytreebooks.com/#wantlist at 320/390/1366: 27 sourced set tiles, 21 source-needed tiles, native select 48 groups, real filtering, no overflow, source email/GitHub links, no missing totals invented, PASS.
+- Private application routes /api/cards and /owner/private continue to respond HTTP 404; catalog, checklist JSON, images and CNAME unchanged. Source must remain read-only.
+- New GitHub issue suggestion end-to-end authenticated account submission and physical Android/cellular remain NOT tested.
+- Existing set-completion Chrome tests 3/3 passed on retry after a one-off Windows temporary Chrome DevToolsActivePort PermissionError. Legacy finder/mobile/features all PASS; Node 26/26 PASS.
+- Private LAND coordination request filed at Coordination/Requests/20261107_PUBLIC_to_LAN_checklist_sources_batch1.md with seven checklists; candidate counts not shipped publicly. LAN owner to validate original cards, numbering and sources before approved public export.
