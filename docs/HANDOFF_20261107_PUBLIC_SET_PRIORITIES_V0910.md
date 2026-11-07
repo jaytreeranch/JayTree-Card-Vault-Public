@@ -28,3 +28,11 @@ Changes to public index.html, wantlist.js and wantlist.css plus safe source regr
 1. Full regression, protected backup, guarded public v0.9.10 release; GitHub and live acceptance, docs+manager receipts.
 2. LAN approves new sourced numbered checklists through its own verified one-way exporter; public UI must continue safely if counts change and keep unsourced totals unknown.
 3. Physical Android/cellular public browsing and screen-reader acceptance; address actual usability issues without editing Android scanning or LAN ownership.
+
+## Verified LIVE public source deployment
+- Source commit 0a4537ed72002402afeadc5dcd3e061b10eff5d5 pushed to source branch and public main; both remote GitHub refs matched local exact SHA; GitHub Pages source release completed SUCCESS.
+- Eight live HTTPS files byte-equal to committed Git (index.html, wantlist.js, wantlist.css, app.js, checklist-coverage.js, catalog.json, set-checklists.json, CNAME); data and CNAME unchanged.
+- Chrome CDP real LIVE custom domain widths 320,390,1366 verified Circle K 31/33, 94%, 2 missing, 8 Chain Reaction and 9 My House!, accessible progress, modal 2/2, remaining filters 1/2/24/27, highest percent, combined sport filter, no horizontal overflow. /api/cards and /owner/private return 404.
+- Full 38/38 Node source checks and all previous browser suites PASS, including individual card links, global missing search, sorted set picker, sourced/unsourced coverage, mobile and feature classifications.
+- LAN protected source and rollback SHA manifests at \JT-DESKTOP\JayTreeFarm\CardVault\PublicShowcase\receipts\PUBLIC_V0910_SET_PRIORITIES_20261107. No private LAN or Android edits. Physical Android17/cellular and formal screen-reader tests not performed.
+- Next documentation/test checkpoint may update public remote main SHA without changing runtime; independently verify docs-only Pages success and live byte parity, do not confuse source SHA with docs SHA.
