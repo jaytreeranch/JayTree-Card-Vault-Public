@@ -57,3 +57,8 @@ Visitors may suggest independently published checklist URLs by sending an email 
 ## Search missing cards across sourced sets (v0.9.8)
 
 The public want-list section now searches all 27 vetted numbered-set lists by player, team, printed card number or set title. Prefix a printed number with # to match that exact number rather than substring matches. Only 40 matches render initially and visitors can load more. Each result can open its set's numbered-card dialog or open an existing owner-directed email/GitHub inquiry. It cannot change card inventory, approves no identities, and does not load extra public data.
+
+
+## Share an individual missing card (public v0.9.9)
+
+Visitors can select **Copy card link** beside any missing numbered card in either the cross-set search or a sourced set's numbered want list. Links use only the published sport/year/brand/set plus the printed checklist number, never a physical-copy ID or serialized stamp. Opening a link in a fresh browser automatically opens the correct sourced set filtered to that one numbered spot. Older set-sharing links keep working, and the offer email/GitHub issue includes the same card-specific link. Invalid links do not create records or claim a card is missing. If browser clipboard access is blocked, a read-only input lets visitors manually select/copy the link. This is static client-side functionality, not an inventory editing or visitor submission API.

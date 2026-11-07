@@ -1,3 +1,6 @@
+## Public v0.9.9 individual missing-card links ? 2026-11-07
+Newest handoff: docs/HANDOFF_20261107_PUBLIC_MISSING_CARD_LINKS_V099.md. Public site only: immutable 5-string URL fragment (exact 4-part sourced set key + printed checklist number), copy link from global search and set modal, preserve existing #want-set links, fail closed for stale/malformed cards. No private copy_id/serial stamp, new checklist source, LAN or Android modifications. Run source+Chrome/Pages QC and leave protected LAN/Git rollback.
+
 ## LATEST PUBLIC v0.9.8 ? cross-set missing-card search (2026-11-07)
 Read docs/HANDOFF_20261107_PUBLIC_GLOBAL_MISSING_SEARCH_V098.md. Public want list searches vetted missing numbered cards across sourced sets, 40 at a time with exact #number, existing offers and modal. No new published cards/checklists, private owner writes, API, Android native code or private exporter. Verify remote main and release handoff.
 

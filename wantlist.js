@@ -19,6 +19,30 @@ const sourceValid=u=>{
  try{const parsed=new URL(u);return parsed.protocol==="https:";}catch{return false;}
 };
 const setUrl=s=>location.origin+location.pathname+"#want-set="+encodeURIComponent(key(s));
+// Printed checklist number is a set-scoped identifier, never a per-copy serial stamp.
+const cardUrl=(s,card)=>location.origin+location.pathname+
+ "#want-card="+encodeURIComponent(JSON.stringify([...s.key,String(card.number)]));
+function addCardShare(parent,s,card){
+ const button=text(parent,"button","Copy card link","want-card-share");
+ button.type="button";
+ button.setAttribute("aria-label","Copy shareable link to "+s.set+" card #"+card.number);
+ button.addEventListener("click",async()=>{
+  const url=cardUrl(s,card);
+  try{
+   if(!navigator.clipboard?.writeText)throw new Error("Clipboard not available");
+   await navigator.clipboard.writeText(url);
+   button.textContent="Card link copied";
+  }catch{
+   // Safe, visible manual alternative for blocked clipboard contexts.
+   const input=document.createElement("input");
+   input.type="text";input.readOnly=true;input.value=url;
+   input.className="want-share-fallback want-card-share-fallback";
+   input.setAttribute("aria-label","Select and copy this missing-card link");
+   button.replaceWith(input);
+   input.focus();input.select();
+  }
+ });
+}
 const issueRoot="https://github.com/jaytreeranch/JayTree-Card-Vault-Public/issues/new";
 function issueLink(s,card){
  const params=new URLSearchParams({
@@ -27,7 +51,7 @@ function issueLink(s,card){
   "set-name":title(s),
   "card-number":card.number,
   "card-name":card.player||"Numbered card #"+card.number,
-  "set-link":setUrl(s)
+  "set-link":cardUrl(s,card)
  });
  return issueRoot+"?"+params.toString();
 }
@@ -38,7 +62,7 @@ function emailLink(s,card){
   "I may have a card from your public want list:",
   "Set: "+title(s),
   "Card: #"+card.number+(card.player?" — "+card.player:""),
-  "Your want list: "+setUrl(s),
+  "Specific missing card: "+cardUrl(s,card),
   "",
   "Condition, variation/parallel, asking price and other details:",
   "",
@@ -105,6 +129,7 @@ function renderMissing(){
   issue.href=issueLink(s,c);issue.target="_blank";issue.rel="noopener noreferrer";
   const email=text(links,"a","Email owner","want-email-link");
   email.href=emailLink(s,c);
+  addCardShare(links,s,c);
   list.appendChild(row);
  }
  $("wantlist-missing-status").textContent=fmt(end)+" of "+fmt(items.length)+" matching missing cards shown";
@@ -157,13 +182,8 @@ function renderGlobalMissing(){
   const actions=text(row,"div","","want-global-actions");
   const open=text(actions,"button","View in set","want-global-open");
   open.type="button";
-  open.addEventListener("click",()=>{
-   openSet(s);
-   $("wantlist-missing-search").value="#"+c.number;
-   state.visible=PAGE;
-   $("wantlist-missing-list").replaceChildren();
-   renderMissing();
-  });
+  open.addEventListener("click",()=>openSet(s,c));
+  addCardShare(actions,s,c);
   const email=text(actions,"a","Email owner","want-email-link");email.href=emailLink(s,c);
   const issue=text(actions,"a","I have this card","want-offer-link");
   issue.href=issueLink(s,c);issue.target="_blank";issue.rel="noopener noreferrer";
@@ -172,12 +192,19 @@ function renderGlobalMissing(){
   " matching missing numbered cards shown. Identifications may be provisional.";
  $("want-global-more").hidden=visible>=matches.length;
 }
-function openSet(s){
+function openSet(s,selectedCard=null){
+ // Only a vetted missing number from this exact sourced set can be deep-linked.
+ if(selectedCard&&!s.missing_cards.some(c=>c.number===selectedCard.number))return;
  state.selected=s;state.visible=PAGE;
  $("wantlist-dialog-content").replaceChildren();
  const panel=$("wantlist-dialog-content");
  text(panel,"p",s.sport+" · "+s.year,"want-set-meta");
  text(panel,"h2",title(s),"want-dialog-title");
+ if(selectedCard){
+  const selected=text(panel,"p","Shared missing card: #"+selectedCard.number+
+   (selectedCard.player?" - "+selectedCard.player:" (name not yet verified)"),"want-shared-card");
+  selected.setAttribute("role","status");
+ }
  text(panel,"p",fmt(s.owned)+" of "+fmt(s.total)+" numbered spots owned · "+fmt(s.missing)+" missing · "+s.progress_percent+"% complete","want-dialog-totals");
  text(panel,"p",s.review_needed_records+" catalog entries still need review; owned numbered spots may include parallels or tentative identifications. Verify the exact card, condition, year and variation before offering.","want-dialog-note");
  text(panel,"p","Checklist: "+(s.source.description||"Published numbered reference"),"want-source-note");
@@ -203,18 +230,31 @@ function openSet(s){
    share.replaceWith(manual);manual.focus();manual.select();
   }
  });
- $("wantlist-missing-search").value="";
+ $("wantlist-missing-search").value=selectedCard?"#"+selectedCard.number:"";
  $("wantlist-missing-list").replaceChildren();
- $("wantlist-dialog").showModal();
+ if(!$("wantlist-dialog").open)$("wantlist-dialog").showModal();
  renderMissing();
 }
 function parseHash(){
- if(!location.hash.startsWith("#want-set="))return;
+ const hash=location.hash;
+ if(hash.startsWith("#want-card=")){
+  // Fail closed for malformed, stale or tampered links; never invent a missing card.
+  try{
+   if(hash.length>2500)return;
+   const parts=JSON.parse(decodeURIComponent(hash.slice("#want-card=".length)));
+   if(!Array.isArray(parts)||parts.length!==5||!parts.every(v=>typeof v==="string"))return;
+   const found=state.sets.find(s=>key(s)===JSON.stringify(parts.slice(0,4)));
+   const card=found?.missing_cards.find(c=>c.number===parts[4]);
+   if(found&&card)openSet(found,card);
+  }catch{/* Invalid or outdated card link: keep the gallery usable. */}
+  return;
+ }
+ if(!hash.startsWith("#want-set="))return;
  try{
-  const desired=JSON.stringify(JSON.parse(decodeURIComponent(location.hash.slice("#want-set=".length))));
+  const desired=JSON.stringify(JSON.parse(decodeURIComponent(hash.slice("#want-set=".length))));
   const found=state.sets.find(s=>key(s)===desired);
   if(found)openSet(found);
- }catch{/* malformed share link: leave gallery usable */}
+ }catch{/* malformed legacy set link: keep gallery usable */}
 }
 async function loadWantList(){
  try{

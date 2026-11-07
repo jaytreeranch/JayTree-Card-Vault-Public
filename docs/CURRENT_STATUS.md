@@ -1,3 +1,10 @@
+## Public v0.9.9 individual missing-card link development (2026-11-07)
+- Added read-only shareable link to one missing numbered card, not to an owner physical copy: #want-card=encoded JSON array of [sport,year,brand,set,printed_number]. Copy buttons in across-all-sets search and each set's missing rows; existing email/GitHub inquiries now prefill the specific card URL instead of set-only link.
+- Cold-loading a valid card URL opens the proper sourced set and prefilters the numbered list to its single exact printed number; stale/unknown/malformed numbers fail closed. Legacy #want-set links unaffected. Clipboard permission failure shows a selectable manual link, never a false copy success.
+- No published card or checklist data, names, identity approvals, estimates, photos, private copy IDs, LAN API, Android scanner, private publisher or DNS changed. All 1,006 catalog entries, 27 sourced lists, 21 unsourced groups retained.
+- Initial 34/34 Node tests and new real Chrome 320/390/1366 (cold link, tampering, legacy link, clipboard fallback) PASS; final full legacy QC and GitHub live deployment must be confirmed separately.
+- Isolated worktree feature/public-share-missing-card-v099-20261107 from public main d5e45a412cb7a75f56b7f82971b8e07c5a50d056. Latest handoff: docs/HANDOFF_20261107_PUBLIC_MISSING_CARD_LINKS_V099.md.
+
 ## Public v0.9.8 global missing search development checkpoint (2026-11-07)
 - Cross-set search of existing 6,513 missing numbered slots across 27 sourced lists. Published 2,168 slots without verified player name remain searchable by printed number/set; names are never guessed. Separate 21 unsourced groups unchanged.
 - Text search player, team, year, set or number, exact #number, 40-row pagination, owner inquiry options and View-in-set modal with exact numbered filter. Sport/verified names controls reused. No new HTTP requests/private API or database writes.
