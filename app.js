@@ -1,5 +1,7 @@
 "use strict";
-const state = { cards: [], results: [] };
+const PAGE_SIZE = 48;
+const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map() };
+const setKey = (c) => JSON.stringify([String(c.year||""),String(c.brand||""),String(c.set||"")]);
 const $ = (id) => document.getElementById(id);
 const fmtUSD = (v) => typeof v === "number" && Number.isFinite(v) ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(v) : "Not valued";
 const safeImage = (path) => typeof path === "string" && /^assets\/[a-f0-9]{24}\.jpg$/.test(path) ? path : "";
@@ -7,9 +9,13 @@ const value = (c) => typeof c.estimate_usd === "number" ? c.estimate_usd : -1;
 const text = (parent, name, content, className) => {const n=document.createElement(name);n.textContent=content || "";if(className)n.className=className;parent.appendChild(n);return n;};
 const cleanDate = (s) => /^\d{4}-\d{2}-\d{2}/.test(s||"") ? s.slice(0,10) : "—";
 function filtered() {
- const q = $("search").value.trim().toLocaleLowerCase(), sport=$("sport").value, review=$("review").value, offers=$("offers").checked;
+ const q = $("search").value.trim().toLocaleLowerCase(),
+       sport=$("sport").value, review=$("review").value, year=$("year").value,
+       ownedSet=$("set").value, offers=$("offers").checked;
  const selected=state.cards.filter(c =>
-   (!sport || c.sport===sport) && (!review || c.review_status===review) && (!offers || c.for_sale) &&
+   (!sport || c.sport===sport) && (!review || c.review_status===review) &&
+   (!year || String(c.year||"")===year) && (!ownedSet || setKey(c)===ownedSet) &&
+   (!offers || c.for_sale) &&
    [c.player,c.team,c.brand,c.set,c.year,c.number,c.parallel].join(" ").toLowerCase().includes(q));
  switch($("sort").value){
   case "value-high":selected.sort((a,b)=>value(b)-value(a));break;
@@ -19,18 +25,24 @@ function filtered() {
   default:selected.sort((a,b)=>(a.player||"").localeCompare(b.player||""));
  }
  state.results=selected;
+ state.rendered=0;
+ state.visibleCount=PAGE_SIZE;
  renderCards();
+ renderSetSummary();
 }
 function renderCards(){
- const grid=$("grid");grid.replaceChildren();
+ const grid=$("grid");
  const cards=state.results;
- $("result-count").textContent=cards.length+" of "+state.cards.length+" displayed";
+ if(state.rendered===0)grid.replaceChildren();
+ const showCount=Math.min(cards.length,state.visibleCount);
+ $("result-count").textContent=showCount+" of "+cards.length+" matching cards shown · "+state.cards.length+" in collection";
  $("empty").hidden=cards.length>0;
- for(const c of cards){
+ $("load-more").hidden=showCount>=cards.length;
+ for(const c of cards.slice(state.rendered,showCount)){
   const article=document.createElement("article");article.className="card";
   const btn=document.createElement("button");btn.type="button";btn.setAttribute("aria-label","View "+c.player+" card details");
   const pic=text(btn,"div","","card-pic");
-  if(safeImage(c.image)){const img=document.createElement("img");img.src=c.image;img.alt=c.player+" trading card front";img.loading="lazy";pic.appendChild(img);}
+  if(safeImage(c.image)){const img=document.createElement("img");img.src=c.image;img.alt=c.player+" trading card front";img.loading="lazy";img.decoding="async";pic.appendChild(img);}
   if(c.identity_unconfirmed)text(pic,"span","NEEDS REVIEW","card-tag review-tag");
   else if(c.for_sale)text(pic,"span","OPEN TO OFFERS","card-tag");
   const meta=text(btn,"div","","card-meta");
@@ -44,6 +56,7 @@ function renderCards(){
   text(foot,"small",hist.length>1?"↗ Price history":"Owner estimate",hist.length>1?"has-history":"");
   btn.addEventListener("click",()=>details(c));article.appendChild(btn);grid.appendChild(article);
  }
+ state.rendered=showCount;
 }
 function makeHistory(container, values){
  if(values.length<2){text(container,"p",values.length===1?"One recorded weekly owner estimate; history builds over time.":"No weekly history recorded yet.","chart-note");return;}
@@ -143,6 +156,25 @@ async function load(){
   $("stat-update").textContent=cleanDate(data.generated_at_utc);
   const sports=[...new Set(state.cards.map(c=>c.sport).filter(Boolean))].sort();
   for(const sport of sports){const option=document.createElement("option");option.value=sport;option.textContent=sport;$("sport").appendChild(option);}
+  const years=[...new Set(state.cards.map(c=>String(c.year||"")).filter(v=>/^\d{4}$/.test(v)))].sort().reverse();
+  for(const year of years){const opt=document.createElement("option");opt.value=year;opt.textContent=year;$("year").appendChild(opt);}
+  for(const card of state.cards){
+   if(!card.year&&!card.brand&&!card.set)continue;
+   const key=setKey(card), group=state.sets.get(key)||{year:card.year,brand:card.brand,set:card.set,total:0,verified:0,numbers:new Set()};
+   group.total++;
+   if(card.review_status==="Verified")group.verified++;
+   if(card.number)group.numbers.add(String(card.number));
+   state.sets.set(key,group);
+  }
+  const groups=[...state.sets.entries()].sort((a,b)=>
+   String(b[1].year||"").localeCompare(String(a[1].year||""))||
+   String(a[1].brand||"").localeCompare(String(b[1].brand||""))||
+   String(a[1].set||"").localeCompare(String(b[1].set||"")));
+  for(const [key,group] of groups){
+   const opt=document.createElement("option");opt.value=key;
+   opt.textContent=[group.year,group.brand,group.set].filter(Boolean).join(" · ")+" ("+group.total+" cards)";
+   $("set").appendChild(opt);
+  }
   filtered();
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
   if(deepLink){const selected=state.cards.find(c=>c.id===deepLink[1]);if(selected)details(selected);}
@@ -152,7 +184,16 @@ async function load(){
   $("empty").querySelector("p").textContent="Please check back soon.";
  }
 }
-["search","sport","review","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
+function renderSetSummary(){
+ const value=$("set").value;
+ if(!value){$("set-summary").textContent="Browse "+state.sets.size+" cataloged set groups. Owned-card counts do not imply manufacturer checklist completion.";return;}
+ const group=state.sets.get(value);
+ if(!group){$("set-summary").textContent="Set not found in approved public catalog.";return;}
+ const count=group.numbers.size;
+ $("set-summary").textContent="In this set: "+group.total+" cataloged cards · "+group.verified+" Verified · "+(group.total-group.verified)+" Needs review · "+count+" distinct numbered entries. Missing cards require a verified manufacturer checklist.";
+}
+["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
+$("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 $("close").addEventListener("click",()=>$("details").close());
 $("details").addEventListener("close",()=>{if(location.hash.startsWith("#card="))history.replaceState(null,"",location.pathname+location.search+"#collection");});
 $("details").addEventListener("click",(ev)=>{if(ev.target===$("details"))$("details").close();});

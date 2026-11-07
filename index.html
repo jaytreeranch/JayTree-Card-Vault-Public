@@ -45,10 +45,14 @@
       <label class="select"><span class="sr-only">Filter sport</span><select id="sport"><option value="">All sports</option></select></label>
       <label class="select"><span class="sr-only">Sort collection</span><select id="sort"><option value="name">Name A–Z</option><option value="value-high">Highest estimate</option><option value="value-low">Lowest estimate</option><option value="new">Newest cards</option><option value="old">Oldest cards</option></select></label>
       <label class="select"><span class="sr-only">Filter review status</span><select id="review"><option value="">All review statuses</option><option value="Verified">Verified</option><option value="Needs review">Needs review</option></select></label>
+      <label class="select"><span class="sr-only">Filter year</span><select id="year"><option value="">All years</option></select></label>
+      <label class="select"><span class="sr-only">Filter owned set</span><select id="set"><option value="">All cataloged sets</option></select></label>
       <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
     </div>
     <p class="review-explain">Cards labeled Needs review have provisional names, sets, and parallels. You can help identify errors; feedback is reviewed privately and cannot change collection records directly.</p>
-    <div class="grid" id="grid" aria-live="polite"></div>
+    <p id="set-summary" class="set-summary" aria-live="polite">Choose a cataloged set to see owned-card counts. Missing-card and completion totals require a verified manufacturer checklist.</p>
+    <div class="grid" id="grid"></div>
+    <div class="load-more-wrap"><button type="button" id="load-more" hidden>Show more cards</button></div>
     <div class="empty" id="empty" hidden><h3>No cards to show yet.</h3><p>Try another search or check back as more cards are approved for display.</p></div>
     <p class="disclaimer">*Prices are collection-owner estimates, not live quotes, completed sales or guaranteed sale prices. Published cards are individually approved; the private Vault is never accessible from this website.</p>
   </section>
