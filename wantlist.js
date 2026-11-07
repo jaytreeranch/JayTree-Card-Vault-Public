@@ -11,7 +11,7 @@ const text=(parent,tag,value,className)=>{
  parent.appendChild(el);return el;
 };
 const PAGE=40;
-const state={sets:[],selected:null,visible:PAGE,search:""};
+const state={sets:[],selected:null,visible:PAGE,search:"",globalVisible:PAGE,globalMatches:[]};
 const key=s=>JSON.stringify(s.key);
 const title=s=>[s.year,s.brand,s.set].filter(Boolean).join(" · ");
 const fmt=n=>Number(n||0).toLocaleString("en-US");
@@ -85,8 +85,10 @@ function renderMissing(){
  const s=state.selected;if(!s)return;
  const list=$("wantlist-missing-list");
  const q=$("wantlist-missing-search").value.trim().toLocaleLowerCase();
- const items=s.missing_cards.filter(c=>
-  !q||c.number.includes(q)||(c.player||"").toLocaleLowerCase().includes(q)||
+ const exact=q.startsWith("#")?q.slice(1):null;
+ const items=s.missing_cards.filter(c=>exact!==null?
+  c.number.toLocaleLowerCase()===exact:
+  !q||c.number.toLocaleLowerCase().includes(q)||(c.player||"").toLocaleLowerCase().includes(q)||
   (c.team||"").toLocaleLowerCase().includes(q));
  if(state.visible===PAGE)list.replaceChildren();
  const begin=list.children.length;
@@ -107,6 +109,68 @@ function renderMissing(){
  }
  $("wantlist-missing-status").textContent=fmt(end)+" of "+fmt(items.length)+" matching missing cards shown";
  $("wantlist-more").hidden=end>=items.length;
+}
+// Search is client-side over the already vetted 6,513 missing numbered spots.
+// Only render one page at a time: a broad year/set query must not flood the DOM.
+function searchAllMissing(){
+ const query=$("want-global-search").value.trim().toLocaleLowerCase();
+ const panel=$("want-global-results");
+ const enough=query.length>=2&&query!=="#";
+ if(!enough||!state.sets.length){
+  panel.hidden=true;
+  state.globalMatches=[];
+  return;
+ }
+ const words=query.split(/\s+/).filter(Boolean);
+ const sports=$("wantlist-sport").value;
+ const named=$("wantlist-named").value;
+ const matches=[];
+ for(const s of state.sets){
+  if(sports&&s.sport!==sports)continue;
+  if(named&&s.reference_player_names_complete!==true)continue;
+  for(const c of s.missing_cards){
+   const number=String(c.number).toLocaleLowerCase();
+   const content=[c.player||"",c.team||"",number,s.sport,s.year,s.brand,s.set]
+    .join(" ").toLocaleLowerCase();
+   const isMatch=words.every(w=>w.startsWith("#")?number===w.slice(1):content.includes(w));
+   if(isMatch)matches.push({set:s,card:c});
+  }
+ }
+ state.globalMatches=matches;
+ state.globalVisible=PAGE;
+ renderGlobalMissing();
+}
+function renderGlobalMissing(){
+ const matches=state.globalMatches;
+ const panel=$("want-global-results");
+ panel.hidden=false;
+ const list=$("want-global-list");
+ list.replaceChildren();
+ const visible=Math.min(matches.length,state.globalVisible);
+ for(const {set:s,card:c} of matches.slice(0,visible)){
+  const row=text(list,"li","","want-global-row");
+  const desc=text(row,"div","","want-global-card");
+  text(desc,"strong","#"+c.number+(c.player?" - "+c.player:""));
+  text(desc,"small",s.year+" / "+s.brand+" / "+s.set);
+  if(c.team)text(desc,"small",c.team);
+  else if(!c.player)text(desc,"small","Player not independently named; confirm printed number and set");
+  const actions=text(row,"div","","want-global-actions");
+  const open=text(actions,"button","View in set","want-global-open");
+  open.type="button";
+  open.addEventListener("click",()=>{
+   openSet(s);
+   $("wantlist-missing-search").value="#"+c.number;
+   state.visible=PAGE;
+   $("wantlist-missing-list").replaceChildren();
+   renderMissing();
+  });
+  const email=text(actions,"a","Email owner","want-email-link");email.href=emailLink(s,c);
+  const issue=text(actions,"a","I have this card","want-offer-link");
+  issue.href=issueLink(s,c);issue.target="_blank";issue.rel="noopener noreferrer";
+ }
+ $("want-global-count").textContent=fmt(visible)+" of "+fmt(matches.length)+
+  " matching missing numbered cards shown. Identifications may be provisional.";
+ $("want-global-more").hidden=visible>=matches.length;
 }
 function openSet(s){
  state.selected=s;state.visible=PAGE;
@@ -189,16 +253,24 @@ async function loadWantList(){
   const sports=[...new Set(state.sets.map(s=>s.sport))].sort();
   for(const sport of sports){const opt=document.createElement("option");opt.value=sport;opt.textContent=sport;$("wantlist-sport").appendChild(opt);}
   renderTiles();
+  searchAllMissing();
   parseHash();
  }catch{
   $("wantlist-intro").textContent="Verified set checklists are temporarily unavailable. You can still browse every publicly listed card in the collection.";
   $("wantlist-count").textContent="Checklists unavailable";
+  $("want-global-help").textContent="Missing-card search is unavailable while the sourced checklist snapshot cannot be verified.";
+  $("want-global-search").disabled=true;
  }
 }
 $("wantlist-search").addEventListener("input",renderTiles);
-$("wantlist-sport").addEventListener("change",renderTiles);
+$("wantlist-sport").addEventListener("change",()=>{renderTiles();searchAllMissing();});
 $("wantlist-sort").addEventListener("change",renderTiles);
-$("wantlist-named").addEventListener("change",renderTiles);
+$("wantlist-named").addEventListener("change",()=>{renderTiles();searchAllMissing();});
+$("want-global-search").addEventListener("input",searchAllMissing);
+$("want-global-more").addEventListener("click",()=>{
+ state.globalVisible+=PAGE;
+ renderGlobalMissing();
+});
 $("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$("wantlist-missing-list").replaceChildren();renderMissing();});
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());

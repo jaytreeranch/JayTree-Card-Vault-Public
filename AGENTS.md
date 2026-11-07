@@ -1,3 +1,6 @@
+## LATEST PUBLIC v0.9.8 ? cross-set missing-card search (2026-11-07)
+Read docs/HANDOFF_20261107_PUBLIC_GLOBAL_MISSING_SEARCH_V098.md. Public want list searches vetted missing numbered cards across sourced sets, 40 at a time with exact #number, existing offers and modal. No new published cards/checklists, private owner writes, API, Android native code or private exporter. Verify remote main and release handoff.
+
 ## LATEST public v0.9.7 ? checklist coverage 2026-11-07
 Read docs/HANDOFF_20261107_PUBLIC_CHECKLIST_COVERAGE_V097.md. The public want list has a separate read-only source-needed area (21 unsourced groups); approved sourced totals remain unchanged (27). Reuse already loaded catalog/checklist events, never infer a denominator or modify LAN. Visitor issue/email suggestions are owner-reviewed; see LAN coordination Requests for research handoff. No new agent or private data writing.
 

@@ -68,3 +68,22 @@
 .coverage-actions a {display:inline-flex;align-items:center;min-height:40px;color:#f0c584;font-size:13px;text-decoration:underline;text-underline-offset:3px;font-weight:650;}
 .coverage-actions a:focus-visible {outline:3px solid #e9bb71;outline-offset:3px;}
 @media(max-width:490px) {.coverage-pending{padding:0 13px 15px}.coverage-pending summary{align-items:flex-start;flex-direction:column;gap:3px}}
+
+/* v0.9.8: global cross-set missing-card search, bounded 40-row DOM pages. */
+.want-global { border:1px solid #426276;border-radius:12px;background:#112d40;padding:clamp(16px,3vw,24px);margin:20px 0 24px; }
+.want-global h3 {color:#f3e8d6;font:600 21px/1.3 Georgia,serif;margin:0 0 8px;}
+.want-global p {color:#b6cad8;font-size:13px;line-height:1.6;max-width:920px;margin:8px 0 13px;}
+.want-global label {display:block;color:#e7f2f7;font-size:13px;font-weight:700;margin:10px 0 6px;}
+#want-global-search {display:block;width:100%;max-width:720px;background:#0c2434;border:1px solid #54758a;color:#fff;border-radius:7px;padding:12px 14px;font:inherit;min-width:0;}
+#want-global-search:focus-visible,.want-global-open:focus-visible,.want-global-more:focus-visible {outline:3px solid #f0c584;outline-offset:2px;}
+#want-global-results[hidden],#want-global-more[hidden] {display:none;}
+.want-global-list {list-style:none;display:flex;flex-direction:column;gap:9px;margin:10px 0 14px;padding:0;}
+.want-global-row {display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;background:#0b2536;border:1px solid #355369;border-radius:9px;padding:13px;}
+.want-global-card {display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 240px;}
+.want-global-card strong {color:#f1f6f8;font-size:14px;overflow-wrap:anywhere;}
+.want-global-card small {color:#b6cedb;font-size:12px;line-height:1.5;overflow-wrap:anywhere;}
+.want-global-actions {display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+.want-global-actions a {display:inline-flex;align-items:center;min-height:38px;}
+.want-global-open,.want-global-more {font-size:13px;font-weight:700;line-height:1.4;cursor:pointer;border:1px solid #d9aa65;border-radius:7px;background:#f1c584;color:#182534;padding:9px 13px;min-height:39px;}
+.want-global-more {display:block;margin:10px auto 0;}
+@media(max-width:490px) {.want-global-actions{gap:8px}.want-global-actions>*{flex:0 0 auto;}.want-global{padding:15px;}}

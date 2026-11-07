@@ -93,6 +93,18 @@
     <label><span class="sr-only">Sort checklist sets</span><select id="wantlist-sort"><option value="closest">Fewest missing first</option><option value="most">Most missing first</option><option value="year">Newest sets first</option><option value="az">Set name A to Z</option></select></label>
     <label><span class="sr-only">Filter checklist coverage</span><select id="wantlist-named"><option value="">All sourced checklists</option><option value="named">Verified player names only</option></select></label>
   </div>
+  <section class="want-global" aria-labelledby="want-global-title">
+    <h3 id="want-global-title">Find a missing card across every sourced set</h3>
+    <p>Search player, team, printed card number or set. Use <code>#6</code> to find the exact printed number 6. Results are from the published checklist snapshot, not a live inventory lookup.</p>
+    <label for="want-global-search">Search all missing numbered cards</label>
+    <input id="want-global-search" type="search" autocomplete="off" placeholder="Try Brock Bowers, Dallas Cowboys, #6, or 2025 Prizm" aria-describedby="want-global-help">
+    <p id="want-global-help" class="want-global-help">Type at least two characters, or # followed by a number. The sport and verified-name filters above also apply.</p>
+    <div id="want-global-results" hidden>
+      <p id="want-global-count" class="want-global-count" role="status" aria-live="polite"></p>
+      <ul id="want-global-list" class="want-global-list"></ul>
+      <button type="button" id="want-global-more" class="want-global-more" hidden>Show 40 more missing cards</button>
+    </div>
+  </section>
   <p class="wantlist-explain">Have one of these missing cards? Open a set and choose <strong>I have this card</strong> to send an offer. GitHub reports require an account, or you can contact me by email. All offers are inquiries only, not purchases. <strong>Owned counts represent distinct issued card numbers, never duplicate copies.</strong> Different parallels sharing a checklist number count as one spot.</p>
   <div id="wantlist-sets" class="wantlist-sets" aria-live="polite"></div>
   <p id="wantlist-empty" hidden>No matching sets. Try another search.</p>

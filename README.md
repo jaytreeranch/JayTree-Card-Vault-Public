@@ -52,3 +52,8 @@ On narrow phones (320px), the site header navigation now uses two rows to preven
 The missing-card explorer separates 27 approved numbered checklists from 21 published set groups without a complete sourced denominator. A collapsed "Sets awaiting verified checklists" section displays only the number of distinct numbered spots recorded, how many catalog entries exist and review caveats; the total is explicitly UNKNOWN. It never invents missing-card numbers, an inaccurate percentage or extra spots from duplicate copies.
 
 Visitors may suggest independently published checklist URLs by sending an email draft or by opening a public GitHub issue form; no proposal changes the authoritative private LAN inventory. The public display reuses the current published catalog and vetted checklist events without additional HTTP requests. For continuity see docs/HANDOFF_20261107_PUBLIC_CHECKLIST_COVERAGE_V097.md.
+
+
+## Search missing cards across sourced sets (v0.9.8)
+
+The public want-list section now searches all 27 vetted numbered-set lists by player, team, printed card number or set title. Prefix a printed number with # to match that exact number rather than substring matches. Only 40 matches render initially and visitors can load more. Each result can open its set's numbered-card dialog or open an existing owner-directed email/GitHub inquiry. It cannot change card inventory, approves no identities, and does not load extra public data.
