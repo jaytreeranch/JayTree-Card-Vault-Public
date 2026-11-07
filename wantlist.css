@@ -48,3 +48,23 @@
 .want-share-link { cursor:pointer;font:inherit;border:1px solid #b88d55;border-radius:6px;background:#17384d;padding:9px 12px; }
 .want-share-link:focus-visible,.want-share-fallback:focus-visible { outline:2px solid #f0c584;outline-offset:3px; }
 .want-share-fallback { display:block;width:min(100%,560px);padding:10px;margin-bottom:12px;background:#193c53;color:#fff;border:1px solid #b88d55;border-radius:6px;font:inherit; }
+
+/* Public unsourced checklist browser, always distinct from known missing cards. */
+.coverage-pending {margin-top:30px;border:1px solid #365668;background:#0c2635;border-radius:12px;padding:0 20px 20px;}
+.coverage-pending summary {cursor:pointer;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;min-height:55px;padding:12px 3px;color:#e9f2f7;}
+.coverage-pending summary:focus-visible {outline:3px solid #e9bb71;outline-offset:4px;}
+.coverage-pending summary strong {font-size:16px;}
+#coverage-summary-count {font-size:13px;color:#e5be7e;}
+.coverage-intro,.coverage-disclaimer {color:#bdd0dc;font-size:13px;line-height:1.6;margin:8px 3px 17px;max-width:880px;}
+.coverage-search-label {color:#d7e8ef;font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:7px;max-width:440px;}
+#coverage-search {background:#102b3c;border:1px solid #426476;border-radius:7px;color:#fff;padding:11px 13px;font:inherit;min-width:0;width:100%;}
+.coverage-status {color:#afc9d8;font-size:12px;line-height:1.5;}
+.coverage-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px;}
+.coverage-card {background:#112d40;border:1px solid #3a5a6f;border-radius:9px;padding:17px;display:flex;flex-direction:column;gap:9px;min-width:0;}
+.coverage-card h3 {font:500 17px/1.3 Georgia,serif;margin:0;overflow-wrap:anywhere;}
+.coverage-card p {margin:0;color:#bacddb;font-size:12px;line-height:1.5;}
+.coverage-card .coverage-total-unknown {color:#f0c584;font-weight:700;font-size:14px;}
+.coverage-actions {display:flex;gap:9px;flex-wrap:wrap;margin-top:auto;}
+.coverage-actions a {display:inline-flex;align-items:center;min-height:40px;color:#f0c584;font-size:13px;text-decoration:underline;text-underline-offset:3px;font-weight:650;}
+.coverage-actions a:focus-visible {outline:3px solid #e9bb71;outline-offset:3px;}
+@media(max-width:490px) {.coverage-pending{padding:0 13px 15px}.coverage-pending summary{align-items:flex-start;flex-direction:column;gap:3px}}

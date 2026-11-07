@@ -45,3 +45,10 @@ The Collection native set selector remains keyboard accessible and displays owne
 ## Responsive mobile header and missing-card offers (v0.9.6)
 
 On narrow phones (320px), the site header navigation now uses two rows to prevent horizontal viewport expansion and invisible navigation links. Other phone/tablet/desktop layouts remain usable. Navigation links have larger hit areas on phones; missing-card offer/email links have at least 34px vertical hit areas. No private LAN or public catalog data changes. Local Chrome browser QC: python tests/public_mobile_narrow_browser_smoke.py.
+
+
+## Checklist source coverage for all cataloged sets (v0.9.7)
+
+The missing-card explorer separates 27 approved numbered checklists from 21 published set groups without a complete sourced denominator. A collapsed "Sets awaiting verified checklists" section displays only the number of distinct numbered spots recorded, how many catalog entries exist and review caveats; the total is explicitly UNKNOWN. It never invents missing-card numbers, an inaccurate percentage or extra spots from duplicate copies.
+
+Visitors may suggest independently published checklist URLs by sending an email draft or by opening a public GitHub issue form; no proposal changes the authoritative private LAN inventory. The public display reuses the current published catalog and vetted checklist events without additional HTTP requests. For continuity see docs/HANDOFF_20261107_PUBLIC_CHECKLIST_COVERAGE_V097.md.

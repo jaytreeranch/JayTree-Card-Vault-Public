@@ -1,3 +1,12 @@
+## Public v0.9.7 checklist coverage candidate (2026-11-07)
+- Published snapshot: 1,006 card entries, 48 exact (sport/year/brand/set) groups, 27 sourced complete numbered checklists and 21 awaiting reliable denominators.
+- New collapsed visitor browser displays 21 unsourced groups: unique printed numbers recorded, total UNKNOWN, entry count, provisional-review caveats and suggestion links. No guessing missing counts or parallel/duplicate inflation.
+- New public GitHub issue template checklist-source.yml and email draft allow voluntary reference suggestions only; private LAN reviews sources and owns all approved export changes.
+- New script only reads existing public events; no extra public fetch, private API, personal data, Android build or LAN database mutation. Published catalog.json, set-checklists.json, photos and DNS unchanged.
+- Initial QC 26/26 Node contract tests and Chrome 320/390/1366 local browser scenarios PASS. Remote deployment not yet verified; physical Android/cellular not performed.
+- Separate LAN integration candidate request: Coordination/Requests/20261107_PUBLIC_to_LAN_checklist_sources_batch1.md.
+- Handoff docs/HANDOFF_20261107_PUBLIC_CHECKLIST_COVERAGE_V097.md; source branch feature/public-unsourced-checklist-coverage-20261107 parent 4c931e656bbb1b39b1ba4865b6ec9418a40e7a53.
+
 ## Public v0.9.6 ? mobile accessibility QC (2026-11-07)
 - Public site audit identified 320px physical viewport rendering as 337px CSS layout viewport due to header NAV extension to x=337. Header logo ended at x=152 and the rightmost nav link ended at 337.
 - Minimal mobile-only fix: under 350px wrap site header into two rows; nav links stay visible at all inspected sizes. Up to 490px links use >=32px vertical targets; mobile missing-card offer/email actions >=34px.

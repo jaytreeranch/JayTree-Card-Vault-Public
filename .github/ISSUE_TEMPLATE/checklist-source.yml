@@ -1,0 +1,39 @@
+name: "Suggest a set checklist source"
+description: "Share a published checklist for a set that has no verified numbered total."
+title: "[Checklist source]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping find missing checklists. GitHub issues, usernames
+        and anything you submit are PUBLIC. Please do not post personal information.
+        A source suggestion does NOT automatically change inventory or totals.
+  - type: input
+    id: set-name
+    attributes:
+      label: "Full sport, year, brand and set name"
+      placeholder: "2024 / Football / Panini / Draft Class Contenders"
+    validations:
+      required: true
+  - type: input
+    id: checklist-url
+    attributes:
+      label: "Published checklist source URL"
+      description: "Manufacturer or established checklist reference preferred."
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: scope-notes
+    attributes:
+      label: "Number range and special cases"
+      description: "Include parallel/insert scope, unissued numbers, card sizes, and conflicting sources."
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-privacy
+    attributes:
+      label: "Privacy and verification"
+      options:
+        - label: "I understand this is public and only the owner can approve changes."
+          required: true

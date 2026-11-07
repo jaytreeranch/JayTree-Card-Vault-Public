@@ -262,6 +262,14 @@ async function load(){
    if(String(card.number||"").trim())group.numbers.add(String(card.number).trim());
    state.sets.set(key,group);
   }
+  // Share published, read-only set group summaries with the public coverage widget.
+  document.dispatchEvent(new CustomEvent("jaytree:public-set-groups-ready",{
+   detail:[...state.sets.entries()].map(([id,g])=>({
+    key:JSON.parse(id),sport:String(g.sport||""),year:String(g.year||""),
+    brand:String(g.brand||""),set:String(g.set||""),
+    distinct:g.numbers.size,entries:g.total,needsReview:g.total-g.verified
+   }))
+  }));
   refreshSetOptionLabels();
   refreshFeatureCounts();
   filtered();

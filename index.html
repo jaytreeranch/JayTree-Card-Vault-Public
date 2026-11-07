@@ -13,6 +13,7 @@
   <script src="card-features.js" defer></script>
   <script src="app.js" defer></script>
   <script src="wantlist.js" defer></script>
+  <script src="checklist-coverage.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -95,6 +96,14 @@
   <p class="wantlist-explain">Have one of these missing cards? Open a set and choose <strong>I have this card</strong> to send an offer. GitHub reports require an account, or you can contact me by email. All offers are inquiries only, not purchases. <strong>Owned counts represent distinct issued card numbers, never duplicate copies.</strong> Different parallels sharing a checklist number count as one spot.</p>
   <div id="wantlist-sets" class="wantlist-sets" aria-live="polite"></div>
   <p id="wantlist-empty" hidden>No matching sets. Try another search.</p>
+  <details id="coverage-pending" class="coverage-pending">
+    <summary><strong id="coverage-title">Sets awaiting verified checklists</strong><span id="coverage-summary-count">Checking published set coverage...</span></summary>
+    <p class="coverage-intro">These groups appear in the published collection but do not have an approved complete numbered checklist yet. Counts show distinct recorded card numbers only; <strong>total set size and missing cards are unknown.</strong> Set names and variants may still need review.</p>
+    <label class="coverage-search-label">Find an awaiting set <input id="coverage-search" type="search" autocomplete="off" placeholder="Search sport, year, brand or set"></label>
+    <p class="coverage-status" id="coverage-status" aria-live="polite">Waiting for catalog and checklist data.</p>
+    <div id="coverage-grid" class="coverage-grid"></div>
+    <p class="coverage-disclaimer">Have a published checklist? Send a source link for owner review. A suggestion does not update the collection. GitHub issues and usernames are public; email drafts are sent only when you send them.</p>
+  </details>
   <p class="wantlist-disclaimer">Missing counts are available only for sets backed by a sourced, complete numbered checklist. These totals exclude other parallels, inserts, unissued numbers and variants outside the named subset. Under-review card identifications remain provisional. Source links accompany each checklist.</p>
 </section>
 <dialog id="wantlist-dialog" aria-label="Missing cards in set">
