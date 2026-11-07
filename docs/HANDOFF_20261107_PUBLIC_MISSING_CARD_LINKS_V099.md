@@ -27,3 +27,12 @@ Changes restricted to public wantlist.js, wantlist.css, tests and documentation.
 1. Complete full regression and live Pages/browser acceptance and publish accurate release/handoff SHA/rollback receipt under LAN PublicShowcase and manager Workstreams/PUBLIC.
 2. LAN workstream independently approves additional complete numbered checklists and owner data only through its own one-way exporter; new public v0.9.9 links must survive future approved source-data refreshes, and unissued/stale links must fail closed.
 3. Test the public want-list/share on real Android/cellular and assistive technologies; address actual findings without touching Android scanner code.
+
+## Verified source release ? production acceptance
+- Public source commit 77d4cf8647344600ec39103021b5bf936ab8feb4 pushed to public main and isolated feature branch; GitHub remote SHAs both independently verified. GitHub Pages SOURCE workflow completed SUCCESS.
+- Exact custom HTTPS byte parity against Git (8/8): index.html, wantlist.js, wantlist.css, app.js, checklist-coverage.js, catalog.json, set-checklists.json and CNAME. No new data export or code from other workstreams.
+- Real headless Chrome against LIVE https://cards.jaytreebooks.com/#wantlist at widths 320, 390, 1366: 2 Brock Bowers missing rows, link copy and prefilled inquiry, fresh-document navigation into exactly one missing #6/11, rejected tampered/nonexistent/malformed URL, older #want-set link, blocked Clipboard fallback with selected manual input, existing search/DOM, no overflow: PASS.
+- All 34/34 Node tests and previous public browser feature/set-finder/set-completion/coverage/global search/mobile suites PASS locally. Private routes /api/cards and /owner/private still HTTP 404.
+- Source release rollback protected in \JT-DESKTOP\JayTreeFarm\CardVault\PublicShowcase\receipts\PUBLIC_V099_CARD_DEEPLINKS_20261107; archive contains original/candidate source, exact SHA-256 manifests and release stage log.
+- Actual physical Android 17 device/cellular and screen-reader assessment remain UNTESTED. Authenticated third-party GitHub issue submission also remains untested; links were inspected, not externally submitted.
+- This documentation follow-up is not a second application change. It may advance public Git SHA after the released runtime, so check GitHub Pages success for the final documentation checkpoint independently.
