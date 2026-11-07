@@ -1,6 +1,6 @@
 # JayTree Card Vault - Public Collection
 
-Owner-authorized read-only gallery: 1,006 public front-card photographs, 503 Verified entries and 503 Needs review. The latter identifications are provisional and do not display valuations or sale offers.
+Owner-authorized read-only gallery: 1006 public front-card photographs, 503 Verified entries and 503 Needs review. The latter identifications are provisional and do not display valuations or sale offers.
 
 ## GitHub Pages
 
