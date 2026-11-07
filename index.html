@@ -168,7 +168,7 @@
           <input id="offer-asking-price" type="text" maxlength="64" placeholder="e.g. $5 plus shipping" />
         </label>
         <label>Public card photo link (optional)
-          <input id="offer-photo-url" type="url" inputmode="url" maxlength="400" placeholder="https://example.com/card-photo" aria-describedby="offer-photo-help" />
+          <input id="offer-photo-url" type="url" inputmode="url" maxlength="400" placeholder="https://example.com/card-photo" aria-invalid="false" aria-describedby="offer-photo-help offer-error" />
         </label>
       </div>
       <p id="offer-photo-help" class="offer-help">Use a publicly shareable HTTPS link only. Photos are not uploaded here. Do not link to private folders or personal information.</p>
@@ -179,8 +179,14 @@
     </form>
     <p id="offer-error" class="offer-error" aria-live="polite"></p>
     <div class="offer-actions">
-      <a id="offer-email-out" href="#" class="offer-email-out">Create email draft</a>
-      <a id="offer-github-out" class="offer-github-out" role="link" target="_blank" rel="noopener noreferrer" aria-disabled="true">Continue on GitHub</a>
+      <div class="offer-action-item">
+        <a id="offer-email-out" href="#" class="offer-email-out" tabindex="0" aria-disabled="false" aria-describedby="offer-email-help">Create email draft</a>
+        <p id="offer-email-help" class="offer-action-help">Opens your email app for review; does not send.</p>
+      </div>
+      <div class="offer-action-item">
+        <a id="offer-github-out" class="offer-github-out" role="link" tabindex="0" target="_blank" rel="noopener noreferrer" aria-disabled="true" aria-describedby="offer-github-help">Continue on GitHub</a>
+        <p id="offer-github-help" class="offer-action-help">Check the public-issue notice above to enable GitHub.</p>
+      </div>
     </div>
     <p class="offer-help">Neither option sends or submits an offer automatically. Your email application or GitHub will open for review. GitHub prefilled fields should be checked before submission.</p>
   </div>

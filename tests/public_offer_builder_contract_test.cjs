@@ -27,7 +27,8 @@ test("form consent and photo validation never create false send or allow executa
  assert.ok(js.includes('host==="localhost"'));
  assert.ok(js.includes('host.endsWith(".local")'));
  assert.ok(js.includes('host.includes(":")'));
- assert.ok(js.includes('$("offer-public-ok").checked&&issueUrl.length<=3500'));
+ assert.ok(js.includes('const consent=$("offer-public-ok").checked;'));
+ assert.ok(js.includes('if(consent&&issueUrl.length<=3500)'));
  assert.ok(js.includes('github.setAttribute("aria-disabled","true")'));
  assert.ok(js.includes('email.removeAttribute("href")'));
  assert.ok(js.includes('github.removeAttribute("href")'));

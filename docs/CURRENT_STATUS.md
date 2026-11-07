@@ -1,3 +1,10 @@
+## Public v0.9.12 inquiry accessibility ? source candidate (2026-11-07)
+- New keyboard-focusable disabled email/GitHub links, descriptive status text for both actions, and dynamic disabled vs enabled reasons. Invalid or private-network photo links now set aria-invalid=true, update live error and unavailable-action guidance. Reset clears error state; no upload, autosend, auth, buyer data, valuation or public API changes.
+- Chrome Accessibility.getFullAXTree verified named, described email and GitHub actions; real keyboard Tab navigation reaches both disabled actions. Chrome 320/390/1366 local checks PASS; these are programmatic accessibility checks, NOT a real screen-reader or physical Android/cellular test.
+- Source 46/46 Node PASS (three new accessibility/security contracts, one prior contract adapted to equivalent consent guard). All former sourced-set completion, missing-card link, inquiry and mobile functionality retained. Full regression, LAN backup, live Pages/remote SHA pending at time of initial documentation.
+- Approved published 1,006 catalog entries, 27 sourced and 21 unsourced groups, photos, CNAME, DNS, private LAN and Android unchanged.
+- Branch feature/public-offer-accessibility-v0912-20261107 from 67f94557a4f4c4e3aa07af184ca40c2739190686; handoff docs/HANDOFF_20261107_PUBLIC_INQUIRY_ACCESSIBILITY_V0912.md.
+
 ## Public v0.9.11 inquiry builder PRE-RELEASE development checkpoint (2026-11-07)
 - New native on-page modal for I have this card in global search and per-set missing rows. Optional variant, price, public HTTPS photo link, notes plus condition. Owner-context exact set/card number. Prepares email draft or GitHub issue form with matching public field IDs, but never sends automatically.
 - GitHub issue requires explicit public-warning consent before outgoing link activates. Optional photo URL must be HTTPS, must not embed credentials and must not use private IP/localhost/.local/.lan/.internal. Fields reset on close, no storage/API.

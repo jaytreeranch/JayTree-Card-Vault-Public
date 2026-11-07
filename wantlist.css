@@ -144,3 +144,11 @@
 .offer-error{color:#ffd8a0;font-size:13px;line-height:1.5;min-height:1em;}
 #offer-dialog :is(button,a,input,textarea,select):focus-visible{outline:3px solid #f0c584;outline-offset:3px;}
 @media(max-width:540px){.offer-fields{grid-template-columns:minmax(0,1fr)}.offer-actions a{width:100%;}.offer-body{padding:17px;}}
+
+/* v0.9.12 ? explicit keyboard focus, action status and accessible invalid photo state. */
+.offer-action-item{flex:1 1 210px;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.offer-action-item>a{width:100%;}
+.offer-action-help{color:#b9d2e0;font-size:12px;line-height:1.55;margin:1px 0 6px;}
+#offer-photo-url[aria-invalid="true"]{border-color:#ffd8a0;box-shadow:0 0 0 1px #ffd8a0;}
+.offer-actions a[aria-disabled="true"]:focus-visible{outline:3px solid #f0c584;outline-offset:3px;}
+@media(max-width:540px){.offer-action-item{flex-basis:100%;}}

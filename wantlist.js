@@ -107,13 +107,19 @@ function refreshOfferLinks(){
  const photoInput=$("offer-photo-url");
  const photoOK=validateOfferPhoto(v.photo);
  photoInput.setCustomValidity(photoOK?"":"Enter a public HTTPS photo link, without a username or password.");
+ photoInput.setAttribute("aria-invalid",String(!photoOK));
  const valid=photoOK&&$("offer-form").checkValidity();
  const email=$("offer-email-out"),github=$("offer-github-out");
  email.removeAttribute("href");
+ email.setAttribute("aria-disabled","true");
  github.removeAttribute("href");
  github.setAttribute("aria-disabled","true");
+ $("offer-email-help").textContent="Opens your email app for review; does not send.";
+ $("offer-github-help").textContent="Check the public-issue notice above to enable GitHub.";
  if(!valid){
-  $("offer-error").textContent="Enter a valid public HTTPS photo URL, or leave that field empty.";
+  $("offer-error").textContent="Enter a public HTTPS photo URL without private network addresses, or leave it empty.";
+  $("offer-email-help").textContent="Unavailable while the photo link is invalid.";
+  $("offer-github-help").textContent="Unavailable while the photo link is invalid.";
   return;
  }
  const emailBody=[
@@ -138,14 +144,23 @@ function refreshOfferLinks(){
  params.searchParams.set("photo-url",v.photo);
  params.searchParams.set("offer-details",v.details);
  const issueUrl=params.toString();
- if(emailUrl.length<=4000)email.href=emailUrl;
- if($("offer-public-ok").checked&&issueUrl.length<=3500){
+ if(emailUrl.length<=4000){
+  email.href=emailUrl;
+  email.setAttribute("aria-disabled","false");
+ }else{
+  $("offer-email-help").textContent="Shorten the details to create an email draft.";
+ }
+ const consent=$("offer-public-ok").checked;
+ if(consent&&issueUrl.length<=3500){
   github.href=issueUrl;
   github.setAttribute("aria-disabled","false");
+  $("offer-github-help").textContent="Opens a public issue draft; review it before submitting.";
+ }else if(issueUrl.length>3500){
+  $("offer-github-help").textContent="Shorten the details to enable the GitHub issue.";
  }
  $("offer-error").textContent=issueUrl.length>3500?
-  "Shorten the details for GitHub, or choose email.":
-  emailUrl.length>4000?"Shorten the details to create an email draft.":"";
+  "The GitHub link is too long. Shorten the details, or use email.":
+  emailUrl.length>4000?"The email draft is too long. Shorten the details.":"";
 }
 function openOffer(s,card){
  if(!s||!card||!s.missing_cards.some(c=>c.number===card.number))return;
@@ -470,9 +485,14 @@ $("offer-dialog").addEventListener("close",()=>{
  currentOffer=null;
  $("offer-form").reset();
  $("offer-error").textContent="";
+ $("offer-photo-url").setCustomValidity("");
+ $("offer-photo-url").setAttribute("aria-invalid","false");
  $("offer-email-out").removeAttribute("href");
+ $("offer-email-out").setAttribute("aria-disabled","true");
  $("offer-github-out").removeAttribute("href");
  $("offer-github-out").setAttribute("aria-disabled","true");
+ $("offer-email-help").textContent="Opens your email app for review; does not send.";
+ $("offer-github-help").textContent="Check the public-issue notice above to enable GitHub.";
 });
 window.addEventListener("hashchange",()=>{if(state.sets.length)parseHash();});
 loadWantList();
