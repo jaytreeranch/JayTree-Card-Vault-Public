@@ -1,0 +1,58 @@
+name: "Suggest a trading card correction"
+description: "Report a suspected player, set, parallel, year or photo error in the public collection."
+title: "[Card review]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping verify the JayTree Card Vault collection.
+        GitHub issues, your GitHub username and anything you submit are PUBLIC. Please do not share personal contact details.
+        GitHub sign-in is required; visitors without GitHub can use the website's email option.
+        Reports are suggestions only. They cannot approve, reject or change inventory, quantities, values or listings.
+  - type: input
+    id: card-link
+    attributes:
+      label: "Public card link"
+      description: "Link to the card, prefilled when opened from the gallery."
+      placeholder: "https://cards.jaytreebooks.com/#card=..."
+    validations:
+      required: true
+  - type: dropdown
+    id: assessment
+    attributes:
+      label: "Your assessment"
+      options:
+        - "Needs correction"
+        - "Looks correct"
+    validations:
+      required: true
+  - type: dropdown
+    id: field
+    attributes:
+      label: "Which detail needs checking?"
+      options:
+        - "Other / general"
+        - "player"
+        - "team"
+        - "year"
+        - "set"
+        - "parallel"
+        - "number"
+        - "photo"
+    validations:
+      required: true
+  - type: textarea
+    id: correction-details
+    attributes:
+      label: "Suggested identification or supporting details"
+      description: "Tell us what looks wrong or why it looks right. Add an official checklist or other reference link if available."
+      placeholder: "Example: This looks like the silver parallel, not gold, based on the card border and official checklist."
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-privacy
+    attributes:
+      label: "Privacy and verification"
+      options:
+        - label: "I understand this issue and my GitHub username will be public; only the JayTree owner can change or approve inventory."
+          required: true

@@ -140,6 +140,31 @@ function details(c){
   response.textContent="An email draft should open. Please press Send in your email app; this website has not submitted anything automatically.";
   window.location.href=email;
  });
+ const reportIssue=text(report,"a","Submit a GitHub card report (account required)","github-report");
+ reportIssue.target="_blank";reportIssue.rel="noopener noreferrer";
+ const reportLink=()=> {
+  const subject="[Card suggestion] "+c.id;
+  const cardUrl=location.origin+location.pathname+"#card="+c.id;
+  const reportCategory=assessment.value==="correct"?"Other / general":category.value;
+  const description=textarea.value.trim()||(assessment.value==="correct"?"Looks correct to me.":"");
+  return "https://github.com/jaytreeranch/JayTree-Card-Vault-Public/issues/new"
+   +"?template=card-correction.yml"
+   +"&title="+encodeURIComponent(subject)
+   +"&card-link="+encodeURIComponent(cardUrl)
+   +"&assessment="+encodeURIComponent(assessment.value==="correct"?"Looks correct":"Needs correction")
+   +"&field="+encodeURIComponent(reportCategory)
+   +"&correction-details="+encodeURIComponent(description);
+ };
+ reportIssue.href=reportLink();
+ reportIssue.addEventListener("click",(ev)=>{
+  if(assessment.value==="incorrect"&&textarea.value.trim().length<8){
+   ev.preventDefault();
+   response.textContent="Please describe the suspected error before opening GitHub.";
+   return;
+  }
+  reportIssue.href=reportLink();
+ });
+ text(report,"p","GitHub requires signing in. Submitted reports and usernames are public. Do not include personal details; reports are only suggestions and cannot change the private collection.","feedback-message");
  $("details").showModal();
 }
 async function load(){

@@ -9,13 +9,15 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>JayTree Card Vault · The Collection</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="wantlist.css">
   <script src="app.js" defer></script>
+  <script src="wantlist.js" defer></script>
 </head>
 <body>
 <header class="top">
   <div class="shell navline">
     <a class="wordmark" href="./" aria-label="JayTree Card Vault"><span class="symbol">JT</span><span>JayTree <b>Card Vault</b><small>THE COLLECTION</small></span></a>
-    <nav aria-label="Main navigation"><a href="#collection">Collection</a><a href="#about">About</a><span class="readonly">Public showcase · read-only</span></nav>
+    <nav aria-label="Main navigation"><a href="#collection">Collection</a><a href="#wantlist">Set want list</a><a href="#about">About</a><span class="readonly">Public showcase · read-only</span></nav>
   </div>
 </header>
 <main>
@@ -56,6 +58,37 @@
     <div class="empty" id="empty" hidden><h3>No cards to show yet.</h3><p>Try another search or check back as more cards are approved for display.</p></div>
     <p class="disclaimer">*Prices are collection-owner estimates, not live quotes, completed sales or guaranteed sale prices. Published cards are individually approved; the private Vault is never accessible from this website.</p>
   </section>
+  <section id="wantlist" class="wantlist shell" aria-labelledby="wantlist-title">
+  <div class="sectionhead">
+    <div>
+      <p class="kicker">HELP COMPLETE THE COLLECTION</p>
+      <h2 id="wantlist-title">Set completion &amp; missing cards</h2>
+    </div>
+    <p class="sectionnote" id="wantlist-count" aria-live="polite">Loading numbered checklists…</p>
+  </div>
+  <p id="wantlist-intro" class="wantlist-intro">Browse numbered sets and find the cards I'm missing.</p>
+  <div class="wantlist-toolbar">
+    <label><span class="sr-only">Search numbered sets</span><input id="wantlist-search" type="search" placeholder="Find a year, brand or set" autocomplete="off"></label>
+    <label><span class="sr-only">Filter sport</span><select id="wantlist-sport"><option value="">All sports</option></select></label>
+  </div>
+  <p class="wantlist-explain">Have one of these missing cards? Open a set and choose <strong>I have this card</strong> to send an offer. GitHub reports require an account, or you can contact me by email. All offers are inquiries only, not purchases. <strong>Owned counts represent distinct issued card numbers, never duplicate copies.</strong> Different parallels sharing a checklist number count as one spot.</p>
+  <div id="wantlist-sets" class="wantlist-sets" aria-live="polite"></div>
+  <p id="wantlist-empty" hidden>No matching sets. Try another search.</p>
+  <p class="wantlist-disclaimer">Missing counts are available only for sets backed by a sourced, complete numbered checklist. These totals exclude other parallels, inserts, unissued numbers and variants outside the named subset. Under-review card identifications remain provisional. Source links accompany each checklist.</p>
+</section>
+<dialog id="wantlist-dialog" aria-label="Missing cards in set">
+  <div class="want-dialog">
+    <button type="button" id="wantlist-close" class="want-close" aria-label="Close missing-card list">Close</button>
+    <div id="wantlist-dialog-content"></div>
+    <div class="want-missing-toolbar">
+      <label><span class="sr-only">Search missing card numbers or players</span><input id="wantlist-missing-search" type="search" placeholder="Filter missing number or player" autocomplete="off"></label>
+      <p id="wantlist-missing-status" aria-live="polite"></p>
+    </div>
+    <ul id="wantlist-missing-list" class="want-missing-list"></ul>
+    <div class="want-more-wrap"><button type="button" id="wantlist-more" hidden>Show more missing cards</button></div>
+  </div>
+</dialog>
+
   <section class="aboutwrap" id="about"><div class="shell about"><div><p class="kicker">A COLLECTION IN PROGRESS</p><h2>Collected, cataloged,<br><em>and cared for.</em></h2></div><div><p>JayTree Card Vault showcases selected cards from a private collection. More cards, new details and weekly value-history snapshots will be added as they are reviewed.</p><p>Cards marked “Open to offers” may become available. If an official eBay listing exists, you’ll find its link on the card. No purchases or inventory changes happen on this site.</p></div></div></section>
 </main>
 <dialog id="details" aria-label="Card details"><div class="detail-wrap"><button id="close" class="close" aria-label="Close card details">×</button><div id="detail-content"></div></div></dialog>

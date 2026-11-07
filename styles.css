@@ -36,3 +36,7 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 .load-more-wrap{text-align:center;margin:35px 0 12px}
 #load-more{background:#e9bb71;color:#132330;border:0;border-radius:6px;padding:13px 30px;font-weight:800}
 #load-more[hidden]{display:none}
+
+/* GitHub issue reports are PUBLIC and require an account; email remains optional. */
+.github-report{display:inline-flex;align-items:center;justify-content:center;margin-top:13px;padding:11px 15px;border:1px solid #e9bb71;border-radius:7px;color:#e9bb71;font-size:13px;font-weight:700;text-decoration:none;max-width:100%}
+.github-report:hover,.github-report:focus-visible{background:rgba(233,187,113,.14);outline-offset:3px}

@@ -1,0 +1,68 @@
+name: "I have a missing card"
+description: "Offer a numbered card from the JayTree Card Vault want list."
+title: "[Missing card offer]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for checking the JayTree Card Vault want list.
+        A missing number refers to a numbered checklist spot, not a particular parallel or condition.
+        **IMPORTANT: This is a public GitHub issue. Your username and any details posted here are public.**
+        Do not post your address, phone, payment information or any personal contact details.
+        Offers are nonbinding inquiries and will be reviewed by the collector; no purchase or inventory update happens automatically.
+        If you prefer not to use a public GitHub issue, choose the email option in the gallery.
+  - type: input
+    id: set-name
+    attributes:
+      label: "Set and year"
+      placeholder: "2025 Panini Absolute - By Storm"
+    validations:
+      required: true
+  - type: input
+    id: card-number
+    attributes:
+      label: "Card number"
+      description: "Printed card number, not your copy count."
+      placeholder: "12"
+    validations:
+      required: true
+  - type: input
+    id: card-name
+    attributes:
+      label: "Player / printed card name (if known)"
+      placeholder: "Player name"
+  - type: input
+    id: set-link
+    attributes:
+      label: "Public set want-list link"
+      placeholder: "https://cards.jaytreebooks.com/#want-set=..."
+    validations:
+      required: true
+  - type: dropdown
+    id: condition
+    attributes:
+      label: "Approximate condition"
+      options:
+        - "Unknown / need to inspect"
+        - "Near Mint or better"
+        - "Excellent"
+        - "Very Good"
+        - "Good"
+        - "Poor"
+    validations:
+      required: true
+  - type: textarea
+    id: offer-details
+    attributes:
+      label: "Card details, variant / parallel, and asking price (optional)"
+      description: "Provide relevant card information. Do not include personal or payment details."
+      placeholder: "Base set #12; front/back photos available. Asking $3 plus shipping."
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy-confirmation
+    attributes:
+      label: "Public issue notice"
+      options:
+        - label: "I understand this public offer does not reserve a sale and I should not share private contact or payment information here."
+          required: true
