@@ -15,3 +15,11 @@ No modifications to private GE78 Vault, databases, originals, approved values, i
 Next exact actions: (1) safe commit/push/remote SHA verification, (2) conditional main fast-forward if remote unchanged and live HTTP/TLS smoke, (3) future approved publisher schema integration with private LAN chat. Post-push remote SHA and rollback proof belong to the private LAN release receipt.
 
 An additional public-only serial display contract was audited and retained: optional approved stamps, edition denominator, quarantine of inconsistent/invalid copy data, and a serial-correction feedback category. Current catalog contains ZERO publicly stamped physical copies; private owner serial entry remains out of scope.
+
+## Verified production release after QC
+- Feature source commit: ee66a5c86fe4f859c6b5f5523f803d289dc9e67f; pushed to both feature branch and public main, both remote HEADs verified.
+- GitHub Pages Actions public deployment for that commit: completed SUCCESS (November 7, 2026 UTC 20:33:39 creation).
+- Live HTTPS custom domain bytes matched 8/8 tracked Git blobs: index.html, app.js, card-features.js, wantlist.js, both CSS files, catalog.json and set-checklists.json (the Windows worktree's CRLF-only local difference in checklist JSON is not a source-data change).
+- Live Chrome DOM: eight checks PASS (1,006 cards, parallel/serial/memorabilia counts, disabled empty autographs, 27 checklist tiles, lazy initial 48, date). Approved sample photo 200, private API paths 404.
+- Per-copy serial editing on the private LAN is not handled here. Current public catalog still has no individually stamped-copy data.
+- After this acceptance entry, any docs-only SHA revision must be published normally and verified as a fast-forward. Rollback of public behavior: revert the feature source commit with a NEW commit; never force-push.
