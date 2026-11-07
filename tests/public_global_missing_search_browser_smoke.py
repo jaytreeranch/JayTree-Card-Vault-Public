@@ -54,7 +54,7 @@ def main():
                             {"width":width,"height":844,"mobile":True,"deviceScaleFactor":2})
                         rpc("Page.navigate",{"url":f"http://127.0.0.1:{server.server_port}/#wantlist"})
                         wait("document.querySelectorAll('.want-set-card').length===27")
-                        assert js("document.querySelectorAll('.coverage-card').length")==21
+                        wait("document.querySelectorAll('.coverage-card').length===21")
                         assert js("document.querySelector('#want-global-results').hidden") is True
                         query("Brock Bowers")
                         assert js("document.querySelectorAll('.want-global-row').length")==2

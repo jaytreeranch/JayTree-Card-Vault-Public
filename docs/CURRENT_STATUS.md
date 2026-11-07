@@ -1,7 +1,7 @@
 ## Public v0.9.8 global missing search development checkpoint (2026-11-07)
 - Cross-set search of existing 6,513 missing numbered slots across 27 sourced lists. Published 2,168 slots without verified player name remain searchable by printed number/set; names are never guessed. Separate 21 unsourced groups unchanged.
 - Text search player, team, year, set or number, exact #number, 40-row pagination, owner inquiry options and View-in-set modal with exact numbered filter. Sport/verified names controls reused. No new HTTP requests/private API or database writes.
-- First real Chrome local 320/390/1366 PASS: Brock Bowers 2, #6 exact 20, Williams 61 paginated, sport filter, modal, no overflow. Full Node 30/30 PASS. Production Pages/browser acceptance pending.
+- Final 30/30 Node PASS; prior Chrome fraction/coverage/finder/mobile/features PASS. Source 49c9343d62d23ed6db3024ccbb6adfadd7b75d4f remote main and isolated feature SHA verified, GitHub Pages SUCCESS, eight live HTML/JS/CSS/data/CNAME files byte-match Git, real LIVE Chrome 320/390/1366 player/# exact/pagination/view-in-set PASS; private LAN edit routes HTTP 404. One first live test needed a wait for independently loaded catalog and checklist groups; corrected test passed locally and live. Physical Android/cellular still UNTESTED.
 - No edits to catalog.json, set-checklists.json, private LAN, Android native scanner, private exporter, original photos, DNS or CNAME.
 - Branch feature/public-global-missing-search-20261107 parent cc049ddd5ca48b086abad6515bf36063468401c3; handoff docs/HANDOFF_20261107_PUBLIC_GLOBAL_MISSING_SEARCH_V098.md.
 

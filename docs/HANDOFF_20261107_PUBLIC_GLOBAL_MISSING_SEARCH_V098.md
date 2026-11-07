@@ -26,3 +26,12 @@ Changed ONLY public index.html, wantlist.js, wantlist.css and safe tests/docs. N
 1. Finish QC, publication and remote/LAN verified GitHub+Pages+Chrome handoff.
 2. LAN independently validates checklist source candidates; future approved static JSON export must preserve public site code and strict publication approval.
 3. Complete physical Android/cellular public browser and keyboard/screen-reader accessibility acceptance when hardware access permits.
+
+## VERIFIED live source release (after production acceptance)
+- Source GitHub main and feature branch at 49c9343d62d23ed6db3024ccbb6adfadd7b75d4f; exact remote SHA verified, GitHub Pages deploy completed SUCCESS.
+- Actual custom-domain HTTPS eight files byte-identical committed Git: index.html, wantlist.js, wantlist.css, app.js, checklist-coverage.js, catalog.json, set-checklists.json, CNAME; approved data remains unchanged.
+- Real headless Chrome against LIVE https://cards.jaytreebooks.com/#wantlist at 320,390,1366px PASS: sourced/unsourced lists, Bowers two, exact #6 twenty, Williams 61 paginated, sport filter, owner issue/email, View-in-set exact numbered modal and no horizontal overflow.
+- First live browser test failed ONLY because it checked 21 coverage cards immediately after the 27 independently fetched sourced tiles; corrected browser test to WAIT for both async requests. Corrected test PASS against both live site and local preview; no application change required.
+- Live public paths /api/cards and /owner/private HTTP 404. All 30 Node tests and previous Chrome fraction/set finder/coverage/mobile/feature tests PASS.
+- Real Android17 hardware/cellular and signed-in GitHub issue submission NOT tested.
+- Protected base source and source release hashes at \JT-DESKTOP\JayTreeFarm\CardVault\PublicShowcase\receipts\PUBLIC_V098_GLOBAL_MISSING_SEARCH_20261107. This follow-up documentation/test commit is not an additional UI feature.
