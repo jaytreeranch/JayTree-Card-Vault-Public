@@ -122,9 +122,23 @@ function openSet(s){
   a.href=s.source.url;a.target="_blank";a.rel="noopener noreferrer";
  }
  text(panel,"p",s.source.scope||"Only the supported numbered subset is tracked.","want-source-note");
- const share=text(panel,"a","Share this missing-card list","want-share-link");
- share.href="#want-set="+encodeURIComponent(key(s));
- share.addEventListener("click",()=>{$("wantlist-dialog").close();});
+ const share=text(panel,"button","Copy a link to this set","want-share-link");
+ share.type="button";
+ share.addEventListener("click",async()=>{
+  const url=setUrl(s);
+  try{
+   if(!navigator.clipboard?.writeText)throw new Error("Clipboard unavailable");
+   await navigator.clipboard.writeText(url);
+   share.textContent="Set link copied";
+  }catch{
+   // Allow manual copying if browser clipboard permission is unavailable.
+   const manual=document.createElement("input");
+   manual.type="text";manual.readOnly=true;manual.value=url;
+   manual.className="want-share-fallback";
+   manual.setAttribute("aria-label","Select and copy this set link");
+   share.replaceWith(manual);manual.focus();manual.select();
+  }
+ });
  $("wantlist-missing-search").value="";
  $("wantlist-missing-list").replaceChildren();
  $("wantlist-dialog").showModal();
@@ -146,13 +160,30 @@ async function loadWantList(){
   if(data.schema!=="jaytree.public-wantlist.v1"||data.readonly!==true||
     !Array.isArray(data.sets)||data.sets.length!==data.supported_set_count||
     data.sets.length<1||data.sets.length>100)throw new Error("Unsupported published checklist");
+  const count=n=>Number.isSafeInteger(n)&&n>=0;
+  const keys=new Set();
+  let missingTotal=0,namedTotal=0;
   for(const set of data.sets){
    if(!Array.isArray(set.key)||set.key.length!==4||!Array.isArray(set.missing_cards)||
-      set.total!==set.owned+set.missing||set.missing_cards.length!==set.missing)
+      !count(set.total)||!count(set.owned)||!count(set.missing)||
+      set.total!==set.owned+set.missing||set.missing_cards.length!==set.missing||
+      typeof set.sport!=="string"||typeof set.set!=="string")
      throw new Error("Corrupted set count");
+   const setKey=key(set);
+   if(keys.has(setKey))throw new Error("Duplicate checklist");
+   keys.add(setKey);
+   const numbers=set.missing_cards.map(c=>c.number);
+   if(numbers.some(n=>typeof n!=="string"||!n.trim())||
+      new Set(numbers).size!==numbers.length)
+     throw new Error("Duplicate or invalid missing card number");
+   if(set.reference_player_names_complete===true)namedTotal++;
+   missingTotal+=set.missing;
   }
+  if(!count(data.supported_missing_spots)||data.supported_missing_spots!==missingTotal||
+     !count(data.named_set_count)||data.named_set_count!==namedTotal)
+   throw new Error("Checklist summary does not match details");
   state.sets=data.sets;
-  $("wantlist-intro").textContent="Browse "+fmt(data.supported_set_count)+" independently sourced numbered checklists, including "+fmt(data.named_set_count)+" with verified player names. Missing cards are numbered spots not currently recorded in the public collection.";
+  $("wantlist-intro").textContent="Browse "+fmt(data.supported_set_count)+" independently sourced numbered checklists, including "+fmt(data.named_set_count)+" with verified player names. Missing cards are numbered spots not currently recorded in the public collection. Catalog snapshot: "+String(data.generated_at_utc||"date unavailable").slice(0,10)+".";
   const sports=[...new Set(state.sets.map(s=>s.sport))].sort();
   for(const sport of sports){const opt=document.createElement("option");opt.value=sport;opt.textContent=sport;$("wantlist-sport").appendChild(opt);}
   renderTiles();

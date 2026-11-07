@@ -10,6 +10,7 @@
   <title>JayTree Card Vault · The Collection</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="wantlist.css">
+  <script src="card-features.js" defer></script>
   <script src="app.js" defer></script>
   <script src="wantlist.js" defer></script>
 </head>
@@ -51,6 +52,21 @@
       <label class="select"><span class="sr-only">Filter owned set</span><select id="set"><option value="">All cataloged sets</option></select></label>
       <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
     </div>
+    <fieldset class="feature-filters" aria-describedby="feature-help">
+      <legend>Card features <span class="feature-optional">? select any combination</span></legend>
+      <div class="feature-filter-options" id="feature-options">
+        <label><input type="checkbox" value="parallel" data-feature><span>Parallels <small data-feature-count="parallel"></small></span></label>
+        <label><input type="checkbox" value="serial" data-feature><span>Serial-numbered <small data-feature-count="serial"></small></span></label>
+        <label><input type="checkbox" value="autograph" data-feature><span>Autographs <small data-feature-count="autograph"></small></span></label>
+        <label><input type="checkbox" value="patch" data-feature><span>Patches <small data-feature-count="patch"></small></span></label>
+        <label><input type="checkbox" value="memorabilia" data-feature><span>Memorabilia / relics <small data-feature-count="memorabilia"></small></span></label>
+        <label><input type="checkbox" value="rookie" data-feature><span>Rookie-tagged <small data-feature-count="rookie"></small></span></label>
+      </div>
+      <div class="feature-filter-foot">
+        <p id="feature-help">Show cards matching <strong>any selected feature</strong>; other search and dropdown filters still apply. Counts reflect the published catalog only. Unconfirmed cards and untagged features may be incomplete.</p>
+        <button type="button" id="feature-clear">Clear features</button>
+      </div>
+    </fieldset>
     <p class="review-explain">Cards labeled Needs review have provisional names, sets, and parallels. You can help identify errors; feedback is reviewed privately and cannot change collection records directly.</p>
     <p id="set-summary" class="set-summary" aria-live="polite">Choose a cataloged set to see owned-card counts. Missing-card and completion totals require a verified manufacturer checklist.</p>
     <div class="grid" id="grid"></div>

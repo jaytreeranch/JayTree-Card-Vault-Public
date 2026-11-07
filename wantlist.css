@@ -43,3 +43,8 @@
   .want-set-card { padding:18px; }
   .want-missing-row { align-items:flex-start; }
 }
+
+
+.want-share-link { cursor:pointer;font:inherit;border:1px solid #b88d55;border-radius:6px;background:#17384d;padding:9px 12px; }
+.want-share-link:focus-visible,.want-share-fallback:focus-visible { outline:2px solid #f0c584;outline-offset:3px; }
+.want-share-fallback { display:block;width:min(100%,560px);padding:10px;margin-bottom:12px;background:#193c53;color:#fff;border:1px solid #b88d55;border-radius:6px;font:inherit; }

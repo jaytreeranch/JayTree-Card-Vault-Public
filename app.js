@@ -1,6 +1,18 @@
 "use strict";
 const PAGE_SIZE = 48;
 const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map() };
+const features=window.JayTreeCardFeatures;
+const selectedFeatures=()=>[...document.querySelectorAll('input[data-feature]:checked')].map(n=>n.value);
+function refreshFeatureCounts(){
+ for(const opt of features.OPTIONS){
+  const count=state.cards.filter(c=>features.classify(c)[opt.key]).length;
+  const label=document.querySelector('[data-feature-count="'+opt.key+'"]');
+  const input=document.querySelector('input[data-feature][value="'+opt.key+'"]');
+  if(label)label.textContent="("+count.toLocaleString("en-US")+")";
+  if(input){input.disabled=count===0;if(count===0)input.checked=false;}
+ }
+}
+
 const setKey = (c) => JSON.stringify([String(c.year||""),String(c.brand||""),String(c.set||"")]);
 const $ = (id) => document.getElementById(id);
 const fmtUSD = (v) => typeof v === "number" && Number.isFinite(v) ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(v) : "Not valued";
@@ -12,10 +24,12 @@ function filtered() {
  const q = $("search").value.trim().toLocaleLowerCase(),
        sport=$("sport").value, review=$("review").value, year=$("year").value,
        ownedSet=$("set").value, offers=$("offers").checked;
+ const anyFeatures=selectedFeatures();
  const selected=state.cards.filter(c =>
    (!sport || c.sport===sport) && (!review || c.review_status===review) &&
    (!year || String(c.year||"")===year) && (!ownedSet || setKey(c)===ownedSet) &&
    (!offers || c.for_sale) &&
+   features.matchesAny(c,anyFeatures) &&
    [c.player,c.team,c.brand,c.set,c.year,c.number,c.parallel].join(" ").toLowerCase().includes(q));
  switch($("sort").value){
   case "value-high":selected.sort((a,b)=>value(b)-value(a));break;
@@ -49,6 +63,10 @@ function renderCards(){
   text(meta,"span",String(c.sport||"").toUpperCase(),"kicker");
   text(meta,"h3",c.player||"Unnamed card");
   if(c.identity_unconfirmed)text(meta,"p","Tentative identification · please verify","review-warning");
+  const tags=features.OPTIONS.filter(f=>features.classify(c)[f.key]).map(f=>f.label);
+  if(tags.length)text(meta,"p",tags.join(" / "),"card-feature-tags");
+  const stamped=features.serialInfo(c).stamps;
+  if(stamped.length)text(meta,"p","Stamped "+stamped.join(", "),"card-serial");
   text(meta,"p",[c.year,c.brand,c.set].filter(Boolean).join(" · "),"card-info");
   const foot=text(meta,"div","","card-foot"), price=text(foot,"span",fmtUSD(c.estimate_usd),"card-value");
   price.setAttribute("aria-label","Owner estimated card value "+price.textContent);
@@ -80,7 +98,13 @@ function details(c){
  text(info,"p",fmtUSD(c.estimate_usd),"detail-price");
  text(info,"p",c.identity_unconfirmed?"No value shown until this card is verified.":"Owner estimate per card — not a verified sale or price guarantee.","detail-copy");
  const properties=text(info,"div","","details-grid");
- const pairs=[["Year",c.year],["Team",c.team],["Set",[c.brand,c.set].filter(Boolean).join(" / ")],["Card #",c.number],["Parallel",c.parallel],["Owned",String(c.quantity)],["Available",c.for_sale?"Open to offers":"Not listed"]];
+ const featureNames=features.OPTIONS.filter(f=>features.classify(c)[f.key]).map(f=>f.label);
+ const serial=features.serialInfo(c);
+ const pairs=[["Features",featureNames.join(", ")||"Not tagged"],["Year",c.year],["Team",c.team],["Set",[c.brand,c.set].filter(Boolean).join(" / ")],["Card #",c.number],["Parallel",c.parallel],["Owned",String(c.quantity)],["Available",c.for_sale?"Open to offers":"Not listed"]];
+ if(serial.numbered){
+  pairs.splice(6,0,["Serial edition",serial.edition?"/"+serial.edition:"Numbered; run not confirmed"],
+   ["Owned stamped copy",serial.needsReview?"Needs owner verification":serial.stamps.length?serial.stamps.join(", "):"Not published"]);
+ }
  pairs.forEach(([name,v])=>{const block=text(properties,"div","");text(block,"b",name);text(block,"span",v||"—");});
  text(info,"h3","Estimated value history","chart-heading");
  makeHistory(info,Array.isArray(c.history)?c.history:[]);
@@ -107,7 +131,7 @@ function details(c){
  question.appendChild(assessment);form.appendChild(question);
  const fieldlabel=document.createElement("label");text(fieldlabel,"span","What needs checking?");
  const category=document.createElement("select");
- for(const [v,t] of [["other","Other / general"],["player","Player"],["team","Team"],["year","Year"],["set","Brand or set"],["parallel","Parallel"],["number","Card number"],["photo","Photo"]]){
+ for(const [v,t] of [["other","Other / general"],["player","Player"],["team","Team"],["year","Year"],["set","Brand or set"],["parallel","Parallel"],["number","Card number"],["serial","Stamped serial number"],["photo","Photo"]]){
    const opt=document.createElement("option");opt.value=v;opt.textContent=t;category.appendChild(opt);
  }
  fieldlabel.appendChild(category);form.appendChild(fieldlabel);
@@ -200,6 +224,7 @@ async function load(){
    opt.textContent=[group.year,group.brand,group.set].filter(Boolean).join(" · ")+" ("+group.total+" cards)";
    $("set").appendChild(opt);
   }
+  refreshFeatureCounts();
   filtered();
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
   if(deepLink){const selected=state.cards.find(c=>c.id===deepLink[1]);if(selected)details(selected);}
@@ -217,6 +242,11 @@ function renderSetSummary(){
  const count=group.numbers.size;
  $("set-summary").textContent="In this set: "+group.total+" cataloged cards · "+group.verified+" Verified · "+(group.total-group.verified)+" Needs review · "+count+" distinct numbered entries. Missing cards require a verified manufacturer checklist.";
 }
+document.querySelectorAll('input[data-feature]').forEach(cb=>cb.addEventListener("change",filtered));
+$("feature-clear").addEventListener("click",()=>{
+ document.querySelectorAll('input[data-feature]').forEach(cb=>cb.checked=false);
+ filtered();
+});
 ["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 $("close").addEventListener("click",()=>$("details").close());
