@@ -14,7 +14,7 @@ test("parallel and serial edition are distinct",()=>{
  assert.equal(blue.parallel,true);assert.equal(blue.serial,false);
  const numbered=classify({parallel:"Gold Stars /325"});
  assert.equal(numbered.parallel,true);assert.equal(numbered.serial,true);
- assert.equal(classify({serial_number:"212/325"}).serial,true);
+ assert.equal(classify({serial_number:"42/325"}).serial,true);
  assert.equal(classify({number:"212"}).serial,false);
 });
 test("autographs are never guessed from player names",()=>{

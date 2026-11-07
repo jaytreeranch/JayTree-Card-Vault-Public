@@ -1,3 +1,6 @@
+## 2026-11-07 public serial projection follow-up (v0.9.3 candidate)
+Current: docs/HANDOFF_20261107_PUBLIC_SERIAL_SCHEMA_QC_V093.md. Copy-stamp projection must be owner-approved in the private LAN; malformed or partially invalid published serials now suppress all copy stamps pending review. Physical-copy editor tracked in private repo issue #15. Public main remains read-only and LAN review stays separate.
+
 # Public Card Vault - START HERE
 Updated November 7, 2026.
 

@@ -53,6 +53,11 @@ def run():
                     assert js("document.querySelector('#result-count').textContent").startswith("48 of 1006")
                     js("document.querySelector('input[data-feature][value=serial]').click()")
                     assert js("document.querySelector('#result-count').textContent").startswith("1 of 1")
+                    js("document.querySelector('#grid .card button').click()")
+                    assert js("document.querySelector('#details').open") is True
+                    assert js("document.querySelector('#detail-content').textContent.includes('Serial edition/325')") is True
+                    assert js("document.querySelector('#detail-content').textContent.includes('Owned stamped copyNot published')") is True
+                    js("document.querySelector('#close').click()")
                     js("document.querySelector('input[data-feature][value=parallel]').click()")
                     assert js("document.querySelector('#result-count').textContent").startswith("26 of 26")
                     js("document.querySelector('#feature-clear').click()")

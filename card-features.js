@@ -26,6 +26,7 @@ function serialInfo(card){
  const hints=[isInt(c.serial_total)?c.serial_total:null,
   runFromLabel?Number(runFromLabel[1]):null].filter(v=>v!==null);
  const legacy=parse(c.serial_number);
+ const invalidLegacy=typeof c.serial_number==="string"&&c.serial_number.trim().length>0&&!legacy;
  if(legacy)hints.push(legacy.out_of);
  const approved=Array.isArray(c.public_serial_copies)?c.public_serial_copies:[];
  const invalidApproved=approved.some(v=>!v||!isInt(v.number)||!isInt(v.out_of)||v.number>v.out_of);
@@ -36,13 +37,13 @@ function serialInfo(card){
  const consistent=runs.length===0||runs.every(v=>v===runs[0]);
  const edition=consistent&&runs.length?runs[0]:null;
  const unique=new Set(stamps.map(v=>v.number+"/"+v.out_of));
- const validated=consistent&&unique.size===stamps.length?stamps:[];
+ const validated=!invalidApproved&&!invalidLegacy&&consistent&&unique.size===stamps.length?stamps:[];
  return Object.freeze({
   numbered:c.serial_numbered===true||hints.length>0||approved.length>0||
-   !!legacy||Array.isArray(c.public_features)&&c.public_features.includes("serial"),
+   !!legacy||invalidLegacy||Array.isArray(c.public_features)&&c.public_features.includes("serial"),
   edition:edition,
   stamps:validated.map(v=>v.number+"/"+v.out_of),
-  needsReview:invalidApproved||!consistent||unique.size!==stamps.length
+  needsReview:invalidApproved||invalidLegacy||!consistent||unique.size!==stamps.length
  });
 }
 function classify(card){
