@@ -1,0 +1,56 @@
+const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path");
+const root=path.resolve(__dirname,".."),read=n=>fs.readFileSync(path.join(root,n),"utf8");
+const js=read("app.js"),html=read("index.html"),css=read("styles.css");
+test("Collection current-view link has accessible live status and focusable manual fallback",()=>{
+ assert.ok(html.includes('id="collection-view-link" type="button" aria-describedby="collection-view-link-help"'));
+ assert.ok(html.includes('id="collection-view-link-status" role="status" aria-live="polite"'));
+ assert.ok(html.includes('id="collection-view-link-fallback"'));
+ assert.ok(html.includes("readonly hidden"));
+ assert.ok(css.includes(".collection-browse-tools #collection-view-link{"));
+ assert.ok(css.includes("min-height:44px"));
+ assert.ok(js.includes('field.hidden=false;field.value=url;field.focus();field.select()'));
+ assert.ok(js.includes('Copied link to this published collection view. No message was sent.'));
+});
+test("Exact public filter payload restores sport/year/review/known set/features, sort and query, never Low-data preference",()=>{
+ assert.ok(js.includes('const BROWSE_SCHEMA="jt.public.browse.v1"'));
+ assert.ok(js.includes('function currentBrowsePayload()'));
+ assert.ok(js.includes('"#browse="+encodeURIComponent(JSON.stringify(params))'));
+ assert.ok(js.includes('if(!restoreBrowseFromHash())filtered();'));
+ assert.ok(js.includes('window.addEventListener("hashchange"'));
+ assert.ok(js.includes('if(!validBrowsePayload(p))return false'));
+ assert.ok(js.includes('["set",p[5]]'));
+ assert.ok(js.includes('["set-finder",p[6]]'));
+ assert.ok(js.includes('["set-sort",p[7]]'));
+ assert.ok(js.includes('["sort",p[8]]'));
+ assert.ok(js.includes('$("offers").checked=p[9]'));
+ assert.ok(js.includes('el.checked=p[10].includes(el.value)&&!el.disabled'));
+ const restore=js.slice(js.indexOf('function restoreBrowseFromHash()'),js.indexOf('// Mobile visitor clarity'));
+ assert.ok(!restore.includes('gallery-low-data-toggle'));
+ assert.ok(!restore.includes('localStorage'));
+});
+test("Invalid and stale browse URL fails closed without overwriting filters or enabling disabled features",()=>{
+ assert.ok(js.includes('location.hash.length>2400'));
+ assert.ok(js.includes('v.length!==11'));
+ assert.ok(js.includes('v[0]!==BROWSE_SCHEMA'));
+ assert.ok(js.includes('v[10].length>features.OPTIONS.length'));
+ assert.ok(js.includes('v[5]&&!state.sets.has(v[5])'));
+ assert.ok(js.includes('!document.querySelector'));
+ assert.ok(js.includes('new Set(v[10]).size===v[10].length'));
+ assert.ok(js.includes('!/[\\x00-\\x1f\\x7f]/.test(v)'));
+ assert.ok(html.includes('id="search" type="search" maxlength="100"'));
+ assert.ok(html.includes('id="set-finder" type="search" maxlength="100"'));
+});
+test("Async copy completion cannot clobber new filter state and no new API/visitor tracking",()=>{
+ assert.ok(js.includes('let browseShareEpoch=0;'));
+ assert.ok(js.includes('const attempt=browseShareEpoch;'));
+ assert.ok(js.includes('if(attempt!==browseShareEpoch)return;'));
+ assert.ok(js.includes('function filtered() {\n clearBrowseLinkFeedback();'));
+ assert.ok(js.includes('function refreshSetOptionLabels(){'));
+ assert.ok(js.includes('clearBrowseLinkFeedback();refreshSetOptionLabels();'));
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.ok(!js.includes("sendBeacon"));
+ const cat=JSON.parse(read("catalog.json")),sets=JSON.parse(read("set-checklists.json"));
+ assert.equal(cat.cards.length,1006);
+ assert.equal(sets.supported_set_count,27);
+ assert.equal(sets.supported_missing_spots,6513);
+});

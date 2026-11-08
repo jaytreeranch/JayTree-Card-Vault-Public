@@ -26,7 +26,7 @@ test("Filtered link resolves only approved set with an exact validated query",()
  assert.ok(h.includes('maxlength="100"'));
  const rx=js.match(/const safeShareQuery=q=>[^\n]+/);
  assert.ok(rx);
- const expr=rx[0].replace('const safeShareQuery=q=>','q=>').replace(/;$/,'');
+ const expr=rx[0].trimEnd().replace('const safeShareQuery=q=>','q=>').replace(/;$/,'');
  const testQuery=vm.runInNewContext('('+expr+')');
  assert.equal(testQuery("#6"),true);
  for(const q of ["","A".repeat(101),"\n#6","\tfoo","\x7ffoo"])assert.equal(testQuery(q),false);

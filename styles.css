@@ -112,3 +112,11 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 .collection-browse-tools button[aria-disabled="true"]{opacity:.58;cursor:default;}
 .collection-browse-tools button:focus-visible{outline:3px solid #f1d69e;outline-offset:3px;}
 @media(max-width:490px){.collection-browse-tools{margin-top:0;padding:11px;}.collection-browse-tools button{width:100%;}}
+
+/* Public v0.9.19: private-safe collection view URLs with accessible manual copy fallback. */
+.collection-browse-tools #collection-view-link{background:#194b68;color:#eff9ff;border-color:#91bbd2;min-height:44px;}
+.collection-browse-tools #collection-view-link-help{flex-basis:100%;font-size:12px;line-height:1.55;color:#cbdde9;}
+.collection-browse-tools #collection-view-link-status:not(:empty){flex-basis:100%;font-size:13px;color:#f0d4a4;font-weight:700;}
+.collection-browse-tools #collection-view-link-fallback:not([hidden]){display:block;flex-basis:100%;width:100%;min-width:0;min-height:44px;padding:10px 12px;
+ border:1px solid #9dbfd0;border-radius:7px;color:#eff9ff;background:#102f43;font:13px/1.45 monospace;}
+@media(max-width:490px){.collection-browse-tools #collection-view-link{width:100%;}}

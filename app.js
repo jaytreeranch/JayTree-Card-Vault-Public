@@ -68,6 +68,89 @@ const safeImage = (path) => typeof path === "string" && /^assets\/[a-f0-9]{24}\.
 const value = (c) => typeof c.estimate_usd === "number" ? c.estimate_usd : -1;
 const text = (parent, name, content, className) => {const n=document.createElement(name);n.textContent=content || "";if(className)n.className=className;parent.appendChild(n);return n;};
 const cleanDate = (s) => /^\d{4}-\d{2}-\d{2}/.test(s||"") ? s.slice(0,10) : "—";
+// Share public collection filters, never a private inventory/copy link.
+const BROWSE_SCHEMA="jt.public.browse.v1";
+let browseShareEpoch=0;
+function clearBrowseLinkFeedback(){
+ browseShareEpoch++;
+ const field=$("collection-view-link-fallback");
+ field.hidden=true;field.value="";
+ $("collection-view-link-status").textContent="";
+}
+function safeBrowseText(v){
+ return typeof v==="string"&&v.length<=100&&!/[\x00-\x1f\x7f]/.test(v);
+}
+function currentBrowsePayload(){
+ return [BROWSE_SCHEMA,$("search").value.trim(),$("sport").value,$("review").value,
+  $("year").value,$("set").value,$("set-finder").value.trim(),$("set-sort").value,
+  $("sort").value,$("offers").checked,selectedFeatures().slice().sort()];
+}
+function validBrowsePayload(v){
+ if(!Array.isArray(v)||v.length!==11||v[0]!==BROWSE_SCHEMA||
+    typeof v[9]!=="boolean"||!Array.isArray(v[10])||
+    v[10].length>features.OPTIONS.length||
+    ![0,1,2,3,4,6,7,8].every(i=>safeBrowseText(v[i]))||
+    typeof v[5]!=="string"||v[5].length>800)return false;
+ for(const [id,val] of [["sport",v[2]],["review",v[3]],["year",v[4]],
+   ["set-sort",v[7]],["sort",v[8]]]){
+  if(![...$(id).options].some(o=>o.value===val))return false;
+ }
+ if(v[5]&&!state.sets.has(v[5]))return false;
+ const allowed=new Set(features.OPTIONS.map(f=>f.key));
+ return v[10].every(f=>allowed.has(f)&&
+  !document.querySelector('input[data-feature][value="'+f+'"]')?.disabled)&&
+  new Set(v[10]).size===v[10].length;
+}
+function publicBrowseUrl(){
+ const params=currentBrowsePayload();
+ if(!validBrowsePayload(params))return null;
+ const url=location.origin+location.pathname+
+  (customizedBrowseCount()?"#browse="+encodeURIComponent(JSON.stringify(params)):"#collection");
+ return url.split("#")[1].length>2400?null:url;
+}
+async function copyBrowseViewLink(){
+ const url=publicBrowseUrl();
+ if(!url){
+  $("collection-view-link-status").textContent="One or more collection filters cannot be shared.";
+  return;
+ }
+ clearBrowseLinkFeedback();
+ const attempt=browseShareEpoch;
+ try{
+  if(!navigator.clipboard?.writeText)throw new Error("Clipboard unavailable");
+  await navigator.clipboard.writeText(url);
+  if(attempt!==browseShareEpoch)return;
+  $("collection-view-link-status").textContent=
+   "Copied link to this published collection view. No message was sent.";
+ }catch{
+  if(attempt!==browseShareEpoch)return;
+  const field=$("collection-view-link-fallback");
+  field.hidden=false;field.value=url;field.focus();field.select();
+  $("collection-view-link-status").textContent=
+   "Clipboard blocked. The public collection link is selected for manual copying.";
+ }
+}
+// No server-side lookups. Invalid or stale links leave existing controls unchanged.
+function restoreBrowseFromHash(){
+ if(!location.hash.startsWith("#browse=")||location.hash.length>2400)return false;
+ let p;
+ try{p=JSON.parse(decodeURIComponent(location.hash.slice("#browse=".length)));}
+ catch{return false;}
+ if(!validBrowsePayload(p))return false;
+ for(const [id,value] of [["search",p[1]],["sport",p[2]],["review",p[3]],
+    ["year",p[4]],["set",p[5]],["set-finder",p[6]],["set-sort",p[7]],["sort",p[8]]]){
+  $(id).value=value;
+ }
+ $("offers").checked=p[9];
+ document.querySelectorAll("input[data-feature]").forEach(el=>{
+  el.checked=p[10].includes(el.value)&&!el.disabled;
+ });
+ refreshSetOptionLabels();
+ filtered();
+ $("collection-view-link-status").textContent=
+  "Opened shared published collection view: "+state.results.length.toLocaleString("en-US")+" matching cards.";
+ return true;
+}
 // Mobile visitor clarity: account for ALL browse controls, while respecting Low-data view.
 function customizedBrowseCount(){
  const ids=["search","sport","review","year","set","set-finder"];
@@ -98,6 +181,7 @@ function clearBrowseControls(){
  filtered();
 }
 function filtered() {
+ clearBrowseLinkFeedback();
  const q = $("search").value.trim().toLocaleLowerCase(),
        sport=$("sport").value, review=$("review").value, year=$("year").value,
        ownedSet=$("set").value, offers=$("offers").checked;
@@ -310,7 +394,7 @@ async function load(){
   }));
   refreshSetOptionLabels();
   refreshFeatureCounts();
-  filtered();
+  if(!restoreBrowseFromHash())filtered();
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
   if(deepLink){const selected=state.cards.find(c=>c.id===deepLink[1]);if(selected)details(selected);}
  }catch(err){
@@ -376,9 +460,17 @@ $("feature-clear").addEventListener("click",()=>{
  document.querySelectorAll('input[data-feature]').forEach(cb=>cb.checked=false);
  filtered();
 });
-$("set-finder").addEventListener("input",refreshSetOptionLabels);
-$("set-sort").addEventListener("change",refreshSetOptionLabels);
+$("set-finder").addEventListener("input",()=>{
+ clearBrowseLinkFeedback();refreshSetOptionLabels();
+});
+$("set-sort").addEventListener("change",()=>{
+ clearBrowseLinkFeedback();refreshSetOptionLabels();
+});
 $("collection-browse-reset").addEventListener("click",clearBrowseControls);
+$("collection-view-link").addEventListener("click",copyBrowseViewLink);
+window.addEventListener("hashchange",()=>{
+ if(state.cards.length&&location.hash.startsWith("#browse="))restoreBrowseFromHash();
+});
 ["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 function updateLowDataView(announce=false){

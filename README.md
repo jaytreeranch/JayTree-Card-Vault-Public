@@ -101,3 +101,8 @@ Within a sourced set's missing-number dialog, enter a printed number, player, or
 ## Device-native sharing of missing-card lists (public v0.9.18)
 
 On phones and other browsers that support the Web Share API, opening an approved set's missing-card list also offers **Share N matching missing cards** next to **Copy message**. Tapping it opens the native Share menu with the exact same source-backed, filtered missing-number message and public link. The website never chooses a recipient or posts itself. Closing the menu or an unavailable device Share feature keeps Copy and its manual fallback available. A resolved Share API request means the browser accepted the handoff, **not** that a message was delivered. The approved catalog and private LAN inventory remain separate.
+
+
+## Share a filtered collection view (public v0.9.19)
+
+Visitors can choose gallery search, sport, year, review status, cataloged set, card features, and sorting, then select **Copy link to this view**. Opening the link restores those published-card filters for another visitor, including the set finder and Open to offers state. It shares only already-public filter values, not individual private card copies or account data. Invalid or outdated collection links fail closed. Low-data photo viewing is a visitor's own setting and is **not** shared. Blocked clipboard access shows a readonly, selected link that can be copied manually. Copying never sends a message or edits the owner's LAN Vault.
