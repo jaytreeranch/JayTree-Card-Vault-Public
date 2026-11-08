@@ -79,3 +79,8 @@ The email and GitHub offer actions remain keyboard-focusable when unavailable, s
 ## Low-data gallery (public v0.9.13)
 
 The public collection includes an optional Low-data view checkbox. When enabled, the page keeps every card's title, set, status, filters and collection counts but does not create gallery photo image requests; opening a specific card loads that one full original front photo. Visitors can turn regular photos back on without losing their current results or expanded number of cards. A browser that explicitly advertises navigator.connection.saveData === true gets low-data mode initially, but all other browsers preserve the normal lazy-loaded photo gallery by default. The setting is in-memory only for the current page: no cookies, visitor tracking or local storage. This helps visitors browsing collections with constrained data, not a guarantee of a particular network speed; the fixed catalog/checklist JSON still downloads as before. See docs/HANDOFF_20261107_PUBLIC_LOW_DATA_V0913.md.
+
+
+## Collection one-touch browsing reset (public v0.9.14)
+
+The public collection now shows how many browsing controls have been customized and provides a keyboard-accessible, mobile-friendly Clear all filters button. It clears card search, sport/year/review/set selectors, open-to-offers, selected card features, set-finder search, and custom sort settings in one action while preserving the visitor's Low-data preference. There is no new query service or visitor storage, and the card catalog/checklist data are unchanged. The button remains focusable with an explanatory state even when no filters are active.

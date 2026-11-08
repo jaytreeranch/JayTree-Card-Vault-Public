@@ -1,3 +1,6 @@
+## Public v0.9.14 mobile browse reset ? 2026-11-07
+Newest handoff docs/HANDOFF_20261107_PUBLIC_MOBILE_BROWSE_RESET_V0914.md. Public collection browse-state summary and one-touch clear: resets search, sport/year/set/review/offers/feature filters, chosen sorts and set-finder query, but preserves current Low-data image preference and all owner-approved source. Never infer missing cards or change LAN/Android. Maintain no data fetch or visitor tracking. Require full Chrome/regression, SHA-256 LAN rollback, GitHub remote main/feature and Pages/live acceptance.
+
 ## Public v0.9.13 Low-data card gallery ? 2026-11-07
 Latest handoff docs/HANDOFF_20261107_PUBLIC_LOW_DATA_V0913.md. Optional Low-data view suppresses all grid JPEG src assignments while preserving player/set/review/price/search filters. Opening an individual card must still display full photo. Auto-enable ONLY when browser navigator.connection.saveData===true, never assume all phones want photos hidden. No tracking/storage or new API, private LAN database/exporter or Android native changes. Preserve all approved JSON/photos and run browser/network QC plus GitHub remote/Pages handoff.
 

@@ -59,6 +59,7 @@ function refreshSetOptionLabels(){
  status.appendChild(document.createTextNode(" "));
  const link=document.createElement("a");link.href="#wantlist";link.textContent="Browse missing-card lists";
  status.appendChild(link);
+ updateBrowseSummary();
 }
 
 const $ = (id) => document.getElementById(id);
@@ -67,6 +68,35 @@ const safeImage = (path) => typeof path === "string" && /^assets\/[a-f0-9]{24}\.
 const value = (c) => typeof c.estimate_usd === "number" ? c.estimate_usd : -1;
 const text = (parent, name, content, className) => {const n=document.createElement(name);n.textContent=content || "";if(className)n.className=className;parent.appendChild(n);return n;};
 const cleanDate = (s) => /^\d{4}-\d{2}-\d{2}/.test(s||"") ? s.slice(0,10) : "—";
+// Mobile visitor clarity: account for ALL browse controls, while respecting Low-data view.
+function customizedBrowseCount(){
+ const ids=["search","sport","review","year","set","set-finder"];
+ let count=ids.filter(id=>String($(id).value).trim()!=="").length;
+ count+=selectedFeatures().length;
+ if($("offers").checked)count++;
+ if($("sort").value!=="name")count++;
+ if($("set-sort").value!=="year")count++;
+ return count;
+}
+function updateBrowseSummary(){
+ const count=customizedBrowseCount();
+ const cards=state.results.length.toLocaleString("en-US");
+ $("collection-browse-status").textContent=count?
+  count+" customized browse "+(count===1?"control":"controls")+" ? "+cards+" matching cards":
+  "All browse filters clear ? "+cards+" published cards";
+ // aria-disabled instead of disabled: remain keyboard focusable when clearing.
+ $("collection-browse-reset").setAttribute("aria-disabled",String(count===0));
+}
+function clearBrowseControls(){
+ if(customizedBrowseCount()===0)return;
+ for(const id of ["search","sport","review","year","set","set-finder"])$(id).value="";
+ $("sort").value="name";
+ $("set-sort").value="year";
+ $("offers").checked=false;
+ document.querySelectorAll("input[data-feature]").forEach(cb=>cb.checked=false);
+ refreshSetOptionLabels();
+ filtered();
+}
 function filtered() {
  const q = $("search").value.trim().toLocaleLowerCase(),
        sport=$("sport").value, review=$("review").value, year=$("year").value,
@@ -90,6 +120,7 @@ function filtered() {
  state.visibleCount=PAGE_SIZE;
  renderCards();
  renderSetSummary();
+ updateBrowseSummary();
 }
 function renderCards(){
  const grid=$("grid");
@@ -347,6 +378,7 @@ $("feature-clear").addEventListener("click",()=>{
 });
 $("set-finder").addEventListener("input",refreshSetOptionLabels);
 $("set-sort").addEventListener("change",refreshSetOptionLabels);
+$("collection-browse-reset").addEventListener("click",clearBrowseControls);
 ["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 function updateLowDataView(announce=false){

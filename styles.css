@@ -104,3 +104,11 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 .gallery-low-data input:focus-visible{outline:3px solid #f1c68e;outline-offset:3px;}
 .card-photo-deferred{display:flex;align-items:center;justify-content:center;min-height:90px;width:70%;max-width:150px;text-align:center;border:1px dashed #517285;border-radius:8px;padding:15px;color:#b9d7e6;font-size:13px;line-height:1.45;}
 @media(max-width:490px){.gallery-low-data{padding:12px;}.gallery-low-data label{flex-basis:100%;}}
+
+/* Public v0.9.14: compact mobile browse-state summary and one-touch reset. */
+.collection-browse-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:9px 16px;padding:11px 15px;margin:-12px 0 16px;border:1px solid #34586d;border-radius:8px;background:#0c2939;min-width:0;}
+.collection-browse-tools p{flex:1 1 215px;margin:0;color:#c6dbe6;font-size:13px;line-height:1.5;overflow-wrap:anywhere;}
+.collection-browse-tools button{min-height:42px;padding:9px 14px;border-radius:7px;border:1px solid #d4ae74;color:#182b3b;background:#f2c989;font-size:13px;font-weight:800;cursor:pointer;}
+.collection-browse-tools button[aria-disabled="true"]{opacity:.58;cursor:default;}
+.collection-browse-tools button:focus-visible{outline:3px solid #f1d69e;outline-offset:3px;}
+@media(max-width:490px){.collection-browse-tools{margin-top:0;padding:11px;}.collection-browse-tools button{width:100%;}}
