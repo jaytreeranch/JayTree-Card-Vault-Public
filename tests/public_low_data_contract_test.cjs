@@ -26,7 +26,9 @@ test("skip gallery image network sources yet always retain full photo on demand"
  assert.ok(js.includes('function updateLowDataView(announce=false)'));
  assert.ok(js.includes('state.rendered=0;'));
  assert.ok(js.includes('renderCards();'));
- assert.ok(js.includes('img.className="detail-photo";img.src=c.image'));
+ assert.ok(js.includes("renderDetailPhoto(picture,c);"));
+ assert.ok(js.includes('img.className="detail-photo";'));
+ assert.ok(js.includes('img.loading="eager";img.decoding="async";img.fetchPriority="high";'));
  assert.ok(!js.includes('img.src=null'));
 });
 test("unchanged approved 1,006-card snapshot and set denominators; no new fetch or owner API",()=>{

@@ -124,3 +124,15 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
  border:1px solid #9dbfd0;border-radius:7px;color:#eff9ff;background:#102f43;font:13px/1.45 monospace;}
 @media(max-width:490px){.collection-browse-tools #collection-view-link,
 .collection-browse-tools #collection-native-share:not([hidden]){width:100%;}}
+
+/* v0.9.21: show useful, readable public-card photo fallback on network failures. */
+.card-photo-unavailable{display:flex;align-items:center;justify-content:center;max-width:170px;
+ min-height:100px;margin:12px;padding:15px;text-align:center;border:1px dashed #7591a2;
+ border-radius:8px;color:#d4e4eb;background:#163145;font-size:13px;line-height:1.5;}
+.detail-photo-wrap{display:flex;flex-direction:column;align-items:stretch;gap:10px;min-width:0;}
+.detail-photo-status:not([hidden]){display:block;margin:0;padding:14px;border:1px dashed #7c9bb0;
+ border-radius:8px;background:#163144;color:#f0f6f8;font-size:13px;line-height:1.55;}
+.detail-photo-retry:not([hidden]){display:inline-flex;align-self:flex-start;align-items:center;
+ justify-content:center;min-height:44px;padding:9px 15px;border:1px solid #e1b979;
+ border-radius:7px;background:#e9bb71;color:#12273a;font:700 13px system-ui;cursor:pointer;}
+.detail-photo-retry:focus-visible{outline:3px solid #f6d5a2;outline-offset:3px;}

@@ -111,3 +111,8 @@ Visitors can choose gallery search, sport, year, review status, cataloged set, c
 ## Native device sharing of a filtered gallery (PUBLIC v0.9.20)
 
 Where supported by your browser, choose **Share N matching cards** beside **Copy link to this view**. The native device share menu receives the same published collection view URL, matching card count, and a warning that some identities still need review. The visitor selects the destination; nothing is sent automatically, and a browser handoff is not proof of delivery. Other browsers retain Copy and manual selection fallback. Private LAN inventory, original card photos and native Android scanner are unaffected.
+
+
+## Card photo availability and recovery (PUBLIC v0.9.21)
+
+If a published card's front image fails to load, the gallery displays **Photo temporarily unavailable** rather than an empty image. Selecting that card still opens its read-only details. Inside the detail view, a **Retry card photo** control allows up to two user-initiated attempts; repeated network failure does not trigger an endless retry or hide the card's information. Low-data mode continues to avoid gallery photo requests until visitors choose to see card details. This uses only existing, approved public front images; it does not create thumbnails or contact the private LAN.

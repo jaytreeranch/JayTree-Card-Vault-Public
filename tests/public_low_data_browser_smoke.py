@@ -72,16 +72,17 @@ def main():
                         # Opening one gallery card must request its full original photo and keep unverified status visible.
                         js("document.querySelector('#grid .card button').click()")
                         assert js("document.querySelector('#details').open") is True
-                        assert js("document.querySelectorAll('#details img.detail-photo').length")==1
-                        assert js("document.querySelector('#details img.detail-photo').getAttribute('src').startsWith('assets/')")
-                        wait("document.querySelector('#details img.detail-photo').complete")
+                        assert js("Boolean(document.querySelector('#details img.detail-photo')||document.querySelector('#details .detail-photo-status:not([hidden])'))") is True
+                        assert js("""(()=>{const img=document.querySelector('#details img.detail-photo');
+                           return !img||img.getAttribute('src').startsWith('assets/')})()""") is True
+                        wait("document.querySelector('#details img.detail-photo')?.complete||Boolean(document.querySelector('#details .detail-photo-status:not([hidden])'))")
                         req=js("""performance.getEntriesByType('resource').filter(x=>x.name.includes('/assets/')&&x.name.endsWith('.jpg')).length""")
                         assert req>=1,(width,req)
                         js("document.querySelector('#close').click()")
                         # The visitor may opt back into pictures. Existing search/filter/more count must persist.
                         js("""(()=>{const t=document.querySelector('#gallery-low-data-toggle');
                          t.checked=false;t.dispatchEvent(new Event('change',{bubbles:true}));})()""")
-                        assert js("document.querySelectorAll('#grid img').length")==48
+                        assert js("document.querySelectorAll('#grid .card-pic img, #grid .card-pic .card-photo-unavailable').length")==48
                         assert js("document.querySelectorAll('#grid .card').length")==48
                         assert js("document.querySelector('#gallery-low-data-status').textContent.includes('restored')")
                         js("document.querySelector('#load-more').click()")
@@ -107,7 +108,7 @@ def main():
                     rpc("Page.navigate",{"url":f"http://127.0.0.1:{server.server_port}/#collection"})
                     wait("document.querySelector('#stat-count')?.textContent==='1,006'")
                     assert js("document.querySelector('#gallery-low-data-toggle').checked") is False
-                    assert js("document.querySelectorAll('#grid img').length")==48
+                    assert js("document.querySelectorAll('#grid .card-pic img, #grid .card-pic .card-photo-unavailable').length")==48
                     print("PASS Chrome normal gallery defaults to visible lazy photos")
                 finally:ws.close()
             finally:

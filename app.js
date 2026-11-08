@@ -250,11 +250,25 @@ function renderCards(){
  $("load-more").hidden=showCount>=cards.length;
  for(const c of cards.slice(state.rendered,showCount)){
   const article=document.createElement("article");article.className="card";
-  const btn=document.createElement("button");btn.type="button";btn.setAttribute("aria-label","View "+c.player+" card details");
+  const btn=document.createElement("button");btn.type="button";
+  const cardName=c.player||"Unnamed";
+  btn.setAttribute("aria-label","View "+cardName+" card details");
   const pic=text(btn,"div","","card-pic");
   if(safeImage(c.image)){
    if(!$("gallery-low-data-toggle").checked){
-    const img=document.createElement("img");img.src=c.image;img.alt=c.player+" trading card front";img.loading="lazy";img.decoding="async";pic.appendChild(img);
+    const img=document.createElement("img");
+    img.alt=(c.player||"Unnamed card")+" trading card front";
+    // Apply loading hints and failure handling BEFORE src triggers a request.
+    img.loading="lazy";img.decoding="async";img.fetchPriority="low";
+    img.addEventListener("error",()=>{
+     if(!img.isConnected)return;
+     img.remove();
+     const fallback=text(pic,"span","Photo temporarily unavailable. Open card for retry.","card-photo-unavailable");
+     fallback.setAttribute("aria-hidden","true");
+     btn.setAttribute("aria-label","View "+cardName+" card details; photo temporarily unavailable");
+    },{once:true});
+    pic.appendChild(img);
+    img.src=c.image;
    }else{
     const skipped=text(pic,"span","Open for photo","card-photo-deferred");
     skipped.setAttribute("aria-hidden","true");
@@ -288,12 +302,52 @@ function makeHistory(container, values){
  const line=document.createElementNS("http://www.w3.org/2000/svg","polyline");line.setAttribute("points",pts.map(p=>p.join(",")).join(" "));line.setAttribute("fill","none");line.setAttribute("stroke","#e9bb71");line.setAttribute("stroke-width","2.5");line.setAttribute("stroke-linejoin","round");svg.appendChild(line);container.appendChild(svg);
  text(container,"p",cleanDate(series[0].week)+" → "+cleanDate(series[series.length-1].week)+" · "+fmtUSD(series[0].value)+" → "+fmtUSD(series[series.length-1].value),"chart-note");
 }
+// Card details always remain readable if an approved public front image is missing.
+function renderDetailPhoto(picture,c){
+ const approved=safeImage(c.image);
+ if(!approved){
+  text(picture,"p","Card photo unavailable; card details are still available.","detail-photo-status");
+  return;
+ }
+ const status=text(picture,"p","","detail-photo-status");
+ status.setAttribute("role","status");status.hidden=true;
+ const retry=text(picture,"button","Retry card photo","detail-photo-retry");
+ retry.type="button";retry.hidden=true;
+ let attempts=0,current=null;
+ function request(retryRequest=false){
+  if(current)current.remove();
+  status.hidden=true;retry.hidden=true;
+  const img=document.createElement("img");
+  img.className="detail-photo";
+  img.alt=(c.player||"Unnamed card")+" trading card front";
+  img.loading="eager";img.decoding="async";img.fetchPriority="high";
+  img.addEventListener("error",()=>{
+   if(current!==img||!img.isConnected)return;
+   img.remove();
+   status.textContent=attempts>=2?
+    "Photo still unavailable. Please try again later; card details remain accessible.":
+    "Photo temporarily unavailable. Card details remain accessible.";
+   status.hidden=false;
+   retry.hidden=attempts>=2;
+  },{once:true});
+  current=img;
+  picture.prepend(img);
+  // Only user-triggered retry bypasses a possibly cached failed response.
+  img.src=approved+(retryRequest?"?retry="+Date.now()+"-"+attempts:"");
+ }
+ retry.addEventListener("click",()=>{
+  if(attempts>=2)return;
+  attempts++;
+  request(true);
+ });
+ request();
+}
 function details(c){
  history.replaceState(null,"","#card="+c.id);
  const body=$("detail-content");body.replaceChildren();
  const wrap=text(body,"div","","detail-grid");
- const picture=document.createElement("div");wrap.appendChild(picture);
- if(safeImage(c.image)){const img=document.createElement("img");img.className="detail-photo";img.src=c.image;img.alt=c.player+" trading card";picture.appendChild(img);}
+ const picture=document.createElement("div");picture.className="detail-photo-wrap";wrap.appendChild(picture);
+ renderDetailPhoto(picture,c);
  const info=text(wrap,"div","");
  text(info,"p",String(c.sport||"").toUpperCase(),"kicker");
  text(info,"h2",c.player||"Unnamed card","detail-title");

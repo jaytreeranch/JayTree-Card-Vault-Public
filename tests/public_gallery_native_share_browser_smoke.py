@@ -228,7 +228,7 @@ def main():
                     rpc("Page.navigate",{"url":f"http://127.0.0.1:{server.server_port}/#collection"})
                     wait("document.querySelector('#stat-count')?.textContent==='1,006'")
                     assert js("document.querySelector('#gallery-low-data-toggle').checked") is False
-                    assert js("document.querySelectorAll('#grid img').length")==48
+                    assert js("document.querySelectorAll('#grid .card-pic img, #grid .card-pic .card-photo-unavailable').length")==48
                     print("PASS Chrome normal gallery defaults to visible lazy photos")
                 finally:ws.close()
             finally:
