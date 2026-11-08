@@ -23,3 +23,11 @@ Only public index.html, app.js, styles.css, Node/Chrome tests and safe project d
 1. Finish full QC, protected release, GitHub Pages/live deployment and final documentation/manager receipts.
 2. Real Android phone OS Share chooser/cellular/TalkBack tests when accessible, keeping Android native scanner ownership separate.
 3. Send LAN development an integration request for optional approved compact front-image thumbnails and SHA-256 provenance through its one-way public publisher, without using private original assets in PUBLIC.
+
+## Verified public runtime acceptance
+- Source commit aad469c5ef87369c66816462117e1a9149fd8e95 pushed on public main and isolated feature, exact remote SHA independently verified and clean isolated source worktree, GitHub Pages source workflow completed SUCCESS.
+- Ten actual public HTTPS static files equal committed Git bytes: index.html, app.js, styles.css, card-features.js, wantlist.js, wantlist.css, checklist-coverage.js, catalog.json, set-checklists.json, CNAME. Existing published static data, approved JPEG, CNAME and owner LAN/Android untouched.
+- Entire 78/78 Node contracts and all 18 local Chrome browser suites PASS. Real Chrome against live production HTTPS at 320,390,1366 PASS: native Web Share API mocked supported/unsupported, exact public gallery view URL and published matching count, provisional review caveat, chooser success/canceled/error, deferred result discarded after filter change, invalid view disabled, standard gallery link/clipboard fallback and Low-data isolation. Private /api/cards and /owner/private returned HTTP 404.
+- Important distinction: Chrome tests mocked navigator.share, no physical Android phone is authorized/attached; never count browser headless mobile emulation as actual OS/native recipient or physical cellular acceptance. No message was sent.
+- Protected baseline/candidate/released source and SHA-256 evidence in JayTree private LAN PublicShowcase receipts, plus immutable PUBLIC coordination release; next docs-only Git commit and Pages/current-status byte acceptance are separate gates.
+- Cross-workstream performance request opened: 20261107_1934_PUBLIC_TO_LAN_APPROVED_CARD_THUMBNAILS_V1_REQUEST.md in Coordination/Requests for LAN exporter owner review. REQUEST ONLY, no approved media export or LAN data changes.
