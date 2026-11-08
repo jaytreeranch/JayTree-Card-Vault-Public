@@ -560,7 +560,11 @@ $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissi
 $("wantlist-export-csv").addEventListener("click",exportMissingCsv);
 $("wantlist-print").addEventListener("click",printMissing);
 window.addEventListener("afterprint",clearPrintSheet);
-$("wantlist-dialog").addEventListener("close",clearPrintSheet);
+$("wantlist-dialog").addEventListener("close",()=>{
+ // A delayed close event from a previously closed modal must not wipe a newly
+ // opened set's print preparation. Real close still clears all print-only DOM.
+ if(!$("wantlist-dialog").open)clearPrintSheet();
+});
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());
 $("wantlist-dialog").addEventListener("click",e=>{if(e.target===$("wantlist-dialog"))$("wantlist-dialog").close();});
 for(const name of ["offer-condition","offer-variation","offer-asking-price","offer-photo-url","offer-note","offer-public-ok"]){

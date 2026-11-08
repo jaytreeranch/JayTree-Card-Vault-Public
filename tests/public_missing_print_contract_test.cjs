@@ -9,7 +9,8 @@ test("Native print is an explicit, accessible action alongside sourced CSV downl
  assert.ok(js.includes('if(!matches.length)return'));
  assert.ok(js.includes('try{window.print();}catch{clearPrintSheet();}'));
  assert.ok(js.includes('window.addEventListener("afterprint",clearPrintSheet)'));
- assert.ok(js.includes('$("wantlist-dialog").addEventListener("close",clearPrintSheet)'));
+ assert.ok(js.includes('$("wantlist-dialog").addEventListener("close",()=>{'));
+ assert.ok(js.includes('if(!$("wantlist-dialog").open)clearPrintSheet()'));
 });
 test("Complete matching set, including beyond first page, and public provenance only",()=>{
  assert.ok(js.includes('const matches=matchingMissing(s)'));

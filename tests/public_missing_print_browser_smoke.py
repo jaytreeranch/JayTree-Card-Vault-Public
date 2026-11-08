@@ -120,6 +120,10 @@ def main():
                         assert js("document.querySelector('#wantlist-print').textContent.includes('785 matching missing cards')")
                         js("document.querySelector('#wantlist-print').click()")
                         assert js("document.querySelectorAll('#want-print-content tbody tr').length")==785
+                        # Simulate delayed close event from prior modal while newly opened: must NOT clear sheet.
+                        js("document.querySelector('#wantlist-dialog').dispatchEvent(new Event('close'))")
+                        assert js("document.querySelector('#wantlist-dialog').open") is True
+                        assert js("document.querySelectorAll('#want-print-content tbody tr').length")==785
                         assert js("""new Set([...document.querySelectorAll('#want-print-content tbody tr td:nth-child(2)')].
                             map(x=>x.textContent)).size""")==785
                         assert "1991" in js("document.querySelector('#want-print-content h2').textContent")
