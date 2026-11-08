@@ -25,3 +25,11 @@ Original public catalog 1,006 cards, original photos, 27 sourced numbered sets/2
 1. Finish full Node/browser QC, protected LAN rollback, GitHub source and docs, Pages/live verification and immutable PUBLIC release receipts.
 2. Obtain physical Android/cellular/VoiceOver/TalkBack accessibility and real degraded-network photo recovery acceptance when authorized device available; do not mislabel mocked browser tests as hardware.
 3. Wait for LAN owner acceptance of optional approved thumbnail export contract before implementing any new public thumbnail URL/path/JSON field. Existing public JPEG remains authoritative and untouched.
+
+## Production source deployment acceptance ? VERIFIED
+- Runtime source a8ebc8a990bd8d4a4f6da1e00dd176fc45e6262a GitHub public main + feature remote exact SHA independently verified, clean source worktree; GitHub Pages source workflow completed SUCCESS.
+- Actual production HTTPS index.html, app.js, styles.css, card-features.js, wantlist.js, wantlist.css, checklist-coverage.js, catalog.json, set-checklists.json and CNAME all match Git bytes (10/10).
+- Actual HTTPS Chrome at 320,390,1366 PASS: intentionally dispatched public image load-failure events (not a real CDN outage) trigger visible fallback and correct card aria-label, full card metadata and correction form remain accessible, Retry card photo initiates exactly two click-only cache-busting attempts then hides, Low-data continues hiding gallery photo requests, no overflow. Actual public /api/cards and /owner/private HTTP 404.
+- Full Node 82/82 and local Chrome 19/19 suites PASS; existing gallery tests were intentionally updated to accept either a valid image element or the explicit network-failure placeholder on local test server with no JPG assets, without weakening card-count/Low-data invariants.
+- Original approved JSON (1,006 public card records, 27 sourced /21 unsourced sets, 6,513 missing numbered spots), CNAME, original JPG and LAN/Android private systems UNMODIFIED. LAN original/candidate/released source and SHA256 protected in CardVault/PublicShowcase/receipts/PUBLIC_V0921_PHOTO_RECOVERY_20261107.
+- Final documentation-only GitHub commit, remote SHA, docs Pages and live docs/CURRENT_STATUS.md exact-byte verification are separate gates. Physical Android/cellular, actual image outage and formal TalkBack/VoiceOver/NVDA NOT TESTED.
