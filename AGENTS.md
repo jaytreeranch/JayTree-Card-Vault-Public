@@ -1,3 +1,6 @@
+## Public v0.9.13 Low-data card gallery ? 2026-11-07
+Latest handoff docs/HANDOFF_20261107_PUBLIC_LOW_DATA_V0913.md. Optional Low-data view suppresses all grid JPEG src assignments while preserving player/set/review/price/search filters. Opening an individual card must still display full photo. Auto-enable ONLY when browser navigator.connection.saveData===true, never assume all phones want photos hidden. No tracking/storage or new API, private LAN database/exporter or Android native changes. Preserve all approved JSON/photos and run browser/network QC plus GitHub remote/Pages handoff.
+
 ## Public v0.9.12 accessible inquiry actions (2026-11-07)
 Read docs/HANDOFF_20261107_PUBLIC_INQUIRY_ACCESSIBILITY_V0912.md. Extend existing source-backed public inquiry builder with keyboard-reachable disabled email/GitHub actions, dynamic action guidance, aria-invalid photo states and reset. Preserve all approved catalog/checklists/photos, private LAN and Android boundaries. Chrome Accessibility.getFullAXTree verifies accessible link names/descriptions; NOT a substitute for actual screen-reader or real Android acceptance. GitHub SHA+Pages/rollback required.
 

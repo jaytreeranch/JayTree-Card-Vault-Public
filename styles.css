@@ -93,3 +93,14 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
  .navline nav { width:100%; justify-content:center; flex-wrap:nowrap; gap:18px; }
  .navline nav a { white-space:nowrap; }
 }
+
+/* Public v0.9.13: optional low-data gallery retains metadata and photo-on-demand. */
+.gallery-low-data{display:flex;flex-wrap:wrap;align-items:center;gap:6px 17px;border:1px solid #426176;background:#0e2739;border-radius:9px;padding:12px 16px;margin:0 0 17px;min-width:0;}
+.gallery-low-data label{display:inline-flex;align-items:center;gap:9px;color:#f6e1be;font-size:14px;font-weight:700;cursor:pointer;flex:0 0 auto;}
+.gallery-low-data input{width:19px;height:19px;accent-color:#e9bb71;cursor:pointer;}
+.gallery-low-data p{color:#b6cfdb;line-height:1.55;font-size:12px;margin:0;flex:1 1 240px;}
+.gallery-low-data .gallery-low-data-status{flex-basis:100%;color:#f2d09c;font-weight:600;}
+.gallery-low-data .gallery-low-data-status:empty{display:none;}
+.gallery-low-data input:focus-visible{outline:3px solid #f1c68e;outline-offset:3px;}
+.card-photo-deferred{display:flex;align-items:center;justify-content:center;min-height:90px;width:70%;max-width:150px;text-align:center;border:1px dashed #517285;border-radius:8px;padding:15px;color:#b9d7e6;font-size:13px;line-height:1.45;}
+@media(max-width:490px){.gallery-low-data{padding:12px;}.gallery-low-data label{flex-basis:100%;}}

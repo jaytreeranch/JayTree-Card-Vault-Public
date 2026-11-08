@@ -103,7 +103,14 @@ function renderCards(){
   const article=document.createElement("article");article.className="card";
   const btn=document.createElement("button");btn.type="button";btn.setAttribute("aria-label","View "+c.player+" card details");
   const pic=text(btn,"div","","card-pic");
-  if(safeImage(c.image)){const img=document.createElement("img");img.src=c.image;img.alt=c.player+" trading card front";img.loading="lazy";img.decoding="async";pic.appendChild(img);}
+  if(safeImage(c.image)){
+   if(!$("gallery-low-data-toggle").checked){
+    const img=document.createElement("img");img.src=c.image;img.alt=c.player+" trading card front";img.loading="lazy";img.decoding="async";pic.appendChild(img);
+   }else{
+    const skipped=text(pic,"span","Open for photo","card-photo-deferred");
+    skipped.setAttribute("aria-hidden","true");
+   }
+  }
   if(c.identity_unconfirmed)text(pic,"span","NEEDS REVIEW","card-tag review-tag");
   else if(c.for_sale)text(pic,"span","OPEN TO OFFERS","card-tag");
   const meta=text(btn,"div","","card-meta");
@@ -342,6 +349,20 @@ $("set-finder").addEventListener("input",refreshSetOptionLabels);
 $("set-sort").addEventListener("change",refreshSetOptionLabels);
 ["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
+function updateLowDataView(announce=false){
+ // Re-render only existing visible results; retain search/filter and Show More state.
+ state.rendered=0;
+ renderCards();
+ if(announce)$("gallery-low-data-status").textContent=$("gallery-low-data-toggle").checked?
+  "Low-data view enabled. Gallery photos are skipped; open any card to load its photo.":
+  "Photo gallery restored. Photos load lazily as you browse.";
+}
+$("gallery-low-data-toggle").addEventListener("change",()=>updateLowDataView(true));
+// Only auto-select for a browser reporting an explicit user Save-Data preference.
+// Do not infer mobile users want photos hidden. No persistent visitor tracking.
+$("gallery-low-data-toggle").checked=navigator.connection?.saveData===true;
+$("gallery-low-data-status").textContent=$("gallery-low-data-toggle").checked?
+ "Your browser requested data saving. Open any card to load its photo.":"";
 $("close").addEventListener("click",()=>$("details").close());
 $("details").addEventListener("close",()=>{if(location.hash.startsWith("#card="))history.replaceState(null,"",location.pathname+location.search+"#collection");});
 $("details").addEventListener("click",(ev)=>{if(ev.target===$("details"))$("details").close();});
