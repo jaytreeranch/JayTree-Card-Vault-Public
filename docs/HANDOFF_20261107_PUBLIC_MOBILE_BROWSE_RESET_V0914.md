@@ -29,3 +29,10 @@ Original/candidate source and SHA-256 receipts stored under \JT-DESKTOP\JayTreeF
 1. Complete all local QC, guarded source and docs releases, GitHub Pages/live acceptance and final LAN receipts.
 2. Coordinate optional smaller publisher-approved thumbnails only via LAN workstream's own approved export schema; keep public preview static and read-only.
 3. Test real Android/cellular and formal screen readers when an authorized device becomes accessible; follow evidence before adding further mobile optimizations.
+
+## Production source release QC ? VERIFIED
+- Source commit ac105c24da83304a77a30efb069a41c7e53d2160 pushed to public main and feature/public-mobile-browse-reset-v0914-20261107; both GitHub remote refs exact SHA and local clean worktree independently confirmed. GitHub Pages source workflow completed SUCCESS.
+- Ten live HTTPS files byte-for-byte identical to Git: index.html, app.js, styles.css, card-features.js, wantlist.js, wantlist.css, checklist-coverage.js, catalog.json, set-checklists.json and CNAME. Catalog, issued numbered checklists, photos and DNS unchanged.
+- Chrome CDP testing ACTUAL https://cards.jaytreebooks.com/#collection at 320px/390px/1366px passed: reset ten customized browse controls, all 1,006 original catalog entries and 49 set options restored, keyboard focus on clear button preserved, Low-data retains zero initial gallery JPEG requests under simulated Save-Data, full original photo on demand and normal gallery when Save-Data false. All 12 browser suites and 54/54 Node tests PASS. Private /api/cards and /owner/private paths HTTP 404.
+- Physical phone/cellular and actual screen reader still NOT tested; the existing GE78/GE75 ADB probes did not show an accessible device in known locations, not proof the phone is offline.
+- Before source push protected original and candidate SHA-256 files on JayTree LAN under CardVault/PublicShowcase/receipts/PUBLIC_V0914_BROWSE_RESET_20261107. Final docs-only commit may change main SHA but not runtime, so check docs Pages and actual live docs byte parity separately.
