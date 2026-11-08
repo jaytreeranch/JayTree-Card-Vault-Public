@@ -22,3 +22,10 @@ Real physical Android/cellular, NVDA/TalkBack/VoiceOver and actual copied messag
 1. Finish full QC, protected LAN rollback, GitHub/Pages source+docs and actual live share regression; write immutable PUBLIC receipt.
 2. Obtain real-device mobile/cellular and assistive technology acceptance when physical device available, especially long text selection and Share Sheet expectations.
 3. Additional sourced checklist numbers, official player identities or smaller card thumbnails require LAN owner approved one-way publisher contract, never PUBLIC modifications to original source data.
+
+## SOURCE production acceptance ? verified
+- Runtime source commit 9311403c42cb03707fc7e39d5f1f28410a0bc636 pushed on public main and isolated feature with exact full SHA remote verification, clean source worktree and GitHub Pages workflow SUCCESS.
+- Actual public HTTPS ten HTML/JS/CSS/catalog/checklist/CNAME files byte-for-byte identical Git. 1,006 published catalog entries, 27 sourced numbered sets, 21 unsourced unknown denominators, 6,513 approved missing published numbers and original photos unchanged.
+- Real production Chrome 320, 390, 1366 PASS: copies source-backed #6 filtered-list message with public source and name caution; incoming link restores exact filtered one-card set; inaccessible clipboard opens focused/selected manual fallback; stale async resolution does not show wrong result; 785 numbered missing spots share bounded 12-preview +773 remaining; stale/wrong-key/invalid 101-char links fail closed; no horizontal overflow. /api/cards and /owner/private HTTP 404.
+- Entire 66/66 Node source tests and 15/15 real local Chrome suites PASS, app syntax and staged whitespace PASS. Original/candidate/released-source SHA-256 manifest and rollback on JayTree LAN at CardVault/PublicShowcase/receipts/PUBLIC_V0917_FILTERED_SHARE_20261107.
+- Browser emulation does not certify real Android 17 cellular or actual screen reader. No public inquiry sent. Final docs-only Pages/byte acceptance separate and must be independently verified.
