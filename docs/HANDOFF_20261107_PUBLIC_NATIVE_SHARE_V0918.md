@@ -23,3 +23,10 @@ Public only index.html, wantlist.js, new regression tests, AGENTS, README, START
 1. Complete full regression and LAN rollback, guarded source/docs release, live HTTPS and GitHub SHA verification, stage log/manager receipt.
 2. When authorized physical Android Web Share/cellular available, test actual OS chooser and recipient apps/accessibility, without assuming delivery or editing the native Card Vault app.
 3. New checklist sources, verified card names or thumbnails require LAN-owned one-way approved publisher, not public edits to source data. Rollback via NEW ordinary Git revert after checking concurrent main, never reset/force push.
+
+## Production source release acceptance ? VERIFIED
+- Runtime source 9cabf8797604632c9c7c25d63c6f0b4d3e338c02 committed and pushed to public main and isolated feature, both exact GitHub remote SHA verified and clean source worktree; GitHub Pages source workflow completed SUCCESS.
+- Ten live custom HTTPS source/data assets byte-identical to Git: index.html, app.js, styles.css, card-features.js, wantlist.js, wantlist.css, checklist-coverage.js, catalog.json, set-checklists.json, CNAME. All approved data, original card images and DNS unchanged.
+- Actual real production Chrome at 320,390,1366 validates simulated navigator.share supported/unsupported, precise #6 sourced filtered message passed to mocked provider, OS chooser cancellation/other rejection status, stale Promise resolve ignored after filter change, 785-match preview 12+773, copy fallback and no overflow. Private public /api/cards and /owner/private return 404.
+- Full 70/70 Node contracts and all 16 local Chrome regression suites PASS. Production Share API mocked on desktop Chrome; this does not validate real OS chooser, Android handset/cellular, actual delivery or real screen-reader operation.
+- SHA-256 protected baseline/candidate/released Git source and preserved rollback at private LAN CardVault/PublicShowcase/receipts/PUBLIC_V0918_NATIVE_SHARE_20261107. Final docs-only Git commit may advance main SHA after this runtime source; independently verify docs Pages and live docs bytes before marking docs complete.
