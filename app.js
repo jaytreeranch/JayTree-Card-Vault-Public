@@ -108,6 +108,36 @@ function publicBrowseUrl(){
   (customizedBrowseCount()?"#browse="+encodeURIComponent(JSON.stringify(params)):"#collection");
  return url.split("#")[1].length>2400?null:url;
 }
+// Device-native gallery sharing is optional. A resolved browser handoff is not delivery.
+async function nativeShareBrowseView(){
+ if(typeof navigator.share!=="function"||!state.cards.length)return;
+ const url=publicBrowseUrl();
+ if(!url){
+  $("collection-view-link-status").textContent=
+   "One or more collection filters cannot be shared. Use a supported public filter.";
+  return;
+ }
+ const count=state.results.length;
+ const total=state.cards.length;
+ const message=count.toLocaleString("en-US")+" matching published card"+
+  (count===1?"":"s")+" out of "+total.toLocaleString("en-US")+
+  ". Public, read-only collection snapshot; Needs review identifications are provisional. "+
+  "This view may change when new owner-approved cards are published.";
+ clearBrowseLinkFeedback();
+ const attempt=browseShareEpoch;
+ // Must enter the browser's native Share API inside this user click, before any await.
+ try{
+  await navigator.share({title:"JayTree Card Vault - collection view",text:message,url});
+  if(attempt!==browseShareEpoch)return;
+  $("collection-view-link-status").textContent=
+   "Share menu handoff completed. Your chosen app controls whether anything was sent.";
+ }catch(error){
+  if(attempt!==browseShareEpoch)return;
+  $("collection-view-link-status").textContent=error?.name==="AbortError"?
+   "Share menu closed or canceled. You can still copy the view link.":
+   "Device sharing was unavailable. Use Copy link to this view instead.";
+ }
+}
 async function copyBrowseViewLink(){
  const url=publicBrowseUrl();
  if(!url){
@@ -169,6 +199,10 @@ function updateBrowseSummary(){
   "All browse filters clear ? "+cards+" published cards";
  // aria-disabled instead of disabled: remain keyboard focusable when clearing.
  $("collection-browse-reset").setAttribute("aria-disabled",String(count===0));
+ const native=$("collection-native-share");
+ native.hidden=typeof navigator.share!=="function";
+ native.disabled=!publicBrowseUrl();
+ native.textContent="Share "+cards+" matching "+(state.results.length===1?"card":"cards");
 }
 function clearBrowseControls(){
  if(customizedBrowseCount()===0)return;
@@ -467,6 +501,7 @@ $("set-sort").addEventListener("change",()=>{
  clearBrowseLinkFeedback();refreshSetOptionLabels();
 });
 $("collection-browse-reset").addEventListener("click",clearBrowseControls);
+$("collection-native-share").addEventListener("click",nativeShareBrowseView);
 $("collection-view-link").addEventListener("click",copyBrowseViewLink);
 window.addEventListener("hashchange",()=>{
  if(state.cards.length&&location.hash.startsWith("#browse="))restoreBrowseFromHash();

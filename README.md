@@ -106,3 +106,8 @@ On phones and other browsers that support the Web Share API, opening an approved
 ## Share a filtered collection view (public v0.9.19)
 
 Visitors can choose gallery search, sport, year, review status, cataloged set, card features, and sorting, then select **Copy link to this view**. Opening the link restores those published-card filters for another visitor, including the set finder and Open to offers state. It shares only already-public filter values, not individual private card copies or account data. Invalid or outdated collection links fail closed. Low-data photo viewing is a visitor's own setting and is **not** shared. Blocked clipboard access shows a readonly, selected link that can be copied manually. Copying never sends a message or edits the owner's LAN Vault.
+
+
+## Native device sharing of a filtered gallery (PUBLIC v0.9.20)
+
+Where supported by your browser, choose **Share N matching cards** beside **Copy link to this view**. The native device share menu receives the same published collection view URL, matching card count, and a warning that some identities still need review. The visitor selects the destination; nothing is sent automatically, and a browser handoff is not proof of delivery. Other browsers retain Copy and manual selection fallback. Private LAN inventory, original card photos and native Android scanner are unaffected.
