@@ -1,0 +1,24 @@
+# JayTree Card Vault PUBLIC v0.9.17 ? filtered list sharing
+Date: 2026-11-07 America/Chicago
+Repo: jaytreeranch/JayTree-Card-Vault-Public
+Isolated branch: feature/public-filtered-wantlist-share-v0917-20261107
+Baseline public main SHA: 8c829912dfbe0b89cd92fa1c83c802dc42ab36e7
+Public URL: https://cards.jaytreebooks.com/#wantlist
+Authorized machine: JT-GE78 via existing JayTree Local Control; hostname_test PASS, GE75 hostname_test also PASS. Read AGENTS, README, START_HERE, CURRENT_STATUS, previous dated v0.9.16 handoff and private Coordination/START_HERE and INTEGRATION_GATES. Only PUBLIC source owned.
+
+## Scope and functionality
+Existing public functionality: 1,006 approved published entries, 27 independently sourced numbered checklists, 21 unsourced unknown-denominator groups, 6,513 missing vetted numbered spots. Previous v0.9.15 CSV, v0.9.16 print, whole-set and individual-card URLs preserved. No owner data/publisher modifications.
+Add Copy message for N matching missing cards inside an opened sourced set. It uses the same approved missing-number/player/team filter as onscreen rows, CSV and print, including matches past 40 displayed. The generated text previews up to 12 *public* printed numbers with provisional published player names or explicit unidentified notices, explicitly states how many additional matches remain and links to the **full matching public set**. Adds public HTTPS checklist source and identity/variation cautions. For an unfiltered set, original #want-set link is reused; for a filter, a new #want-filter=URI-encoded JSON five-string array [sport,year,brand,set,query] restores that exact set and query. No copies are sent automatically, no social/email/GitHub posts or visitor data persistence.
+
+## Validation/security
+New shared filter URL validation: hash <=2500 chars, JSON exactly five strings, first four match a currently approved set key, final query non-empty <=100, no control bytes and at least one actual published missing number matches; unknown/stale/tampered hashes do not open fabricated entries. Existing #want-card and #want-set links unaffected. UI query max length 100; zero-match or invalid-length disables share. Clipboard success reports copied but not sent; when Clipboard API unavailable/blocked, a read-only textarea is exposed, focused and selected. Changing filters or opening a new set resets fallback and increments a generation marker; asynchronous clipboard success or failure is ignored once the originating filter/modal is stale. No new fetch, local/sessionStorage, cookies, analytics, private API or LAN publisher dependency. Uses textContent, never innerHTML for public reference values.
+
+## Testing and release
+Four new Node static/security contracts PASS; local Chrome real 320/390/1366 PASS: exact #6 two-spot Circle K list filtered to one, text includes public source + provisional disclaimer and #want-filter link reopens exactly one matching number; no clipboard fallback is selected manually; delayed clipboard resolve after filter switch cannot show stale copied state; 785-spot Upper Deck list copy previews only 12 and explicitly says +773 more, bounded length; invalid/truncated/wrong-key/101-char/nonmatching hash fails closed; no overflow. Must rerun all previous 62 Node tests and 14 Chrome suites => expected 66 Node + 15 Chrome, JS syntax/staged whitespace.
+Before pushing protect original and candidate source SHA-256 at \JT-DESKTOP\JayTreeFarm\CardVault\PublicShowcase\receipts\PUBLIC_V0917_FILTERED_SHARE_20261107. Commit feature then remote-SHA verify; fast-forward main only if unchanged. No force push. Confirm source Pages SUCCESS, public HTTPS 10/10 static source files byte equal Git, actual live Chrome share/copy/fallback, private /api/cards and /owner/private HTTP 404. Commit verified docs, remote SHA and final Pages/live docs acceptance; write immutable PUBLIC Coordination/Workstreams/PUBLIC receipts. Rollback to baseline through new normal revert after concurrent remote check. Never reset or force-push.
+
+## Limitations / exact next actions
+Real physical Android/cellular, NVDA/TalkBack/VoiceOver and actual copied message sent to recipient NOT TESTED. Chrome viewport emulation does not certify hardware. A shared link points to current public snapshot and may no longer match if future LAN-approved data changes; invalid stale links intentionally fail closed.
+1. Finish full QC, protected LAN rollback, GitHub/Pages source+docs and actual live share regression; write immutable PUBLIC receipt.
+2. Obtain real-device mobile/cellular and assistive technology acceptance when physical device available, especially long text selection and Share Sheet expectations.
+3. Additional sourced checklist numbers, official player identities or smaller card thumbnails require LAN owner approved one-way publisher contract, never PUBLIC modifications to original source data.

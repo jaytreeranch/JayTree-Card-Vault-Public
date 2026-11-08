@@ -253,13 +253,64 @@ function renderTiles(){
   list.appendChild(card);
  }
 }
-function matchingMissing(s){
- const q=$("wantlist-missing-search").value.trim().toLocaleLowerCase();
+function matchingMissing(s,filterText=$("wantlist-missing-search").value){
+ const q=filterText.trim().toLocaleLowerCase();
  const exact=q.startsWith("#")?q.slice(1):null;
  return s.missing_cards.filter(c=>exact!==null?
   c.number.toLocaleLowerCase()===exact:
   !q||c.number.toLocaleLowerCase().includes(q)||(c.player||"").toLocaleLowerCase().includes(q)||
   (c.team||"").toLocaleLowerCase().includes(q));
+}
+// A shared filter is set-scoped public data, not a private inventory lookup.
+const safeShareQuery=q=>typeof q==="string"&&q.length>0&&q.length<=100&&!/[\x00-\x1f\x7f]/.test(q);
+const filteredSetUrl=(s,q)=>location.origin+location.pathname+"#want-filter="+
+ encodeURIComponent(JSON.stringify([...s.key,q]));
+function shareMessage(s,matches,q){
+ const link=q?filteredSetUrl(s,q):setUrl(s);
+ const preview=matches.slice(0,12).map(c=>"#"+c.number+
+  (c.player?" - "+c.player+" (published reference)":" (name not independently verified)"));
+ const rest=matches.length>12?"... plus "+fmt(matches.length-12)+" more matching numbered spots.":"";
+ return [
+  "JayTree Card Vault - missing cards: "+title(s),
+  fmt(matches.length)+" matching missing numbered spots"+(q?" for filter: "+q:"")+
+   " (out of "+fmt(s.missing)+" missing in this sourced set).",
+  "Preview only:",
+  ...preview,rest,
+  "Open the complete matching public list: "+link,
+  sourceValid(s.source.url)?"Published checklist source: "+s.source.url:"",
+  "Public snapshot only. Names and variants may be provisional; confirm the exact printed number, set and condition before offering."
+ ].filter(Boolean).join("\n");
+}
+let shareGeneration=0;
+function clearShareFallback(){
+ shareGeneration++;
+ const manual=$("wantlist-share-manual");
+ manual.hidden=true;manual.value="";
+ $("wantlist-share-status").textContent="";
+}
+async function copyMatchingMessage(){
+ const s=state.selected;
+ if(!s||!state.sets.includes(s)||!$("wantlist-dialog").open)return;
+ const q=$("wantlist-missing-search").value.trim();
+ if(q&&!safeShareQuery(q))return;
+ const matches=matchingMissing(s);
+ if(!matches.length)return;
+ const message=shareMessage(s,matches,q);
+ clearShareFallback();
+ const attempt=shareGeneration;
+ const stillCurrent=()=>attempt===shareGeneration&&state.selected===s&&$("wantlist-dialog").open;
+ try{
+  if(!navigator.clipboard?.writeText)throw new Error("Clipboard not available");
+  await navigator.clipboard.writeText(message);
+  if(!stillCurrent())return;
+  $("wantlist-share-status").textContent="Copied "+fmt(matches.length)+
+   " matching missing numbers and their public list link. No message was sent.";
+ }catch{
+  if(!stillCurrent())return;
+  const manual=$("wantlist-share-manual");
+  manual.hidden=false;manual.value=message;manual.focus();manual.select();
+  $("wantlist-share-status").textContent="Clipboard blocked. The message is selected below; copy it manually. No message was sent.";
+ }
 }
 // Always quote cells and escape spreadsheet formula prefixes, even in imported reference text.
 // CSV is a user-selected download: never upload, post or expose private per-copy card data.
@@ -352,6 +403,11 @@ function renderMissing(){
  const printButton=$("wantlist-print");
  printButton.disabled=items.length===0;
  printButton.textContent="Print "+fmt(items.length)+" matching missing "+(items.length===1?"card":"cards");
+ const shareButton=$("wantlist-share-matching");
+ const query=$("wantlist-missing-search").value.trim();
+ shareButton.disabled=items.length===0||(query&&!safeShareQuery(query));
+ shareButton.textContent="Copy message for "+fmt(items.length)+" matching missing "+
+  (items.length===1?"card":"cards");
  if(state.visible===PAGE)list.replaceChildren();
  const begin=list.children.length;
  const end=Math.min(items.length,state.visible);
@@ -432,9 +488,10 @@ function renderGlobalMissing(){
   " matching missing numbered cards shown. Identifications may be provisional.";
  $("want-global-more").hidden=visible>=matches.length;
 }
-function openSet(s,selectedCard=null){
- // Only a vetted missing number from this exact sourced set can be deep-linked.
+function openSet(s,selectedCard=null,selectedQuery=""){
+ // Only a vetted numbered spot or valid matching sourced-set filter may be deep-linked.
  if(selectedCard&&!s.missing_cards.some(c=>c.number===selectedCard.number))return;
+ if(selectedQuery&&(!safeShareQuery(selectedQuery)||!matchingMissing(s,selectedQuery).length))return;
  state.selected=s;state.visible=PAGE;
  $("wantlist-dialog-content").replaceChildren();
  const panel=$("wantlist-dialog-content");
@@ -470,8 +527,9 @@ function openSet(s,selectedCard=null){
    share.replaceWith(manual);manual.focus();manual.select();
   }
  });
- $("wantlist-missing-search").value=selectedCard?"#"+selectedCard.number:"";
+ $("wantlist-missing-search").value=selectedCard?"#"+selectedCard.number:selectedQuery;
  $("wantlist-export-status").textContent="";
+ clearShareFallback();
  clearPrintSheet();
  $("wantlist-missing-list").replaceChildren();
  if(!$("wantlist-dialog").open)$("wantlist-dialog").showModal();
@@ -489,6 +547,18 @@ function parseHash(){
    const card=found?.missing_cards.find(c=>c.number===parts[4]);
    if(found&&card)openSet(found,card);
   }catch{/* Invalid or outdated card link: keep the gallery usable. */}
+  return;
+ }
+ if(hash.startsWith("#want-filter=")){
+  try{
+   if(hash.length>2500)return;
+   const parts=JSON.parse(decodeURIComponent(hash.slice("#want-filter=".length)));
+   if(!Array.isArray(parts)||parts.length!==5||!parts.every(v=>typeof v==="string"))return;
+   const q=parts[4];
+   if(!safeShareQuery(q))return;
+   const found=state.sets.find(s=>key(s)===JSON.stringify(parts.slice(0,4)));
+   if(found&&matchingMissing(found,q).length)openSet(found,null,q);
+  }catch{/* Invalid or outdated filtered public list: do not invent matches. */}
   return;
  }
  if(!hash.startsWith("#want-set="))return;
@@ -555,8 +625,11 @@ $("want-global-more").addEventListener("click",()=>{
  state.globalVisible+=PAGE;
  renderGlobalMissing();
 });
-$("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$("wantlist-missing-list").replaceChildren();renderMissing();});
+$("wantlist-missing-search").addEventListener("input",()=>{
+ state.visible=PAGE;clearShareFallback();$("wantlist-missing-list").replaceChildren();renderMissing();
+});
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
+$("wantlist-share-matching").addEventListener("click",copyMatchingMessage);
 $("wantlist-export-csv").addEventListener("click",exportMissingCsv);
 $("wantlist-print").addEventListener("click",printMissing);
 window.addEventListener("afterprint",clearPrintSheet);

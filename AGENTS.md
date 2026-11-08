@@ -1,3 +1,6 @@
+## Public v0.9.17 filtered missing-list sharing (2026-11-07)
+Read docs/HANDOFF_20261107_PUBLIC_FILTERED_SHARE_V0917.md. Add public set-specific #want-filter= links restoring a validated current missing-number/player/team filter, shareable 12-spot preview message and clipboard/manual fallback. Never expose private per-copy data or invent identities; no network submission. Protect race of asynchronous clipboard result after user changes filter/modal. Full regression, exact Git remote SHA/Pages, LAN rollback and immutable PUBLIC workstream receipt mandatory. LAN/Android and approved static data remain separate.
+
 ## Public v0.9.16 print missing-number checklist (2026-11-07)
 Latest handoff docs/HANDOFF_20261107_PUBLIC_MISSING_PRINT_V0916.md. Print-friendly existing sourced-set missing-card modal, ALL currently matching published numbers including beyond first 40 shown, source and provisional reference-name warning. Native browser print only on user gesture; print-only DOM removed after print/modal close. Do not mutate LAN/Android, published catalog/checklists, original images, private copy/serial data, CNAME or manager aggregate. Verify GitHub SHA, Pages, live Chrome print-media, private 404 and protected LAN rollback.
 

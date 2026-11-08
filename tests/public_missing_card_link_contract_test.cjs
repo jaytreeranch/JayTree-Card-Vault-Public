@@ -41,7 +41,8 @@ test("clipboard fallback is explicit, modal filter matches exact printed number"
  assert.ok(js.includes('button.textContent="Card link copied"'));
  assert.ok(js.includes('input.readOnly=true'));
  assert.ok(js.includes('input.focus();input.select()'));
- assert.ok(js.includes('selectedCard?"#"+selectedCard.number:""'));
+ assert.ok(js.includes('selectedCard?"#"+selectedCard.number:selectedQuery'));
+ assert.ok(js.includes('if(selectedCard&&!s.missing_cards.some(c=>c.number===selectedCard.number))return'));
  assert.ok(js.includes('c.number.toLocaleLowerCase()===exact'));
  assert.ok(!/\/api\/cards|method:\s*["']POST["']/.test(js));
 });

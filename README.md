@@ -92,3 +92,7 @@ Open a sourced set from the public want list and choose Download matching missin
 ## Print missing-card checklists (public v0.9.16)
 
 From any sourced set's missing-card list, choose **Print matching missing cards**. The browser's normal print dialog prepares a paper-friendly checklist of **all** current search matches, even those beyond the first 40 shown on screen. It includes the printed card number, published player/team references or an explicit unnamed note, a blank marking column, public source URL and provisional-identity warning. It does not include private inventory or originals. The visitor can print on paper or use the browser's Save as PDF option; nothing prints or downloads automatically. Printing is separate from the existing CSV and inquiry actions.
+
+## Share a filtered missing-card list (public v0.9.17)
+
+Within a sourced set's missing-number dialog, enter a printed number, player, or team and choose **Copy message for N matching missing cards**. The copied text contains a public link that restores exactly that current filter, a preview of up to 12 printed numbered spots (with the remaining count), the approved checklist source and a warning that published player references/variations may be provisional. Large lists remain available in full on the website, in CSV and via the print option. If the clipboard is blocked, a read-only, selected text field permits manual copying. The feature never emails/posts a message or alters inventory; unrecognized or outdated filtered links are ignored safely.

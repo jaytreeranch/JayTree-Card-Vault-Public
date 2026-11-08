@@ -1,0 +1,52 @@
+const test=require("node:test"),assert=require("node:assert/strict");
+const fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
+const root=path.resolve(__dirname,".."),read=n=>fs.readFileSync(path.join(root,n),"utf8");
+const js=read("wantlist.js"),h=read("index.html"),css=read("wantlist.css");
+test("Copy action has accessible help, status, manual selection without sending",()=>{
+ assert.ok(h.includes('id="wantlist-share-matching" type="button"'));
+ assert.ok(h.includes('id="wantlist-share-help"'));
+ assert.ok(h.includes('id="wantlist-share-status" role="status" aria-live="polite"'));
+ assert.ok(h.includes('id="wantlist-share-manual"')&&h.includes("readonly hidden"));
+ assert.ok(js.includes('addEventListener("click",copyMatchingMessage)'));
+ assert.ok(js.includes('await navigator.clipboard.writeText(message)'));
+ assert.ok(js.includes('let shareGeneration=0;'));
+ assert.ok(js.includes('const stillCurrent=()=>attempt===shareGeneration&&state.selected===s'));
+ assert.ok(js.includes('if(!stillCurrent())return;'));
+ assert.ok(js.includes('manual.focus();manual.select();'));
+ assert.ok(js.includes('No message was sent.'));
+ assert.ok(css.includes('.want-share-matching button{min-height:44px'));
+});
+test("Filtered link resolves only approved set with an exact validated query",()=>{
+ assert.ok(js.includes('"#want-filter="'));
+ assert.ok(js.includes('if(hash.length>2500)return'));
+ assert.ok(js.includes('parts.length!==5'));
+ assert.ok(js.includes('if(!safeShareQuery(q))return'));
+ assert.ok(js.includes('if(found&&matchingMissing(found,q).length)openSet(found,null,q)'));
+ assert.ok(js.includes('selectedQuery&&(!safeShareQuery(selectedQuery)||!matchingMissing(s,selectedQuery).length)'));
+ assert.ok(h.includes('maxlength="100"'));
+ const rx=js.match(/const safeShareQuery=q=>[^\n]+/);
+ assert.ok(rx);
+ const expr=rx[0].replace('const safeShareQuery=q=>','q=>').replace(/;$/,'');
+ const testQuery=vm.runInNewContext('('+expr+')');
+ assert.equal(testQuery("#6"),true);
+ for(const q of ["","A".repeat(101),"\n#6","\tfoo","\x7ffoo"])assert.equal(testQuery(q),false);
+});
+test("Message previews at most 12, explicitly names remainder, includes entire filtered link and cautions",()=>{
+ assert.ok(js.includes('matches.slice(0,12)'));
+ assert.ok(js.includes('" more matching numbered spots."'));
+ assert.ok(js.includes('filteredSetUrl(s,q):setUrl(s)'));
+ assert.ok(js.includes('sourceValid(s.source.url)'));
+ assert.ok(js.includes('Names and variants may be provisional'));
+ assert.ok(js.includes('complete matching public list:'));
+ assert.ok(js.includes('state.visible=PAGE;clearShareFallback();'));
+ assert.ok(js.includes('renderMissing();'));
+});
+test("Read-only public 1,006 catalog, 27 sourced sets and no new API calls",()=>{
+ const cards=JSON.parse(read("catalog.json"));
+ const sets=JSON.parse(read("set-checklists.json"));
+ assert.equal(cards.cards.length,1006);
+ assert.equal(sets.supported_set_count,27);
+ assert.equal(sets.supported_missing_spots,6513);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.ok(!/localStorage|sessionStorage|sendBeacon|\/owner\/|\/api\/cards/.test(js));
+});

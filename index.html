@@ -144,7 +144,7 @@
     <button type="button" id="wantlist-close" class="want-close" aria-label="Close missing-card list">Close</button>
     <div id="wantlist-dialog-content"></div>
     <div class="want-missing-toolbar">
-      <label><span class="sr-only">Search missing card numbers or players</span><input id="wantlist-missing-search" type="search" placeholder="Filter missing number or player" autocomplete="off"></label>
+      <label><span class="sr-only">Search missing card numbers or players</span><input id="wantlist-missing-search" type="search" placeholder="Filter missing number or player" maxlength="100" autocomplete="off"></label>
       <p id="wantlist-missing-status" aria-live="polite"></p>
     </div>
     <div class="want-export-tools">
@@ -152,6 +152,12 @@
       <button type="button" id="wantlist-export-csv" aria-describedby="wantlist-export-help">Download matching missing cards (CSV)</button>
       <p id="wantlist-export-help">Prints or exports every matching printed number in this sourced set, including results beyond the first 40. Published player names may be provisional; verify the precise card before making an offer.</p>
       <p id="wantlist-export-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="want-share-matching">
+      <button id="wantlist-share-matching" type="button" aria-describedby="wantlist-share-help">Copy matching-list message</button>
+      <p id="wantlist-share-help">Copy a concise message with a link to this exact filtered public missing-card list. The message previews up to 12 numbers; the link opens every matching card.</p>
+      <p id="wantlist-share-status" role="status" aria-live="polite"></p>
+      <textarea id="wantlist-share-manual" class="want-share-manual" aria-label="Select and manually copy this matching missing-card list message" readonly hidden></textarea>
     </div>
     <section id="want-print-content" aria-label="Printable public missing-card checklist" hidden></section>
     <ul id="wantlist-missing-list" class="want-missing-list"></ul>

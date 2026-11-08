@@ -193,3 +193,16 @@
  body.print-wantlist #want-print-content thead{display:table-header-group}
  body.print-wantlist #want-print-content .want-print-footer{margin-top:10pt}
 }
+
+/* v0.9.17: share an exact filtered public want-list with visible copy fallback. */
+.want-share-matching{display:flex;align-items:center;flex-wrap:wrap;gap:7px 16px;margin:10px 0 15px;
+ padding:12px 14px;background:#122c3c;border:1px solid #516e7e;border-radius:8px;min-width:0}
+.want-share-matching button{min-height:44px;padding:10px 14px;max-width:100%;border:1px solid #b8d2e2;
+ border-radius:7px;color:#eff9ff;background:#254b61;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.want-share-matching button:disabled{opacity:.55;cursor:not-allowed}
+.want-share-matching button:focus-visible{outline:3px solid #f0d1a2;outline-offset:3px}
+.want-share-matching p{flex:1 1 270px;color:#c4d7e3;margin:0;font-size:12px;line-height:1.5}
+.want-share-matching #wantlist-share-status:not(:empty){flex-basis:100%;font-weight:700;color:#f0d6a5}
+.want-share-matching .want-share-manual:not([hidden]){display:block;width:100%;min-height:120px;
+ color:#f1f6f9;background:#10283a;border:1px solid #a3c3d1;border-radius:6px;padding:11px;font:13px/1.5 monospace;resize:vertical}
+@media(max-width:490px){.want-share-matching{padding:10px}.want-share-matching button{width:100%}}
