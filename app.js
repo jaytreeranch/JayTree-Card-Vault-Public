@@ -2,6 +2,80 @@
 const PAGE_SIZE = 48;
 const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map() };
 const features=window.JayTreeCardFeatures;
+// Public-only snapshot fidelity: use published metadata; NEVER query private LAN state.
+const publishedSnapshot={catalog:null,checklists:null};
+function publishedTime(raw){
+ if(typeof raw!=="string"||! /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(raw))return null;
+ const date=new Date(raw);
+ return Number.isFinite(date.getTime())?date:null;
+}
+function formatPublishedTime(date){
+ return new Intl.DateTimeFormat("en-US",{
+  month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",
+  timeZone:"UTC",timeZoneName:"short"
+ }).format(date);
+}
+function renderPublishedSnapshot(){
+ const cat=publishedSnapshot.catalog,list=publishedSnapshot.checklists;
+ if(!cat){
+  $("snapshot-integrity").textContent=list?.failed?
+   "Catalog and numbered checklists are unavailable.":"Checking the published catalog and numbered checklists?";
+  return;
+ }
+ if(cat.failed){
+  $("snapshot-time").textContent="Catalog publication details unavailable";
+  $("snapshot-integrity").textContent="Public catalog unavailable; no live inventory data is accessible here.";
+  return;
+ }
+ $("snapshot-time").textContent=cat.date?
+  "Published "+formatPublishedTime(cat.date):
+  "Publication time unavailable in this public catalog";
+ $("snapshot-verified").textContent=cat.verified.toLocaleString("en-US");
+ $("snapshot-needs-review").textContent=cat.needsReview.toLocaleString("en-US");
+ if(!cat.valid){
+  $("snapshot-integrity").textContent=
+   "Published catalog counts do not agree with the displayed cards. Treat these totals as provisional.";
+ }else if(!list){
+  $("snapshot-integrity").textContent="Catalog counts checked. Verifying the separately published numbered checklists?";
+ }else if(list.failed){
+  $("snapshot-integrity").textContent="Catalog counts checked; numbered checklist status is unavailable.";
+ }else if(!cat.date||!list.date){
+  $("snapshot-integrity").textContent=
+   "Catalog counts checked; publication times are missing, so checklist alignment cannot be confirmed.";
+ }else if(cat.timestamp!==list.timestamp||cat.count!==list.cardCount){
+  $("snapshot-integrity").textContent=
+   "The catalog and numbered checklists do not report the same published snapshot. Some set totals may be out of date.";
+ }else{
+  $("snapshot-integrity").textContent=
+   "Catalog and numbered checklist files agree on publication time and card count. This does not confirm the current private Vault.";
+ }
+}
+function setPublishedCatalog(data){
+ const verified=state.cards.filter(c=>c.review_status==="Verified").length;
+ const needsReview=state.cards.filter(c=>c.review_status==="Needs review").length;
+ const date=publishedTime(data.generated_at_utc);
+ const valid=Number.isSafeInteger(data.count)&&data.count===data.cards.length&&
+  data.cards.length===state.cards.length&&
+  Number.isSafeInteger(data.verified_count)&&data.verified_count===verified&&
+  Number.isSafeInteger(data.needs_review_count)&&data.needs_review_count===needsReview&&
+  verified+needsReview===state.cards.length;
+ publishedSnapshot.catalog={count:state.cards.length,verified,needsReview,date,
+  timestamp:date?.getTime(),valid};
+ renderPublishedSnapshot();
+}
+// The existing audited checklist loader broadcasts metadata; no additional request.
+document.addEventListener("jaytree:public-snapshot-checklists",event=>{
+ const d=event.detail;
+ if(!d||d.failed){
+  publishedSnapshot.checklists={failed:true};
+ }else{
+  const date=publishedTime(d.generated_at_utc);
+  publishedSnapshot.checklists={date,timestamp:date?.getTime(),
+   cardCount:Number.isSafeInteger(d.catalog_card_count)?d.catalog_card_count:null};
+ }
+ renderPublishedSnapshot();
+});
+
 const selectedFeatures=()=>[...document.querySelectorAll('input[data-feature]:checked')].map(n=>n.value);
 function refreshFeatureCounts(){
  for(const opt of features.OPTIONS){
@@ -455,6 +529,7 @@ async function load(){
   const data=await res.json();
   if(data.schema!=="jaytree.public-showcase.v1"||data.readonly!==true||!Array.isArray(data.cards))throw new Error("Unexpected catalog format");
   state.cards=data.cards.filter(c=>c && safeImage(c.image));
+  setPublishedCatalog(data);
   $("stat-count").textContent=state.cards.length.toLocaleString("en-US");
   const sum=state.cards.reduce((acc,c)=>acc+(Number.isFinite(c.estimate_usd)?c.estimate_usd*Math.max(1,c.quantity||1):0),0);
   $("stat-estimate").textContent=fmtUSD(sum);
@@ -486,6 +561,8 @@ async function load(){
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
   if(deepLink){const selected=state.cards.find(c=>c.id===deepLink[1]);if(selected)details(selected);}
  }catch(err){
+  publishedSnapshot.catalog={failed:true};
+  renderPublishedSnapshot();
   $("result-count").textContent="Catalog temporarily unavailable";
   $("empty").hidden=false;
   $("empty").querySelector("p").textContent="Please check back soon.";

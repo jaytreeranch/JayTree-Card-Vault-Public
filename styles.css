@@ -136,3 +136,14 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
  justify-content:center;min-height:44px;padding:9px 15px;border:1px solid #e1b979;
  border-radius:7px;background:#e9bb71;color:#12273a;font:700 13px system-ui;cursor:pointer;}
 .detail-photo-retry:focus-visible{outline:3px solid #f6d5a2;outline-offset:3px;}
+
+/* PUBLIC v0.9.22: quiet, readable provenance and identification state (not a live-data badge). */
+.snapshot-panel{padding-top:18px;padding-bottom:20px;border-bottom:1px solid #345266;}
+.snapshot-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;}
+.snapshot-head h2{font:600 15px/1.5 system-ui,sans-serif;margin:0;color:#eaf4f8;}
+.snapshot-head p{margin:0;font:12px/1.5 system-ui,sans-serif;color:#cbdde6;overflow-wrap:anywhere;}
+.snapshot-review-counts{display:flex;flex-wrap:wrap;gap:9px 19px;margin:11px 0;font:13px/1.5 system-ui,sans-serif;color:#deebf1;}
+.snapshot-review-counts strong{font-variant-numeric:tabular-nums;font-size:16px;color:#f3e0bd;}
+.snapshot-panel #snapshot-integrity{margin:8px 0;color:#dbebf2;font:13px/1.5 system-ui,sans-serif;}
+.snapshot-explainer{margin:7px 0 0;color:#b7cad5;font:12px/1.55 system-ui,sans-serif;}
+@media(max-width:490px){.snapshot-panel{padding-top:15px;padding-bottom:16px;}.snapshot-review-counts{gap:6px 14px;}}

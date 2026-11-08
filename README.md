@@ -1,6 +1,6 @@
 # JayTree Card Vault - Public Collection
 
-Owner-authorized read-only gallery: 1006 public front-card photographs, 503 Verified entries and 503 Needs review. The latter identifications are provisional and do not display valuations or sale offers.
+Owner-authorized read-only gallery of approved public front-card photographs. The site derives its published card count, Verified count, Needs review count and timestamp from the current approved static catalog. These are publication snapshots, not live private inventory data. Needs review identities are provisional and cannot display valuations or offers.
 
 ## GitHub Pages
 
@@ -116,3 +116,10 @@ Where supported by your browser, choose **Share N matching cards** beside **Copy
 ## Card photo availability and recovery (PUBLIC v0.9.21)
 
 If a published card's front image fails to load, the gallery displays **Photo temporarily unavailable** rather than an empty image. Selecting that card still opens its read-only details. Inside the detail view, a **Retry card photo** control allows up to two user-initiated attempts; repeated network failure does not trigger an endless retry or hide the card's information. Low-data mode continues to avoid gallery photo requests until visitors choose to see card details. This uses only existing, approved public front images; it does not create thumbnails or contact the private LAN.
+
+
+## Published snapshot freshness and integrity (PUBLIC v0.9.22)
+
+The collection shows public catalog publication time (UTC), its computed Verified and Needs review totals, and whether the separately published numbered-checklist JSON reports the same snapshot timestamp and card count. The notice distinguishes the public static export from the private authoritative LAN. A mismatch warns about data differences without silently changing approved files.
+
+**Read-only Gate A before approving the next PUBLIC export:** run node validate_public_snapshot.cjs. For staged public JSON fixtures, run node validate_public_snapshot.cjs --catalog path/to/catalog.json --checklists path/to/set-checklists.json --json. The tool checks public schemas, exact review totals, unique published IDs/front image paths, checklist arithmetic, distinct missing numbers and timestamp, prints SHA-256 and exits nonzero on failure. It validates internal public-file consistency, not live owner sync or physical card identification. No new API or publisher action was added.

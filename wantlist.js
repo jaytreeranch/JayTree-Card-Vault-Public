@@ -630,6 +630,10 @@ async function loadWantList(){
      !count(data.named_set_count)||data.named_set_count!==namedTotal)
    throw new Error("Checklist summary does not match details");
   state.sets=data.sets;
+  // Notify the public snapshot panel using validated in-memory metadata only.
+  document.dispatchEvent(new CustomEvent("jaytree:public-snapshot-checklists",{
+   detail:{generated_at_utc:data.generated_at_utc,catalog_card_count:data.catalog_card_count}
+  }));
   // Share this vetted public numbered-checklist snapshot with the collection dropdown.
   document.dispatchEvent(new CustomEvent("jaytree:checklists-ready",{detail:state.sets}));
   $("wantlist-intro").textContent="Browse "+fmt(data.supported_set_count)+" independently sourced numbered checklists, including "+fmt(data.named_set_count)+" with verified player names. Missing cards are numbered spots not currently recorded in the public collection. Catalog snapshot: "+String(data.generated_at_utc||"date unavailable").slice(0,10)+".";
@@ -640,6 +644,7 @@ async function loadWantList(){
   searchAllMissing();
   parseHash();
  }catch{
+  document.dispatchEvent(new CustomEvent("jaytree:public-snapshot-checklists",{detail:{failed:true}}));
   $("wantlist-intro").textContent="Verified set checklists are temporarily unavailable. You can still browse every publicly listed card in the collection.";
   $("wantlist-count").textContent="Checklists unavailable";
   $("want-global-help").textContent="Missing-card search is unavailable while the sourced checklist snapshot cannot be verified.";
