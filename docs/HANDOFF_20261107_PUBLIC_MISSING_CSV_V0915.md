@@ -22,3 +22,10 @@ Rollback baseline public main 00eb739885f70ed931557ce36bf33e905ed7ad32 with NEW 
 1. Complete full local QC, protected backup, GitHub source/docs deployment and exact live CSV/browser acceptance.
 2. Continue approved missing checklist data solely via LAN owner static export; public owner copies/serials must remain private.
 3. Real Android/cellular and formal assistive-screen-reader validation when an authorized device is accessible; optional smaller thumbnails need LAN publisher contract.
+
+## Production SOURCE release acceptance ? verified
+- Runtime source 57543e4ba27074b00fb189704e3aa9774156aeee pushed and exact remote SHA verified on both public main and feature/public-wantlist-csv-v0915-20261107. GitHub Pages SOURCE completed SUCCESS.
+- Ten actual live HTTPS HTML/JS/CSS/catalog/checklist/CNAME files byte-identical Git. 1,006 published cards, 27 sourced, 21 unsourced groups, original photos and DNS unchanged.
+- Actual live Chrome 320/390/1366 downloaded genuine CSV files with 2 unnamed Circle K missing numbers, exact filtered #6 one row, and full 785 Upper Deck missing slots though only 40 DOM entries visible. Blank unverified names and provenance/caution validated. Private owner routes 404.
+- All 58/58 Node contracts and 13 Chrome suites passed; protected source and rollback SHA256 archive on JayTree LAN CardVault/PublicShowcase/receipts/PUBLIC_V0915_MISSING_CSV_20261107.
+- Public CSV represents the vetted static snapshot, not realtime private inventory. No email/GitHub inquiry submitted, actual Android hardware/cellular and real screenreader untested. Docs-only follow-up may advance Git main SHA; verify workflow and live docs bytes separately.
