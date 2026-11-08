@@ -96,3 +96,8 @@ From any sourced set's missing-card list, choose **Print matching missing cards*
 ## Share a filtered missing-card list (public v0.9.17)
 
 Within a sourced set's missing-number dialog, enter a printed number, player, or team and choose **Copy message for N matching missing cards**. The copied text contains a public link that restores exactly that current filter, a preview of up to 12 printed numbered spots (with the remaining count), the approved checklist source and a warning that published player references/variations may be provisional. Large lists remain available in full on the website, in CSV and via the print option. If the clipboard is blocked, a read-only, selected text field permits manual copying. The feature never emails/posts a message or alters inventory; unrecognized or outdated filtered links are ignored safely.
+
+
+## Device-native sharing of missing-card lists (public v0.9.18)
+
+On phones and other browsers that support the Web Share API, opening an approved set's missing-card list also offers **Share N matching missing cards** next to **Copy message**. Tapping it opens the native Share menu with the exact same source-backed, filtered missing-number message and public link. The website never chooses a recipient or posts itself. Closing the menu or an unavailable device Share feature keeps Copy and its manual fallback available. A resolved Share API request means the browser accepted the handoff, **not** that a message was delivered. The approved catalog and private LAN inventory remain separate.

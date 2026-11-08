@@ -312,6 +312,32 @@ async function copyMatchingMessage(){
   $("wantlist-share-status").textContent="Clipboard blocked. The message is selected below; copy it manually. No message was sent.";
  }
 }
+// Native Web Share is opt-in and progressive: unsupported browsers retain Copy message.
+async function nativeShareMatching(){
+ const s=state.selected;
+ if(!s||!state.sets.includes(s)||!$("wantlist-dialog").open||
+    typeof navigator.share!=="function")return;
+ const q=$("wantlist-missing-search").value.trim();
+ if(q&&!safeShareQuery(q))return;
+ const matches=matchingMissing(s);
+ if(!matches.length)return;
+ const message=shareMessage(s,matches,q);
+ clearShareFallback();
+ const attempt=shareGeneration;
+ const stillCurrent=()=>attempt===shareGeneration&&state.selected===s&&$("wantlist-dialog").open;
+ // IMPORTANT: invoke share immediately inside the visitor click gesture, before any await.
+ try{
+  await navigator.share({title:"JayTree Card Vault - "+title(s),text:message});
+  if(!stillCurrent())return;
+  $("wantlist-share-status").textContent=
+   "Shared with your device's Share menu. Any actual sending is controlled by the app you chose.";
+ }catch(error){
+  if(!stillCurrent())return;
+  $("wantlist-share-status").textContent=error?.name==="AbortError"?
+   "Share menu closed or canceled. You can still copy the message.":
+   "Native sharing is unavailable. Use Copy message instead.";
+ }
+}
 // Always quote cells and escape spreadsheet formula prefixes, even in imported reference text.
 // CSV is a user-selected download: never upload, post or expose private per-copy card data.
 function csvCell(value){
@@ -407,6 +433,11 @@ function renderMissing(){
  const query=$("wantlist-missing-search").value.trim();
  shareButton.disabled=items.length===0||(query&&!safeShareQuery(query));
  shareButton.textContent="Copy message for "+fmt(items.length)+" matching missing "+
+  (items.length===1?"card":"cards");
+ const nativeShare=$("wantlist-native-share");
+ nativeShare.hidden=typeof navigator.share!=="function";
+ nativeShare.disabled=shareButton.disabled;
+ nativeShare.textContent="Share "+fmt(items.length)+" matching missing "+
   (items.length===1?"card":"cards");
  if(state.visible===PAGE)list.replaceChildren();
  const begin=list.children.length;
@@ -629,6 +660,7 @@ $("wantlist-missing-search").addEventListener("input",()=>{
  state.visible=PAGE;clearShareFallback();$("wantlist-missing-list").replaceChildren();renderMissing();
 });
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
+$("wantlist-native-share").addEventListener("click",nativeShareMatching);
 $("wantlist-share-matching").addEventListener("click",copyMatchingMessage);
 $("wantlist-export-csv").addEventListener("click",exportMissingCsv);
 $("wantlist-print").addEventListener("click",printMissing);

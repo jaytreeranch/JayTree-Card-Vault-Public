@@ -1,3 +1,6 @@
+## Public v0.9.18 optional native Web Share menu (2026-11-07)
+Read docs/HANDOFF_20261107_PUBLIC_NATIVE_SHARE_V0918.md. Native Share N matching cards appears ONLY on browsers exposing navigator.share, uses existing public vetted shareMessage (bounded 12-number preview, source and provisional caution), and only invokes device share chooser on an explicit visitor click. Never auto-send or claim delivery from API resolution. Copy/manual fallback always remains. Cancellation, OS error and stale asynchronous results are guarded; no LAN/Android, catalog/checklists/photos/DNS or private copy fields changed. Full regressions, LAN SHA256 and GitHub remote/Pages/live verification mandatory.
+
 ## Public v0.9.17 filtered missing-list sharing (2026-11-07)
 Read docs/HANDOFF_20261107_PUBLIC_FILTERED_SHARE_V0917.md. Add public set-specific #want-filter= links restoring a validated current missing-number/player/team filter, shareable 12-spot preview message and clipboard/manual fallback. Never expose private per-copy data or invent identities; no network submission. Protect race of asynchronous clipboard result after user changes filter/modal. Full regression, exact Git remote SHA/Pages, LAN rollback and immutable PUBLIC workstream receipt mandatory. LAN/Android and approved static data remain separate.
 
