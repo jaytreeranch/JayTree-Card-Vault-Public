@@ -147,6 +147,11 @@
       <label><span class="sr-only">Search missing card numbers or players</span><input id="wantlist-missing-search" type="search" placeholder="Filter missing number or player" autocomplete="off"></label>
       <p id="wantlist-missing-status" aria-live="polite"></p>
     </div>
+    <div class="want-export-tools">
+      <button type="button" id="wantlist-export-csv" aria-describedby="wantlist-export-help">Download matching missing cards (CSV)</button>
+      <p id="wantlist-export-help">Exports every matching printed number in this sourced set, including results beyond the first 40. Published player names may be provisional; verify the precise card before making an offer.</p>
+      <p id="wantlist-export-status" role="status" aria-live="polite"></p>
+    </div>
     <ul id="wantlist-missing-list" class="want-missing-list"></ul>
     <div class="want-more-wrap"><button type="button" id="wantlist-more" hidden>Show more missing cards</button></div>
   </div>

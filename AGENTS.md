@@ -1,3 +1,6 @@
+## Public v0.9.15 missing numbered-card CSV (2026-11-07)
+Newest handoff docs/HANDOFF_20261107_PUBLIC_MISSING_CSV_V0915.md. Visitor-initiated source-backed CSV download in missing set dialog, ALL matching printed numbered spots even beyond 40 shown; CSV spreadsheet-formula safety, no private copies/serials/guessed names or downloads on page load. Public HTML/JS/CSS only. No LAN, Android, manager aggregate, published source JSON or image changes. GitHub Pages and LAN SHA256 continuity gates mandatory.
+
 ## Public v0.9.14 mobile browse reset ? 2026-11-07
 Newest handoff docs/HANDOFF_20261107_PUBLIC_MOBILE_BROWSE_RESET_V0914.md. Public collection browse-state summary and one-touch clear: resets search, sport/year/set/review/offers/feature filters, chosen sorts and set-finder query, but preserves current Low-data image preference and all owner-approved source. Never infer missing cards or change LAN/Android. Maintain no data fetch or visitor tracking. Require full Chrome/regression, SHA-256 LAN rollback, GitHub remote main/feature and Pages/live acceptance.
 

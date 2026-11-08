@@ -253,15 +253,54 @@ function renderTiles(){
   list.appendChild(card);
  }
 }
-function renderMissing(){
- const s=state.selected;if(!s)return;
- const list=$("wantlist-missing-list");
+function matchingMissing(s){
  const q=$("wantlist-missing-search").value.trim().toLocaleLowerCase();
  const exact=q.startsWith("#")?q.slice(1):null;
- const items=s.missing_cards.filter(c=>exact!==null?
+ return s.missing_cards.filter(c=>exact!==null?
   c.number.toLocaleLowerCase()===exact:
   !q||c.number.toLocaleLowerCase().includes(q)||(c.player||"").toLocaleLowerCase().includes(q)||
   (c.team||"").toLocaleLowerCase().includes(q));
+}
+// Always quote cells and escape spreadsheet formula prefixes, even in imported reference text.
+// CSV is a user-selected download: never upload, post or expose private per-copy card data.
+function csvCell(value){
+ const cleaned=String(value??"").replace(/[\x00-\x1f\x7f]/g," ").trim();
+ const safe=/^[=+\-@]/.test(cleaned)?"'"+cleaned:cleaned;
+ return '"'+safe.replace(/"/g,'""')+'"';
+}
+function exportMissingCsv(){
+ const s=state.selected;if(!s||!state.sets.includes(s))return;
+ const matches=matchingMissing(s);
+ if(!matches.length)return;
+ const names=["Sport","Year","Brand","Set","Printed number","Published player reference",
+  "Published team reference","Public checklist source","Public missing card link","Identity caution"];
+ const entries=matches.map(c=>[
+  s.sport,s.year,s.brand,s.set,String(c.number),c.player||"",c.team||"",
+  sourceValid(s.source.url)?s.source.url:"",cardUrl(s,c),
+  c.player?"Reference may be provisional; confirm printed number and variation":
+   "Player not independently named; confirm printed number and variation"
+ ]);
+ const csv="\uFEFF"+[names,...entries].map(columns=>columns.map(csvCell).join(",")).join("\r\n")+"\r\n";
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const anchor=document.createElement("a");
+ const basename=[s.year,s.brand,s.set].filter(Boolean).join("_")
+  .replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,80)||"sourced_set";
+ anchor.download="JayTree_Missing_"+basename+".csv";
+ anchor.href=url;anchor.hidden=true;
+ document.body.appendChild(anchor);
+ anchor.click();anchor.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("wantlist-export-status").textContent="Prepared "+fmt(matches.length)+
+  " missing numbered "+(matches.length===1?"card":"cards")+" for CSV download.";
+}
+function renderMissing(){
+ const s=state.selected;if(!s)return;
+ const list=$("wantlist-missing-list");
+ const items=matchingMissing(s);
+ const exportButton=$("wantlist-export-csv");
+ exportButton.disabled=items.length===0;
+ exportButton.textContent="Download "+fmt(items.length)+" matching missing "+(items.length===1?"card":"cards")+" (CSV)";
  if(state.visible===PAGE)list.replaceChildren();
  const begin=list.children.length;
  const end=Math.min(items.length,state.visible);
@@ -381,6 +420,7 @@ function openSet(s,selectedCard=null){
   }
  });
  $("wantlist-missing-search").value=selectedCard?"#"+selectedCard.number:"";
+ $("wantlist-export-status").textContent="";
  $("wantlist-missing-list").replaceChildren();
  if(!$("wantlist-dialog").open)$("wantlist-dialog").showModal();
  renderMissing();
@@ -465,6 +505,7 @@ $("want-global-more").addEventListener("click",()=>{
 });
 $("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$("wantlist-missing-list").replaceChildren();renderMissing();});
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
+$("wantlist-export-csv").addEventListener("click",exportMissingCsv);
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());
 $("wantlist-dialog").addEventListener("click",e=>{if(e.target===$("wantlist-dialog"))$("wantlist-dialog").close();});
 for(const name of ["offer-condition","offer-variation","offer-asking-price","offer-photo-url","offer-note","offer-public-ok"]){

@@ -84,3 +84,7 @@ The public collection includes an optional Low-data view checkbox. When enabled,
 ## Collection one-touch browsing reset (public v0.9.14)
 
 The public collection now shows how many browsing controls have been customized and provides a keyboard-accessible, mobile-friendly Clear all filters button. It clears card search, sport/year/review/set selectors, open-to-offers, selected card features, set-finder search, and custom sort settings in one action while preserving the visitor's Low-data preference. There is no new query service or visitor storage, and the card catalog/checklist data are unchanged. The button remains focusable with an explanatory state even when no filters are active.
+
+## Download missing numbered card lists (public v0.9.15)
+
+Open a sourced set from the public want list and choose Download matching missing cards (CSV). The spreadsheet includes all matching printed numbers for that set, even if only 40 are initially shown; the current number/player/team filter also applies. It includes published player/team references where available, the public checklist source, direct missing-card links, and provisional identity warnings. It contains no private owner copy identifiers, serial stamps, personal information, or guessed player names. CSV fields are quoted and formula characters escaped. Downloads occur only on a visitor click and make no inventory edits.

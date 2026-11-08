@@ -152,3 +152,12 @@
 #offer-photo-url[aria-invalid="true"]{border-color:#ffd8a0;box-shadow:0 0 0 1px #ffd8a0;}
 .offer-actions a[aria-disabled="true"]:focus-visible{outline:3px solid #f0c584;outline-offset:3px;}
 @media(max-width:540px){.offer-action-item{flex-basis:100%;}}
+
+/* Public v0.9.15: visitor-requested, source-backed missing-number checklist CSV. */
+.want-export-tools{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:12px 0 16px;padding:12px 14px;border:1px solid #4d6475;background:#102e40;border-radius:8px;}
+.want-export-tools button{min-height:44px;max-width:100%;padding:10px 14px;color:#182938;background:#efd09b;border:1px solid #efd09b;border-radius:7px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;white-space:normal;text-align:center;}
+.want-export-tools button:disabled{opacity:.55;cursor:not-allowed;}
+.want-export-tools button:focus-visible{outline:3px solid #f1d39a;outline-offset:3px;}
+.want-export-tools p{flex:1 1 260px;color:#c2d1d9;font-size:12px;line-height:1.55;margin:0;}
+.want-export-tools #wantlist-export-status:not(:empty){flex-basis:100%;color:#f0d3a3;font-weight:700;}
+@media(max-width:490px){.want-export-tools button{width:100%;}.want-export-tools{padding:10px;}}
