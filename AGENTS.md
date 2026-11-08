@@ -1,3 +1,6 @@
+## Public v0.9.16 print missing-number checklist (2026-11-07)
+Latest handoff docs/HANDOFF_20261107_PUBLIC_MISSING_PRINT_V0916.md. Print-friendly existing sourced-set missing-card modal, ALL currently matching published numbers including beyond first 40 shown, source and provisional reference-name warning. Native browser print only on user gesture; print-only DOM removed after print/modal close. Do not mutate LAN/Android, published catalog/checklists, original images, private copy/serial data, CNAME or manager aggregate. Verify GitHub SHA, Pages, live Chrome print-media, private 404 and protected LAN rollback.
+
 ## Public v0.9.15 missing numbered-card CSV (2026-11-07)
 Newest handoff docs/HANDOFF_20261107_PUBLIC_MISSING_CSV_V0915.md. Visitor-initiated source-backed CSV download in missing set dialog, ALL matching printed numbered spots even beyond 40 shown; CSV spreadsheet-formula safety, no private copies/serials/guessed names or downloads on page load. Public HTML/JS/CSS only. No LAN, Android, manager aggregate, published source JSON or image changes. GitHub Pages and LAN SHA256 continuity gates mandatory.
 

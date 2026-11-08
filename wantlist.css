@@ -161,3 +161,35 @@
 .want-export-tools p{flex:1 1 260px;color:#c2d1d9;font-size:12px;line-height:1.55;margin:0;}
 .want-export-tools #wantlist-export-status:not(:empty){flex-basis:100%;color:#f0d3a3;font-weight:700;}
 @media(max-width:490px){.want-export-tools button{width:100%;}.want-export-tools{padding:10px;}}
+
+/* v0.9.16: print only matching public numbered slots, not the first 40 DOM rows. */
+#want-print-content{display:none}
+@media print{
+ @page{margin:14mm;size:auto}
+ html,body{background:#fff!important;color:#111!important;margin:0!important;padding:0!important}
+ body.print-wantlist > *:not(#wantlist-dialog){display:none!important}
+ body.print-wantlist #wantlist-dialog{display:block!important;position:static!important;inset:auto!important;
+  margin:0!important;padding:0!important;max-height:none!important;max-width:none!important;width:100%!important;
+  overflow:visible!important;border:0!important;border-radius:0!important;background:#fff!important;color:#111!important;
+  box-shadow:none!important}
+ body.print-wantlist #wantlist-dialog::backdrop{display:none!important}
+ body.print-wantlist #wantlist-dialog .want-dialog{display:block!important;background:#fff!important;
+  border:0!important;box-shadow:none!important;padding:0!important;max-width:none!important;max-height:none!important;
+  overflow:visible!important}
+ body.print-wantlist #wantlist-dialog .want-dialog > :not(#want-print-content){display:none!important}
+ body.print-wantlist #want-print-content{display:block!important;color:#111!important;font:11pt/1.45 Arial,sans-serif!important}
+ body.print-wantlist #want-print-content h1{font-size:17pt;color:#111;margin:0 0 7pt}
+ body.print-wantlist #want-print-content h2{font-size:13pt;color:#111;margin:0 0 8pt}
+ body.print-wantlist #want-print-content p{color:#111!important;font-size:9pt;margin:5pt 0;overflow-wrap:anywhere}
+ body.print-wantlist #want-print-content .want-print-warning{font-weight:bold;border:1px solid #555;padding:5pt}
+ body.print-wantlist #want-print-content a{color:#111!important;text-decoration:underline}
+ body.print-wantlist #want-print-content .want-print-table{border-collapse:collapse;width:100%;table-layout:fixed;margin-top:10pt}
+ body.print-wantlist #want-print-content th,body.print-wantlist #want-print-content td{border:1px solid #888;
+  color:#111!important;text-align:left;font:9pt/1.3 Arial,sans-serif!important;padding:4pt 5pt;overflow-wrap:anywhere}
+ body.print-wantlist #want-print-content th{font-weight:bold!important;background:#eee!important}
+ body.print-wantlist #want-print-content th:nth-child(1){width:9%}
+ body.print-wantlist #want-print-content th:nth-child(2){width:15%}
+ body.print-wantlist #want-print-content tr{break-inside:avoid;page-break-inside:avoid}
+ body.print-wantlist #want-print-content thead{display:table-header-group}
+ body.print-wantlist #want-print-content .want-print-footer{margin-top:10pt}
+}

@@ -88,3 +88,7 @@ The public collection now shows how many browsing controls have been customized 
 ## Download missing numbered card lists (public v0.9.15)
 
 Open a sourced set from the public want list and choose Download matching missing cards (CSV). The spreadsheet includes all matching printed numbers for that set, even if only 40 are initially shown; the current number/player/team filter also applies. It includes published player/team references where available, the public checklist source, direct missing-card links, and provisional identity warnings. It contains no private owner copy identifiers, serial stamps, personal information, or guessed player names. CSV fields are quoted and formula characters escaped. Downloads occur only on a visitor click and make no inventory edits.
+
+## Print missing-card checklists (public v0.9.16)
+
+From any sourced set's missing-card list, choose **Print matching missing cards**. The browser's normal print dialog prepares a paper-friendly checklist of **all** current search matches, even those beyond the first 40 shown on screen. It includes the printed card number, published player/team references or an explicit unnamed note, a blank marking column, public source URL and provisional-identity warning. It does not include private inventory or originals. The visitor can print on paper or use the browser's Save as PDF option; nothing prints or downloads automatically. Printing is separate from the existing CSV and inquiry actions.

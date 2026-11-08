@@ -294,6 +294,54 @@ function exportMissingCsv(){
  $("wantlist-export-status").textContent="Prepared "+fmt(matches.length)+
   " missing numbered "+(matches.length===1?"card":"cards")+" for CSV download.";
 }
+function clearPrintSheet(){
+ document.body.classList.remove("print-wantlist");
+ $("want-print-content").replaceChildren();
+ $("want-print-content").hidden=true;
+}
+function printMissing(){
+ const s=state.selected;
+ if(!s||!state.sets.includes(s)||!$("wantlist-dialog").open)return;
+ const matches=matchingMissing(s);
+ if(!matches.length)return;
+ const sheet=$("want-print-content");
+ sheet.replaceChildren();sheet.hidden=false;
+ text(sheet,"h1","JayTree Card Vault - Missing Card Checklist");
+ text(sheet,"h2",title(s));
+ text(sheet,"p",s.sport+" | "+fmt(s.owned)+" / "+fmt(s.total)+
+  " distinct issued numbered spots owned | "+fmt(s.missing)+" missing in sourced set","want-print-meta");
+ text(sheet,"p","Public snapshot: "+fmt(matches.length)+" matching missing numbered spots. Not a live inventory.","want-print-meta");
+ text(sheet,"p","Published checklist: "+(s.source.description||"Sourced numbered reference"),"want-print-meta");
+ if(sourceValid(s.source.url)){
+  const source=text(sheet,"p","","want-print-source");
+  const link=text(source,"a",s.source.url);
+  link.href=s.source.url;link.rel="noopener noreferrer";
+ }
+ text(sheet,"p","Set link: "+setUrl(s),"want-print-url");
+ text(sheet,"p","Identity caution: player/team names may be provisional. Unnamed cards are not "+
+  "independently identified. Confirm printed number, exact set, variation and condition "+
+  "before offering.","want-print-warning");
+ const table=text(sheet,"table","","want-print-table");
+ const thead=text(table,"thead");
+ const head=text(thead,"tr");
+ for(const label of ["Have?","Printed #","Published player reference","Published team reference"]){
+  text(head,"th",label).scope="col";
+ }
+ const body=text(table,"tbody");
+ for(const card of matches){
+  const tr=text(body,"tr");
+  text(tr,"td","[  ]");
+  text(tr,"td","#"+card.number);
+  text(tr,"td",card.player||"Not independently named");
+  text(tr,"td",card.team||"?");
+ }
+ text(sheet,"p","Distinct issued printed numbers only; duplicates and same-number parallels "+
+  "do not count as more set spots. Source and identities may need confirmation.","want-print-footer");
+ document.body.classList.add("print-wantlist");
+ $("wantlist-export-status").textContent="Print view prepared for "+fmt(matches.length)+
+  " missing numbered cards. Choose Print or Save as PDF in your browser.";
+ try{window.print();}catch{clearPrintSheet();}
+}
 function renderMissing(){
  const s=state.selected;if(!s)return;
  const list=$("wantlist-missing-list");
@@ -301,6 +349,9 @@ function renderMissing(){
  const exportButton=$("wantlist-export-csv");
  exportButton.disabled=items.length===0;
  exportButton.textContent="Download "+fmt(items.length)+" matching missing "+(items.length===1?"card":"cards")+" (CSV)";
+ const printButton=$("wantlist-print");
+ printButton.disabled=items.length===0;
+ printButton.textContent="Print "+fmt(items.length)+" matching missing "+(items.length===1?"card":"cards");
  if(state.visible===PAGE)list.replaceChildren();
  const begin=list.children.length;
  const end=Math.min(items.length,state.visible);
@@ -421,6 +472,7 @@ function openSet(s,selectedCard=null){
  });
  $("wantlist-missing-search").value=selectedCard?"#"+selectedCard.number:"";
  $("wantlist-export-status").textContent="";
+ clearPrintSheet();
  $("wantlist-missing-list").replaceChildren();
  if(!$("wantlist-dialog").open)$("wantlist-dialog").showModal();
  renderMissing();
@@ -506,6 +558,9 @@ $("want-global-more").addEventListener("click",()=>{
 $("wantlist-missing-search").addEventListener("input",()=>{state.visible=PAGE;$("wantlist-missing-list").replaceChildren();renderMissing();});
 $("wantlist-more").addEventListener("click",()=>{state.visible+=PAGE;renderMissing();});
 $("wantlist-export-csv").addEventListener("click",exportMissingCsv);
+$("wantlist-print").addEventListener("click",printMissing);
+window.addEventListener("afterprint",clearPrintSheet);
+$("wantlist-dialog").addEventListener("close",clearPrintSheet);
 $("wantlist-close").addEventListener("click",()=>$("wantlist-dialog").close());
 $("wantlist-dialog").addEventListener("click",e=>{if(e.target===$("wantlist-dialog"))$("wantlist-dialog").close();});
 for(const name of ["offer-condition","offer-variation","offer-asking-price","offer-photo-url","offer-note","offer-public-ok"]){
