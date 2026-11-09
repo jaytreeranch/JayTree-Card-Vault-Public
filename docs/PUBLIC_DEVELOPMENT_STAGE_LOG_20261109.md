@@ -18,3 +18,5 @@ Strict Verified duplicate index 30 groups/61 copies, 1618 gallery listing equiva
 
 ## v0.9.26 SOURCE 2026-11-09
 Created dedicated Cloudflare Analytics site with manually injected browser beacon + restrictive CSP; source UI recognizes provisional published Needs Review values but none were released from private owner SQL. Owner attestation confirms imported Ludex images represent owned physical cards, qualifying them for evidence-led review, not automatic serial/foil/authenticity approval. 113/113 tests and 1649 approved catalog validator PASS. No public data/photo/owner modifications. See handoff.
+Public v0.9.27 (2026-11-09): source-only read-only duplicate-triage utilities and review evidence; 182 groups/412 records/409 under review; 289 photo comparisons yielded 171 strong resemblance pairs (not verified). See latest v0.9.27 handoff. No public/owner production mutation.
+Extended review triage to 1028 pending records: 409 duplicate-key, 352 other standard, 267 other special-risk; 0 missing public fronts. 12/12 new safety tests PASS. LAN-only output and no review approvals or inventory writes.

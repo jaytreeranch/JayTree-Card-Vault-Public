@@ -1,6 +1,6 @@
 # JayTree Card Vault - Public Collection
 
-Owner-authorized read-only gallery of approved public front-card photographs. The site derives its published card count, Verified count, Needs review count and timestamp from the current approved static catalog. These are publication snapshots, not live private inventory data. Needs review identities are provisional and cannot display valuations or offers.
+Owner-authorized read-only gallery of approved public front-card photographs. The site derives its published card count, Verified count, Needs review count and timestamp from the current approved static catalog. These are publication snapshots, not live private inventory data. Needs Review identities remain provisional. A numeric owner estimate can display only after explicit private publisher approval and must be visibly labeled provisional; the currently approved public snapshot contains no numeric estimates for Needs Review cards.
 
 ## GitHub Pages
 
