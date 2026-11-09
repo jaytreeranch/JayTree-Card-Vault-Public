@@ -1,7 +1,17 @@
 "use strict";
 const PAGE_SIZE = 48;
-const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map(), positionByName: new Map(), positionReady: false };
+const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map(), positionByName: new Map(), positionReady: false, duplicateGroups:new Map(), duplicateGroupCount:0, duplicateCopyCount:0, resultPhysicalCount:0 };
 const features=window.JayTreeCardFeatures;
+const duplicates=window.JayTreePublicDuplicates||{
+ build:()=>({byId:new Map(),groupCount:0,copyCount:0})
+};
+function confirmedCopies(card){
+ return state.duplicateGroups.get(card?.id)||null;
+}
+function displayCopies(card){
+ const group=confirmedCopies(card);
+ return group?.length||Math.max(1,Number(card?.quantity)||1);
+}
 // Public-only snapshot fidelity: use published metadata; NEVER query private LAN state.
 const publishedSnapshot={catalog:null,checklists:null};
 function publishedTime(raw){
@@ -225,10 +235,10 @@ async function loadPublicPositions(catalog){
 function currentBrowsePayload(){
  return [BROWSE_SCHEMA,$("search").value.trim(),$("sport").value,$("review").value,
   $("year").value,$("set").value,$("set-finder").value.trim(),$("set-sort").value,
-  $("sort").value,$("offers").checked,selectedFeatures().slice().sort(),$("team").value,$("position").value];
+  $("sort").value,$("offers").checked,selectedFeatures().slice().sort(),$("team").value,$("position").value,$("combine-copies").checked,$("duplicates-only").checked];
 }
 function validBrowsePayload(v){
- if(!Array.isArray(v)||(v.length!==11&&v.length!==13)||v[0]!==BROWSE_SCHEMA||
+ if(!Array.isArray(v)||![11,13,15].includes(v.length)||v[0]!==BROWSE_SCHEMA||
     typeof v[9]!=="boolean"||!Array.isArray(v[10])||
     v[10].length>features.OPTIONS.length||
     ![0,1,2,3,4,6,7,8].every(i=>safeBrowseText(v[i]))||
@@ -238,11 +248,12 @@ function validBrowsePayload(v){
   if(![...$(id).options].some(o=>o.value===val))return false;
  }
  if(v[5]&&!state.sets.has(v[5]))return false;
- if(v.length===13){
+ if(v.length>=13){
   if(!safeBrowseText(v[11])||!safeBrowseText(v[12]))return false;
   if(v[11]&&!state.cards.some(c=>(!v[2]||c.sport===v[2])&&c.team===v[11]))return false;
   if(v[12]&&!state.cards.some(c=>(!v[2]||c.sport===v[2])&&publicPosition(c)===v[12]))return false;
  }
+ if(v.length===15&&(typeof v[13]!=="boolean"||typeof v[14]!=="boolean"))return false;
  const allowed=new Set(features.OPTIONS.map(f=>f.key));
  return v[10].every(f=>allowed.has(f)&&
   !document.querySelector('input[data-feature][value="'+f+'"]')?.disabled)&&
@@ -320,8 +331,10 @@ function restoreBrowseFromHash(){
  }
  // Old 11-item shared links remain valid, with both new facets reset.
  refreshTeamAndPositionOptions();
- $("team").value=p.length===13?p[11]:"";
- $("position").value=p.length===13?p[12]:"";
+ $("team").value=p.length>=13?p[11]:"";
+ $("position").value=p.length>=13?p[12]:"";
+ $("combine-copies").checked=p.length===15?p[13]:true;
+ $("duplicates-only").checked=p.length===15?p[14]:false;
  $("offers").checked=p[9];
  document.querySelectorAll("input[data-feature]").forEach(el=>{
   el.checked=p[10].includes(el.value)&&!el.disabled;
@@ -338,6 +351,8 @@ function customizedBrowseCount(){
  let count=ids.filter(id=>String($(id).value).trim()!=="").length;
  count+=selectedFeatures().length;
  if($("offers").checked)count++;
+ if($("duplicates-only").checked)count++;
+ if(!$("combine-copies").checked)count++;
  if($("sort").value!=="name")count++;
  if($("set-sort").value!=="year")count++;
  return count;
@@ -361,6 +376,8 @@ function clearBrowseControls(){
  $("sort").value="name";
  $("set-sort").value="year";
  $("offers").checked=false;
+ $("combine-copies").checked=true;
+ $("duplicates-only").checked=false;
  document.querySelectorAll("input[data-feature]").forEach(cb=>cb.checked=false);
  refreshSetOptionLabels();
  filtered();
@@ -373,11 +390,14 @@ function filtered() {
        ownedSet=$("set").value, offers=$("offers").checked,
        team=$("team").value,position=$("position").value;
  const anyFeatures=selectedFeatures();
+ const onlyDuplicates=$("duplicates-only").checked;
+ const combine=$("combine-copies").checked;
  const selected=state.cards.filter(c =>
    (!sport || c.sport===sport) && (!review || c.review_status===review) &&
    (!year || String(c.year||"")===year) && (!ownedSet || setKey(c)===ownedSet) &&
    (!team || c.team===team) && (!position || publicPosition(c)===position) &&
    (!offers || c.for_sale) &&
+   (!onlyDuplicates || confirmedCopies(c)!==null) &&
    features.matchesAny(c,anyFeatures) &&
    [c.player,c.team,c.brand,c.set,c.year,c.number,c.parallel,publicPosition(c)].join(" ").toLowerCase().includes(q));
  switch($("sort").value){
@@ -392,7 +412,21 @@ function filtered() {
     String(a.player||"").localeCompare(String(b.player||"")));break;
   default:selected.sort((a,b)=>(a.player||"").localeCompare(b.player||""));
  }
- state.results=selected;
+ // Physical rows remain independent in the 1,649-card catalog.
+ // Only verified, same-issue identity records are visually collapsed.
+ state.resultPhysicalCount=selected.length;
+ if(combine){
+  const seen=new Set();
+  state.results=selected.filter(c=>{
+   const group=confirmedCopies(c);
+   if(!group)return true;
+   const marker=group[0].id;
+   if(seen.has(marker))return false;
+   seen.add(marker);return true;
+  });
+ }else{
+  state.results=selected;
+ }
  state.rendered=0;
  state.visibleCount=PAGE_SIZE;
  renderCards();
@@ -404,14 +438,15 @@ function renderCards(){
  const cards=state.results;
  if(state.rendered===0)grid.replaceChildren();
  const showCount=Math.min(cards.length,state.visibleCount);
- $("result-count").textContent=showCount+" of "+cards.length+" matching cards shown · "+state.cards.length+" in collection";
+ $("result-count").textContent=showCount+" of "+cards.length+" listings shown | "+
+  state.resultPhysicalCount+" matching physical copies | "+state.cards.length+" total cards";
  $("empty").hidden=cards.length>0;
  $("load-more").hidden=showCount>=cards.length;
  for(const c of cards.slice(state.rendered,showCount)){
   const article=document.createElement("article");article.className="card";
   const btn=document.createElement("button");btn.type="button";
   const cardName=c.player||"Unnamed";
-  btn.setAttribute("aria-label","View "+cardName+" card details");
+  btn.setAttribute("aria-label","View "+cardName+" card details"+(confirmedCopies(c)?" with "+displayCopies(c)+" verified duplicate copies":""));
   const pic=text(btn,"div","","card-pic");
   if(safeImage(c.image)){
    if(!$("gallery-low-data-toggle").checked){
@@ -435,6 +470,8 @@ function renderCards(){
   }
   if(c.identity_unconfirmed)text(pic,"span","NEEDS REVIEW","card-tag review-tag");
   else if(c.for_sale)text(pic,"span","OPEN TO OFFERS","card-tag");
+  const group=confirmedCopies(c);
+  if(group)text(pic,"span",group.length+" copies","card-copy-count");
   const meta=text(btn,"div","","card-meta");
   text(meta,"span",String(c.sport||"").toUpperCase(),"kicker");
   text(meta,"h3",c.player||"Unnamed card");
@@ -508,6 +545,19 @@ function details(c){
  const picture=document.createElement("div");picture.className="detail-photo-wrap";wrap.appendChild(picture);
  renderDetailPhoto(picture,c);
  const info=text(wrap,"div","");
+ const group=confirmedCopies(c);
+ if(group){
+  const current=group.findIndex(x=>x.id===c.id);
+  const nav=text(info,"div","","duplicate-photo-controls");
+  const back=text(nav,"button","Previous photo","duplicate-photo-prev");back.type="button";
+  const progress=text(nav,"span","Copy "+(current+1)+" of "+group.length,"duplicate-photo-progress");
+  const next=text(nav,"button","Next photo","duplicate-photo-next");next.type="button";
+  back.setAttribute("aria-label","Previous verified physical card photo");
+  next.setAttribute("aria-label","Next verified physical card photo");
+  back.addEventListener("click",()=>details(group[(current+group.length-1)%group.length]));
+  next.addEventListener("click",()=>details(group[(current+1)%group.length]));
+  text(info,"p","These "+group.length+" separately cataloged verified copies share the same printed card identity. Their original records and photos remain separate.","detail-copy");
+ }
  text(info,"p",String(c.sport||"").toUpperCase(),"kicker");
  text(info,"h2",c.player||"Unnamed card","detail-title");
   text(info,"p",c.identity_unconfirmed?"NEEDS REVIEW · Identity, year, parallel and set are provisional.":"Verified in the private collection",c.identity_unconfirmed?"review-warning":"chart-note");
@@ -516,7 +566,7 @@ function details(c){
  const properties=text(info,"div","","details-grid");
  const featureNames=features.OPTIONS.filter(f=>features.classify(c)[f.key]).map(f=>f.label);
  const serial=features.serialInfo(c);
- const pairs=[["Features",featureNames.join(", ")||"Not tagged"],["Year",c.year],["Team",c.team],["Set",[c.brand,c.set].filter(Boolean).join(" / ")],["Card #",c.number],["Parallel",c.parallel],["Owned",String(c.quantity)],["Available",c.for_sale?"Open to offers":"Not listed"]];
+ const pairs=[["Features",featureNames.join(", ")||"Not tagged"],["Year",c.year],["Team",c.team],["Set",[c.brand,c.set].filter(Boolean).join(" / ")],["Card #",c.number],["Parallel",c.parallel],["Owned",String(displayCopies(c))],["Available",c.for_sale?"Open to offers":"Not listed"]];
  if(publicPosition(c))pairs.splice(3,0,["Position",publicPosition(c)+" · "+(POSITION_NAMES[publicPosition(c)]||publicPosition(c))]);
  if(serial.numbered){
   pairs.splice(6,0,["Serial edition",serial.edition?"/"+serial.edition:"Numbered; run not confirmed"],
@@ -607,7 +657,7 @@ function details(c){
      submitting=false;send.disabled=false;send.textContent="Submit suggestion";
    }
  });
- $("details").showModal();
+ if(!$("details").open)$("details").showModal();
 }
 async function load(){
  try{
@@ -617,6 +667,12 @@ async function load(){
   if(data.schema!=="jaytree.public-showcase.v1"||data.readonly!==true||!Array.isArray(data.cards))throw new Error("Unexpected catalog format");
   state.cards=data.cards.filter(c=>c && safeImage(c.image));
   setPublishedCatalog(data);
+  const duplicateIndex=duplicates.build(state.cards,features);
+  state.duplicateGroups=duplicateIndex.byId;
+  state.duplicateGroupCount=duplicateIndex.groupCount;
+  state.duplicateCopyCount=duplicateIndex.copyCount;
+  $("duplicate-filter-help").textContent=duplicateIndex.groupCount+" confirmed duplicate groups ("+
+   duplicateIndex.copyCount+" verified physical copies). Unverified matches, relics and numbered variants stay separate.";
   $("stat-count").textContent=state.cards.length.toLocaleString("en-US");
   const sum=state.cards.reduce((acc,c)=>acc+(Number.isFinite(c.estimate_usd)?c.estimate_usd*Math.max(1,c.quantity||1):0),0);
   $("stat-estimate").textContent=fmtUSD(sum);
@@ -726,7 +782,7 @@ $("collection-view-link").addEventListener("click",copyBrowseViewLink);
 window.addEventListener("hashchange",()=>{
  if(state.cards.length&&location.hash.startsWith("#browse="))restoreBrowseFromHash();
 });
-["search","sport","team","position","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
+["search","sport","team","position","review","year","set","sort","offers","combine-copies","duplicates-only"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 function updateLowDataView(announce=false){
  // Re-render only existing visible results; retain search/filter and Show More state.

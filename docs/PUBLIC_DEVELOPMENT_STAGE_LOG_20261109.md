@@ -12,3 +12,6 @@ Rollback: revert only source-only public UI feature commit; preserve approved 16
 
 ## Production verification, 2026-11-09
 Owner-requested public UI PR #4 merged to main SHA 7ea199fd53bc2103dde8e0b27b27e3ed9cfce7e4. Pages run 42645169994 SUCCESS; exact nine static Git-vs-HTTPS byte digests match; live Chrome 390px and 1366px PASS; real marked QA correction form email appeared in JayTreeBooks inbox; private API endpoints /api/cards and /owner/private return 404. Source 1,649/621/1,028, 27 source-backed sets, 6,491 missing issued spots; catalog, checklist, JPG, CNAME unchanged. Protected current production baseline is stored on JayTree LAN, with exact rollback evidence in the private worker receipt. Rollback ordinary revert -m 1 of merge SHA, NEVER restore old 1,006-card catalog. Public issue #3 stays open for true stamped serial evidence.
+
+## v0.9.25 duplicate-only SOURCE separated 2026-11-09
+Strict Verified duplicate index 30 groups/61 copies, 1618 gallery listing equivalents, Duplicates only/combined copy carousel. 108/108 Node and Chrome 390/1366 PASS. Photo upload unverified, not included. Previous main and public data preserved. See dated source handoff.
