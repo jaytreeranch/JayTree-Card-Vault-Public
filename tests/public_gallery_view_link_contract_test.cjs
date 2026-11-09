@@ -30,7 +30,7 @@ test("Exact public filter payload restores sport/year/review/known set/features,
 });
 test("Invalid and stale browse URL fails closed without overwriting filters or enabling disabled features",()=>{
  assert.ok(js.includes('location.hash.length>2400'));
- assert.ok(js.includes('v.length!==11'));
+ assert.ok(js.includes('[11,13,15].includes(v.length)'));
  assert.ok(js.includes('v[0]!==BROWSE_SCHEMA'));
  assert.ok(js.includes('v[10].length>features.OPTIONS.length'));
  assert.ok(js.includes('v[5]&&!state.sets.has(v[5])'));

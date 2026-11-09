@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="wantlist.css">
   <script src="card-features.js" defer></script>
+  <script src="card-duplicates.js" defer></script>
   <!-- Subscribe to both published-data events before either async loader can fire. -->
   <script src="checklist-coverage.js" defer></script>
   <script src="app.js" defer></script>
@@ -69,7 +70,10 @@
       <label class="set-finder-search"><span class="sr-only">Search cataloged set names</span><input id="set-finder" type="search" maxlength="100" placeholder="Find a set (year, brand, title)" autocomplete="off" aria-describedby="set-finder-status"></label>
       <label class="select set-finder-sort"><span class="sr-only">Sort cataloged set choices</span><select id="set-sort"><option value="year">Newest sets first</option><option value="closest">Fewest missing first</option><option value="percent">Highest completion %</option><option value="az">Set name A-Z</option></select></label>
       <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
+      <label class="offercheck"><input id="combine-copies" type="checkbox" checked><span>Combine verified duplicates</span></label>
+      <label class="offercheck"><input id="duplicates-only" type="checkbox"><span>Duplicates only</span></label>
     </div>
+    <p id="duplicate-filter-help" class="position-filter-help" role="status" aria-live="polite">Loading confirmed duplicate groups. Provisional matches stay separate.</p>
     <p id="position-filter-help" class="position-filter-help" role="status" aria-live="polite">Team filters use the published catalog. Player positions are checked against an independent public football-player reference; unmatched names remain unclassified.</p>
     <div class="collection-browse-tools">
       <p id="collection-browse-status" role="status" aria-live="polite">Loading collection controls?</p>
