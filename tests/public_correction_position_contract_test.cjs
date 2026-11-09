@@ -46,9 +46,9 @@ test("Public controls expose independently sourced Team/Position filter and two 
 
 test("Legacy 11-field shared gallery links still restore without deleting modern 13-field options",()=>{
  assert.ok(app.includes('const BROWSE_SCHEMA="jt.public.browse.v1"'));
- assert.ok(app.includes('(v.length!==11&&v.length!==13)'));
- assert.ok(app.includes('p.length===13?p[11]:""'));
- assert.ok(app.includes('p.length===13?p[12]:""'));
+ assert.ok(app.includes('[11,13,15].includes(v.length)'));
+ assert.ok(app.includes('p.length>=13?p[11]:""'));
+ assert.ok(app.includes('p.length>=13?p[12]:""'));
  assert.ok(app.includes('$("team").value,$("position").value'));
  assert.ok(app.includes('["team","position"]')||app.includes('"team","position"'));
  assert.ok(app.includes('v[11]&&!state.cards.some'));
@@ -71,7 +71,7 @@ test("Direct correction uses free HTTPS FormSubmit AJAX, not email app, newslett
  assert.ok(!app.includes('subscriber'));
  assert.ok(!app.includes('api/cards'));
  assert.ok(html.includes("connect-src 'self' https://formsubmit.co;"));
- assert.ok(html.includes("form-action 'none'"));
+ assert.ok(html.includes("form-action https://formsubmit.co"));
 });
 
 test("Published checklist Auto subset does not mean the owned copy is signed",()=>{

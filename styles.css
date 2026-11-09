@@ -151,3 +151,17 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 /* Position and team facets are built entirely from approved static public fields. */
 .position-filter-help{font-size:12px;line-height:1.45;color:var(--muted);margin:9px 0 16px}
 #position:disabled{opacity:.6;cursor:not-allowed}
+
+/* PUBLIC duplicate grouping is presentational: never touches physical-copy JSON. */
+.card-copy-count{position:absolute;top:10px;right:10px;border:1px solid #d6b77c;
+ border-radius:12px;background:#132c42e8;color:#f9db9e;padding:5px 10px;
+ font-size:12px;font-weight:800;box-shadow:0 3px 12px #0007}
+.duplicate-photo-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.duplicate-photo-controls button{border:1px solid #7c9ba9;border-radius:6px;
+ background:#153b53;color:#e1f1f5;padding:8px 10px;font-size:12px;cursor:pointer}
+.duplicate-photo-progress{font-size:13px;font-weight:700;color:#ecd3a0;min-width:82px;text-align:center}
+
+.feedback-form input[type=file]{max-width:100%;background:#102d41;color:#f2f5f6;
+ border:1px solid #446c83;border-radius:5px;padding:10px;font-size:12px}
+.feedback-form input[type=file]::file-selector-button{border:1px solid #8da8b7;
+ background:#1a4b64;color:#f9f9f9;border-radius:4px;padding:6px 9px;margin-right:11px}
