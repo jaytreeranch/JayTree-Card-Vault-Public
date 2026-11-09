@@ -1,3 +1,7 @@
+## PUBLIC v0.9.23 — 1,649 approved cards LIVE (2026-11-08)
+- Read docs/HANDOFF_20261108_PUBLIC_OWNER_APPROVED_1649_RELEASE.md first. Owner approved 643 additional Needs Review front-photo derivatives. Published public main SHA 3aeddd32fd6943b32e6beabe72ef95b58a8d0bf2, GitHub Pages run #49 SUCCESS, live HTTPS verified 1,649 (621 Verified, 1,028 Needs Review), 27 sourced sets. Exact 643 new assets + 2 JSON, zero deletion; 8 public source/data and 4 new image parity checks pass; private API routes 404. Node baseline 93/94 due pre-existing static source-text assertion; public data CLI PASS. Static rollback previous public SHA b1ee80dbb1b7d316914f8806358c9e63e3c446c7. Docs branch is not a new production release.
+
+---
 ## PUBLIC v0.9.22 published snapshot fidelity ? LIVE SOURCE VERIFIED (2026-11-08)
 - New compact read-only panel after published stats: UTC source publication time, counted Verified and Needs review identities, approved-static-not-live-LAN explanation, accessible catalog/checklist alignment status. No fake sync status, tracking, persistent data or invented owner review totals.
 - Catalog loader now validates declared card and review counts against displayed approved records, warns on failure. Independently validated checklist loader sends only already published generated_at_utc/catalog_card_count metadata via new local DOM event; no extra request. Mismatch, missing timestamp or failed checklist shows truthful warning, not live parity. Existing gallery and wantlist unchanged.

@@ -1,5 +1,7 @@
 # JayTree Card Vault - Public Collection
 
+**Latest approved public snapshot (November 8, 2026):** 1,649 cards, 621 Verified, 1,028 Needs Review, including 643 new approved public front-card photos. See docs/HANDOFF_20261108_PUBLIC_OWNER_APPROVED_1649_RELEASE.md. The public gallery is a static approved snapshot, not live LAN sync; provisional identities have no unverified prices or offers.
+
 Owner-authorized read-only gallery of approved public front-card photographs. The site derives its published card count, Verified count, Needs review count and timestamp from the current approved static catalog. These are publication snapshots, not live private inventory data. Needs review identities are provisional and cannot display valuations or offers.
 
 ## GitHub Pages
