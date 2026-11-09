@@ -482,7 +482,9 @@ function renderCards(){
   if(stamped.length)text(meta,"p","Stamped "+stamped.join(", "),"card-serial");
   text(meta,"p",[c.year,c.brand,c.set].filter(Boolean).join(" · "),"card-info");
   const foot=text(meta,"div","","card-foot"), price=text(foot,"span",fmtUSD(c.estimate_usd),"card-value");
-  price.setAttribute("aria-label","Owner estimated card value "+price.textContent);
+  const provisional=c.review_status!=="Verified";
+  price.setAttribute("aria-label",(provisional?"Provisional, identity unverified, owner estimated value ":"Owner estimated card value ")+price.textContent);
+  if(provisional&&Number.isFinite(c.estimate_usd))text(foot,"small","Provisional estimate · Needs Review","review-value-note");
   const hist=Array.isArray(c.history)?c.history: [];
   text(foot,"small",hist.length>1?"↗ Price history":"Owner estimate",hist.length>1?"has-history":"");
   btn.addEventListener("click",()=>details(c));article.appendChild(btn);grid.appendChild(article);
@@ -562,7 +564,9 @@ function details(c){
  text(info,"h2",c.player||"Unnamed card","detail-title");
   text(info,"p",c.identity_unconfirmed?"NEEDS REVIEW · Identity, year, parallel and set are provisional.":"Verified in the private collection",c.identity_unconfirmed?"review-warning":"chart-note");
  text(info,"p",fmtUSD(c.estimate_usd),"detail-price");
- text(info,"p",c.identity_unconfirmed?"No value shown until this card is verified.":"Owner estimate per card — not a verified sale or price guarantee.","detail-copy");
+ text(info,"p",c.review_status!=="Verified"?
+   (Number.isFinite(c.estimate_usd)?"Provisional owner estimate — card identity, parallel or condition is not yet verified; value may change.":"No provisional value published for this card yet; review is still pending."):
+   "Owner estimate per card — not a verified sale or price guarantee.","detail-copy");
  const properties=text(info,"div","","details-grid");
  const featureNames=features.OPTIONS.filter(f=>features.classify(c)[f.key]).map(f=>f.label);
  const serial=features.serialInfo(c);

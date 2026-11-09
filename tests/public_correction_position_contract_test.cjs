@@ -70,7 +70,7 @@ test("Direct correction uses free HTTPS FormSubmit AJAX, not email app, newslett
  assert.ok(!app.includes('mailto:jaytreebooks@gmail.com'));
  assert.ok(!app.includes('subscriber'));
  assert.ok(!app.includes('api/cards'));
- assert.ok(html.includes("connect-src 'self' https://formsubmit.co;"));
+ assert.ok(html.includes("connect-src 'self' https://formsubmit.co https://cloudflareinsights.com;"));
  assert.ok(html.includes("form-action 'none'"));
 });
 

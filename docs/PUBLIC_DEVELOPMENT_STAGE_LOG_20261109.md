@@ -15,3 +15,6 @@ Owner-requested public UI PR #4 merged to main SHA 7ea199fd53bc2103dde8e0b27b27e
 
 ## v0.9.25 duplicate-only SOURCE separated 2026-11-09
 Strict Verified duplicate index 30 groups/61 copies, 1618 gallery listing equivalents, Duplicates only/combined copy carousel. 108/108 Node and Chrome 390/1366 PASS. Photo upload unverified, not included. Previous main and public data preserved. See dated source handoff.
+
+## v0.9.26 SOURCE 2026-11-09
+Created dedicated Cloudflare Analytics site with manually injected browser beacon + restrictive CSP; source UI recognizes provisional published Needs Review values but none were released from private owner SQL. Owner attestation confirms imported Ludex images represent owned physical cards, qualifying them for evidence-led review, not automatic serial/foil/authenticity approval. 113/113 tests and 1649 approved catalog validator PASS. No public data/photo/owner modifications. See handoff.
