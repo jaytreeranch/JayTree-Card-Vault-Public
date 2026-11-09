@@ -41,12 +41,12 @@ test("Message previews at most 12, explicitly names remainder, includes entire f
  assert.ok(js.includes('state.visible=PAGE;clearShareFallback();'));
  assert.ok(js.includes('renderMissing();'));
 });
-test("Read-only public 1,006 catalog, 27 sourced sets and no new API calls",()=>{
+test("Read-only public 1,649 catalog, 27 sourced sets and no new API calls",()=>{
  const cards=JSON.parse(read("catalog.json"));
  const sets=JSON.parse(read("set-checklists.json"));
- assert.equal(cards.cards.length,1006);
+ assert.equal(cards.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
- assert.equal(sets.supported_missing_spots,6513);
+ assert.equal(sets.supported_missing_spots,6491);
  assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
  assert.ok(!/localStorage|sessionStorage|sendBeacon|\/owner\/|\/api\/cards/.test(js));
 });

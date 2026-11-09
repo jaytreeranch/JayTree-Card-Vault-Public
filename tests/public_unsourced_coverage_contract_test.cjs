@@ -14,11 +14,11 @@ for(const c of cards){
 }
 const known=new Set(sourced.map(s=>JSON.stringify(s.key)));
 test("no catalog entry can be mistaken for missing checklist total",()=>{
- assert.equal(cards.length,1006);
- assert.equal(publicKeys.size,48);
+ assert.equal(cards.length,1649);
+ assert.equal(publicKeys.size,68);
  assert.equal(known.size,27);
  const missing=[...publicKeys.keys()].filter(k=>!known.has(k));
- assert.equal(missing.length,21);
+ assert.equal(missing.length,41);
  for(const k of missing){
   const x=publicKeys.get(k);
   assert.ok(x.entries>=x.distinct.size);
@@ -52,7 +52,7 @@ test("visitor can suggest checklist sources without publishing card data or appr
 test("published data files are unmodified set and card source fixtures",()=>{
  const want=JSON.parse(fs.readFileSync(path.join(root,"set-checklists.json"),"utf8"));
  assert.equal(want.supported_set_count,27);
- assert.equal(want.catalog_card_count,1006);
- assert.equal(want.supported_missing_spots,6513);
+ assert.equal(want.catalog_card_count,1649);
+ assert.equal(want.supported_missing_spots,6491);
  assert.equal(want.named_set_count,23);
 });

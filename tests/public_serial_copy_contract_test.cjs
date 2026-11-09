@@ -34,7 +34,7 @@ test("unapproved owner data and catalog-only edition never reveal private copy f
  const c={number:"185",parallel:"Example Parallel /325",private_serial:"42/325",copy_id:"PRIVATE_TEST_ONLY",serial_owned:42};
  assert.equal(serialInfo(c).stamps.length,0);
  assert.equal(serialInfo(c).edition,325);
- assert.equal(catalog.cards.length,1006);
+ assert.equal(catalog.cards.length,1649);
  assert.equal(catalog.cards.filter(x=>serialInfo(x).stamps.length).length,0);
 });
 test("display layer includes serial copy field without making public editable",()=>{

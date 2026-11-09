@@ -18,7 +18,7 @@ test("Exports all matching issued spots, including beyond the first 40",()=>{
  assert.ok(js.includes('cardUrl(s,c)'));
  assert.ok(js.includes('Player not independently named; confirm printed number and variation'));
  assert.equal(checklists.supported_set_count,27);
- assert.equal(checklists.supported_missing_spots,6513);
+ assert.equal(checklists.supported_missing_spots,6491);
 });
 test("CSV escapes spreadsheet formula injection and quotes",()=>{
  const m=js.match(/function csvCell\(value\)\{[\s\S]*?\n\}/);
@@ -34,7 +34,7 @@ test("CSV escapes spreadsheet formula injection and quotes",()=>{
 });
 test("No new public writers or private copy-level fields",()=>{
  const cards=JSON.parse(read("catalog.json"));
- assert.equal(cards.cards.length,1006);
+ assert.equal(cards.cards.length,1649);
  assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
  assert.ok(!/localStorage|sessionStorage|sendBeacon|copy_id|\/api\/cards|\/owner\//.test(js));
 });

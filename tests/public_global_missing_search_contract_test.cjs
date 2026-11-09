@@ -16,16 +16,16 @@ const matches=q=>{
 };
 test("approved public missing spots include named and unnamed; never invent missing names",()=>{
  assert.equal(data.supported_set_count,27);
- assert.equal(all.length,6513);
- assert.equal(all.filter(({card})=>!card.player).length,2168);
+ assert.equal(all.length,6491);
+ assert.equal(all.filter(({card})=>!card.player).length,2166);
 });
 test("search supports player, team, and exact printed number without guessing variants",()=>{
  const brock=matches("Brock Bowers");
  assert.equal(brock.length,2);
  assert.deepEqual(new Set(brock.map(({card})=>card.number)),new Set(["6","11"]));
- assert.equal(matches("#6").length,20);
+ assert.equal(matches("#6").length,19);
  assert.ok(matches("#6").every(({card})=>card.number==="6"));
- assert.equal(matches("Williams").length,61);
+ assert.equal(matches("Williams").length,60);
  assert.equal(matches("Mahomes").length,6);
 });
 test("global search is read-only, capped per render, and avoids additional HTTP requests",()=>{

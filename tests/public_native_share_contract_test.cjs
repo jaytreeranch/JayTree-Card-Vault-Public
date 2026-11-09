@@ -35,9 +35,9 @@ test("Canceled, failed and stale async native Share outcomes stay truthful",()=>
 test("No read-only boundary regression or private data/API changes",()=>{
  const catalog=JSON.parse(read("catalog.json"));
  const lists=JSON.parse(read("set-checklists.json"));
- assert.equal(catalog.cards.length,1006);
+ assert.equal(catalog.cards.length,1649);
  assert.equal(lists.supported_set_count,27);
- assert.equal(lists.supported_missing_spots,6513);
+ assert.equal(lists.supported_missing_spots,6491);
  assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
  assert.ok(!/localStorage|sessionStorage|sendBeacon|\/api\/cards|\/owner\//.test(js));
 });

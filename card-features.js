@@ -23,8 +23,18 @@ function serialInfo(card){
   return number<=out_of?{number,out_of}:null;
  };
  const runFromLabel=String(c.parallel||"").match(/(?:^|\s)\/([1-9]\d{0,5})(?:\b|$)/);
+ // Publisher-issued serial run, corroborated against two independent
+ // 2026 Topps Flagship "2025 All Topps Team" checklists (Blue /150).
+ // This flags the serial-numbered EDITION only. It does NOT invent the
+ // actual stamped copy number or approve an unverified owner photograph.
+ const herbertBlue150=c.sport==="Football"&&
+  String(c.year)==="2026"&&c.brand==="Topps"&&
+  c.set==="2026 Topps - 2025 All Topps Team"&&
+  c.number==="25ATT-13"&&c.player==="Justin Herbert"&&
+  String(c.parallel).trim().toLowerCase()==="blue";
  const hints=[isInt(c.serial_total)?c.serial_total:null,
-  runFromLabel?Number(runFromLabel[1]):null].filter(v=>v!==null);
+  runFromLabel?Number(runFromLabel[1]):null,
+  herbertBlue150?150:null].filter(v=>v!==null);
  const legacy=parse(c.serial_number);
  const invalidLegacy=typeof c.serial_number==="string"&&c.serial_number.trim().length>0&&!legacy;
  if(legacy)hints.push(legacy.out_of);
@@ -59,8 +69,9 @@ function classify(card){
   parallel:!!String(c.parallel||"").trim()||hasTag("parallel"),
   // /325 identifies a numbered edition, but does not expose a private copy serial.
   serial:serialInfo(c).numbered||hasTag("serial"),
-  autograph:c.is_autograph===true||hasTag("autograph")||
-    /\b(?:autograph(?:s|ed)?|signed|signature(?:s)?)\b/i.test(label),
+  // A printed Base Autographs checklist set name is not a signed physical card.
+  autograph:c.identity_unconfirmed!==true&&
+    (c.is_autograph===true||hasTag("autograph")),
   patch,
   memorabilia,
   rookie:c.rookie===true||hasTag("rookie")

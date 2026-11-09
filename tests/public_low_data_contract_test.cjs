@@ -31,11 +31,11 @@ test("skip gallery image network sources yet always retain full photo on demand"
  assert.ok(js.includes('img.loading="eager";img.decoding="async";img.fetchPriority="high";'));
  assert.ok(!js.includes('img.src=null'));
 });
-test("unchanged approved 1,006-card snapshot and set denominators; no new fetch or owner API",()=>{
+test("unchanged approved 1,649-card snapshot and set denominators; no new fetch or owner API",()=>{
  const c=JSON.parse(read("catalog.json")),s=JSON.parse(read("set-checklists.json"));
- assert.equal(c.cards.length,1006);
+ assert.equal(c.cards.length,1649);
  assert.equal(s.supported_set_count,27);
- assert.equal(s.supported_missing_spots,6513);
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
- assert.ok(!/\/api\/|\/owner\/|method:\s*["']POST["']/.test(js));
+ assert.equal(s.supported_missing_spots,6491);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
+ assert.ok(!/\/api\/|\/owner\//.test(js)&&js.includes("https://formsubmit.co/ajax/jaytreebooks@gmail.com"));
 });

@@ -10,7 +10,7 @@ const card=check.sets.find(s=>s.missing_cards.some(c=>c.player==="Brock Bowers")
 const s=check.sets.find(s=>s.missing_cards.includes(card));
 test("new card link uniquely identifies sourced set and missing printed number",()=>{
  assert.equal(check.supported_set_count,27);
- assert.equal(check.supported_missing_spots,6513);
+ assert.equal(check.supported_missing_spots,6491);
  const tuple=[...s.key,String(card.number)];
  assert.equal(tuple.length,5);
  assert.equal(tuple[4],"6");
@@ -34,7 +34,7 @@ test("per-card copy and inquiry links contain set-scoped card, no private ID",()
  assert.ok(js.includes('addCardShare(links,s,c)'));
  assert.ok(js.includes('addCardShare(actions,s,c)'));
  assert.ok(!js.includes("copy_id"));
- assert.equal(data.cards.length,1006);
+ assert.equal(data.cards.length,1649);
 });
 test("clipboard fallback is explicit, modal filter matches exact printed number",()=>{
  assert.ok(js.includes('if(!navigator.clipboard?.writeText)throw new Error'));

@@ -147,3 +147,7 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 .snapshot-panel #snapshot-integrity{margin:8px 0;color:#dbebf2;font:13px/1.5 system-ui,sans-serif;}
 .snapshot-explainer{margin:7px 0 0;color:#b7cad5;font:12px/1.55 system-ui,sans-serif;}
 @media(max-width:490px){.snapshot-panel{padding-top:15px;padding-bottom:16px;}.snapshot-review-counts{gap:6px 14px;}}
+
+/* Position and team facets are built entirely from approved static public fields. */
+.position-filter-help{font-size:12px;line-height:1.45;color:var(--muted);margin:9px 0 16px}
+#position:disabled{opacity:.6;cursor:not-allowed}

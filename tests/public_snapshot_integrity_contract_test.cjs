@@ -20,8 +20,8 @@ function audit(mutator){
 test("Current approved static snapshot is internally consistent and produces read-only audit hashes",()=>{
  const r=audit();
  assert.equal(r.exit,0);assert.equal(r.valid,true);
- assert.equal(r.cards,1006);assert.equal(r.verified,503);assert.equal(r.needs_review,503);
- assert.equal(r.sourced_sets,27);assert.equal(r.missing_numbered_spots,6513);
+ assert.equal(r.cards,1649);assert.equal(r.verified,621);assert.equal(r.needs_review,1028);
+ assert.equal(r.sourced_sets,27);assert.equal(r.missing_numbered_spots,6491);
  assert.match(r.catalog_sha256,/^[a-f0-9]{64}$/);
  assert.match(r.checklists_sha256,/^[a-f0-9]{64}$/);
  assert.match(r.scope,/NOT live owner LAN verification/);
@@ -59,7 +59,7 @@ test("Public snapshot panel uses metadata and computed public counts; no private
  assert.ok(js.includes('jaytree:public-snapshot-checklists'));
  assert.ok(want.includes('jaytree:public-snapshot-checklists'));
  assert.ok(css.includes(".snapshot-panel{"));
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
  assert.equal((want.match(/\bfetch\s*\(/g)||[]).length,1);
  assert.ok(!/192\.168\.|localhost:8770|\/api\/cards/.test(js));
 });

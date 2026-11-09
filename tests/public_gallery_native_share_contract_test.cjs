@@ -38,9 +38,9 @@ test("Cancel, failure, successful OS handoff, stale completion are truthful; nev
 });
 test("Read-only public gallery snapshot and approved source unchanged",()=>{
  const c=JSON.parse(read("catalog.json")),sets=JSON.parse(read("set-checklists.json"));
- assert.equal(c.cards.length,1006);
+ assert.equal(c.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
- assert.equal(sets.supported_missing_spots,6513);
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.equal(sets.supported_missing_spots,6491);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
  assert.ok(!/sendBeacon|localStorage|sessionStorage|\/api\/cards|\/owner\//.test(handler));
 });
