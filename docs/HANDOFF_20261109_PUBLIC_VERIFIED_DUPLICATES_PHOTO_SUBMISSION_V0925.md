@@ -1,0 +1,24 @@
+# PUBLIC v0.9.25 SOURCE — verified duplicate grouping and visitor photo attachments
+
+Date: 2026-11-09 America/Chicago. Public UI-only isolated branch feature/public-verified-duplicates-photo-feedback-20261109, based on production main d737ee0ad04c5aaf627675d41865d3f43b695fe0. SOURCE STAGE ONLY, NOT DEPLOYED; v0.9.24 remains live.
+
+## Owner-requested changes
+- One listing for verified duplicate printed card identities, with physical-copy count and Previous photo/Next photo inside each card detail, preserving independent source IDs and images.
+- Group only already Verified, non-provisional same sport/year/brand/printed set/card number/player/team/parallel, excluding serial numbered editions and autograph, patch or memorabilia categories. No owner SQL/card changes or inference from duplicate catalog artwork.
+- On the approved 1649-card static snapshot: 30 fully Verified groups, 61 physical records, 31 visually collapsed duplicate slots; 1618 gallery listings by default. 182 other repeated printed identities covering 412 provisional records are NOT grouped. Combine verified duplicates defaults on, and Duplicates only filters confirmed groups. Disabling the combine switch exposes every physical copy.
+- Public deep links support old 11- and 13-item browse payloads and new 15-item payload preserving both duplicate settings. Existing football team/position, source set checklists and search retained.
+- In-page correction form now optionally accepts front/back JPG/PNG images up to 9.5 MB combined, using documented native FormSubmit multipart browser submission into a NEW confirmation tab that may require CAPTCHA; text-only corrections continue via the existing verified AJAX path. The form acknowledges that submitting an image does not approve an inventory edit, and visitors must complete provider confirmation. CSP only allowlists FormSubmit destination. Documented native multipart source: https://formsubmit.co/documentation.
+- Do not describe actual attachment receipt as verified: synthetic multipart to FormSubmit JSON AJAX returned success but the resulting inbox email had NO attachment. Native multipart directly reached a CAPTCHA interstitial in tests; full visitor CAPTCHA plus actual Gmail attachment delivery is not yet accepted. Photo upload browser test intercepts submission and sends no real file.
+
+## Evidence and quality
+- 109/109 public Node regression/contract tests PASS, including new strict 8/8 duplicate-and-photo checks.
+- Headless Chrome localhost at 390px and 1366px PASS: 1649 static records, 30 confirmed groups/61 copies, 1618 collapsed listing count, Duplicates only showing 30, all 61 when collapse off, Kevin Seitzer triple-copy Previous/Next retaining individual public card URLs, 11/15-field link compatibility, team+position filters, AJAX error/success mocks, native file input multipart attributes and files in synthetic intercepted form, no real submissions.
+- Static snapshot validator PASS: 1649 physical cards, 621 Verified, 1028 Needs Review; 27 sourced set checklists/6491 missing issued positions. Public catalog, checklists, JPG assets, CNAME, private owner LAN DB and Android unchanged.
+- User-provided physical Jaxson Dart front photo recovered in ChatGPT attached file context, but was NOT installed on GE78 owner storage or approved/published. Target tentative card 2025 Panini Donruss Optic Rookie Phenoms Jaxson Dart RPBH-JCW remained Needs Review with Ludex catalog placeholder and no owner-original back. A broad photo-source search exceeded the Local Control tunnel's 60-second limit and was terminated; no source photo write or misclassification.
+- No public site deployment yet. Source code in isolated worktree on GE78; remote GitHub branch must be committed, pushed and independently verified. v0.9.24 public live functionality remains intact. The stored old 1006-card checkout must NEVER be used as 1649 live rollback.
+
+## Next steps, review gates, rollback
+1. Save public source/test/docs to isolated GitHub branch and independent remote SHA; publish immutable PUBLIC workstream receipt and manager gate request. Do not merge SOURCE to public main before upload verification.
+2. Verify actual file delivery in a native browser after CAPTCHA using only a labeled synthetic image, or replace the upload flow with verified secure backend. Keep text-only direct AJAX correction working.
+3. Stage the real user Jaxson Dart photo via authorized secure file/Dropbox/LAN transfer. Preserve originals and source hash; review actual front/back and edition identity on private LAN, then update the owner database only via validated private publisher. Keep Needs Review until physical evidence supports approval.
+4. Roll back only this UI/source commit if necessary; no force push, do not alter any private inventory or approved static catalog/images. Preserve public v0.9.24 prior main and recorded protected baseline.
