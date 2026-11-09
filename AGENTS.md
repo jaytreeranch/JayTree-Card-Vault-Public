@@ -1,3 +1,7 @@
+## PUBLIC v0.9.23 — 1,649 approved cards LIVE (2026-11-08)
+- Read docs/HANDOFF_20261108_PUBLIC_OWNER_APPROVED_1649_RELEASE.md first. Owner approved 643 additional Needs Review front-photo derivatives. Published public main SHA 3aeddd32fd6943b32e6beabe72ef95b58a8d0bf2, GitHub Pages run #49 SUCCESS, live HTTPS verified 1,649 (621 Verified, 1,028 Needs Review), 27 sourced sets. Exact 643 new assets + 2 JSON, zero deletion; 8 public source/data and 4 new image parity checks pass; private API routes 404. Node baseline 93/94 due pre-existing static source-text assertion; public data CLI PASS. Static rollback previous public SHA b1ee80dbb1b7d316914f8806358c9e63e3c446c7. Docs branch is not a new production release.
+
+---
 ## PUBLIC v0.9.22 snapshot integrity and freshness ? 2026-11-08
 Read docs/HANDOFF_20261108_PUBLIC_SNAPSHOT_INTEGRITY_V0922.md and docs/PUBLIC_SNAPSHOT_PUBLISHER_ACCEPTANCE_V1.md. Published current review/status counts and UTC snapshot timestamp are dynamically computed from catalog.json, never hardcoded to private LAN counts. Independently loaded approved checklist JSON metadata is compared, with mismatch/unavailable warning, never claimed live sync. Before any public publisher promotion, run read-only node validate_public_snapshot.cjs; a passing static check is NOT approval to publish or write LAN. Preserve actual catalog, checklists, photos, CNAME, private inventory/editor/exports and Android app. Require full QC, GitHub SHA/Pages/live HTTPS, protected LAN source backup and immutable PUBLIC receipts.
 
