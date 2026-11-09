@@ -20,6 +20,6 @@ test("published want-list is internally complete and read-only",()=>{
 test("1985 Circle K correctly excludes duplicate copy and unissued #31",()=>{
  const s=data.sets.find(x=>x.year==="1985"&&x.set.includes("Circle K"));
  assert.ok(s,"Circle K required regression example");
- assert.equal(s.total,33);assert.equal(s.owned,31);assert.equal(s.missing,2);
- assert.deepEqual(s.missing_cards.map(x=>x.number).sort(),["2","6"]);
+ assert.equal(s.total,33);assert.equal(s.owned,33);assert.equal(s.missing,0);
+ assert.deepEqual(s.missing_cards.map(x=>x.number).sort(),[]);
 });

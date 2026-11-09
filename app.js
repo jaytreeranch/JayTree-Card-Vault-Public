@@ -1,6 +1,6 @@
 "use strict";
 const PAGE_SIZE = 48;
-const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map() };
+const state = { cards: [], results: [], rendered: 0, visibleCount: PAGE_SIZE, sets: new Map(), checklists: new Map(), positionByName: new Map(), positionReady: false };
 const features=window.JayTreeCardFeatures;
 // Public-only snapshot fidelity: use published metadata; NEVER query private LAN state.
 const publishedSnapshot={catalog:null,checklists:null};
@@ -154,13 +154,81 @@ function clearBrowseLinkFeedback(){
 function safeBrowseText(v){
  return typeof v==="string"&&v.length<=100&&!/[\x00-\x1f\x7f]/.test(v);
 }
+// Position names come from a separate, source-linked PUBLIC metadata snapshot.
+// Never guess a player's position from their card photo, name or team.
+const POSITION_NAMES=Object.freeze({
+ QB:"Quarterback",WR:"Wide receiver",RB:"Running back",TE:"Tight end",
+ FB:"Fullback",CB:"Cornerback",DB:"Defensive back",S:"Safety",
+ SAF:"Safety",FS:"Free safety",SS:"Strong safety",
+ DE:"Defensive end",DT:"Defensive tackle",DL:"Defensive line",
+ NT:"Nose tackle",LB:"Linebacker",MLB:"Middle linebacker",
+ ILB:"Inside linebacker",OLB:"Outside linebacker",
+ OT:"Offensive tackle",OL:"Offensive line",G:"Guard",C:"Center",
+ K:"Kicker",P:"Punter",LS:"Long snapper"
+});
+function publicPosition(card){
+ return card?.sport==="Football"?state.positionByName.get(String(card.player||""))||"":"";
+}
+function refreshTeamAndPositionOptions(){
+ const sport=$("sport").value;
+ const teamSelect=$("team"),wantedTeam=teamSelect.value;
+ const eligible=state.cards.filter(c=>!sport||c.sport===sport);
+ const names=[...new Set(eligible.map(c=>String(c.team||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const teams=document.createDocumentFragment();
+ const anyTeam=document.createElement("option");anyTeam.value="";anyTeam.textContent="All teams";teams.appendChild(anyTeam);
+ for(const team of names){const option=document.createElement("option");option.value=team;option.textContent=team;teams.appendChild(option);}
+ teamSelect.replaceChildren(teams);
+ teamSelect.value=names.includes(wantedTeam)?wantedTeam:"";
+ const select=$("position"),wanted=select.value;
+ const values=[...new Set(eligible.map(publicPosition).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const positions=document.createDocumentFragment();
+ const any=document.createElement("option");any.value="";any.textContent="All positions";positions.appendChild(any);
+ for(const value of values){const option=document.createElement("option");option.value=value;
+  option.textContent=value+(POSITION_NAMES[value]?" · "+POSITION_NAMES[value]:"");
+  positions.appendChild(option);}
+ select.replaceChildren(positions);
+ select.disabled=values.length===0;
+ select.value=values.includes(wanted)?wanted:"";
+ const covered=eligible.filter(c=>!!publicPosition(c)).length;
+ $("position-filter-help").textContent=values.length?
+  "Position sourced for "+covered.toLocaleString("en-US")+" of "+eligible.length.toLocaleString("en-US")+
+   " currently selected published cards. Missing or ambiguous positions stay under All positions; team and position can be combined.":
+  (sport==="Baseball"?"Baseball positions are not yet sourced; filter by team or use the player search.":
+   "Position reference unavailable for this selection. Team filtering remains available.");
+}
+async function loadPublicPositions(catalog){
+ state.positionByName=new Map();state.positionReady=false;
+ try{
+  const res=await fetch("player-positions.json",{cache:"no-store"});
+  if(!res.ok)throw new Error("Source unavailable");
+  const data=await res.json();
+  if(data?.schema!=="jaytree.public-positions.v1"||
+     data.catalog_generated_at_utc!==catalog.generated_at_utc||
+     !data.positions_by_name||Array.isArray(data.positions_by_name)||
+     typeof data.positions_by_name!=="object")throw new Error("Stale or malformed position snapshot");
+  const published=new Set(state.cards.filter(c=>c.sport==="Football").map(c=>c.player));
+  const map=new Map();
+  for(const [name,position] of Object.entries(data.positions_by_name)){
+   if(!published.has(name)||!/^[A-Z]{1,3}$/.test(position)||
+      !Object.prototype.hasOwnProperty.call(POSITION_NAMES,position))throw new Error("Unsupported position row");
+   map.set(name,position);
+  }
+  const computed=state.cards.filter(c=>c.sport==="Football"&&map.has(c.player)).length;
+  if(computed!==data.cards_with_position||computed<1)throw new Error("Incomplete position source");
+  state.positionByName=map;state.positionReady=true;
+ }catch(_){
+  // The static catalog remains usable if this independent reference is absent,
+  // stale, blocked by the browser, or fails integrity checks.
+  state.positionByName=new Map();state.positionReady=false;
+ }
+}
 function currentBrowsePayload(){
  return [BROWSE_SCHEMA,$("search").value.trim(),$("sport").value,$("review").value,
   $("year").value,$("set").value,$("set-finder").value.trim(),$("set-sort").value,
-  $("sort").value,$("offers").checked,selectedFeatures().slice().sort()];
+  $("sort").value,$("offers").checked,selectedFeatures().slice().sort(),$("team").value,$("position").value];
 }
 function validBrowsePayload(v){
- if(!Array.isArray(v)||v.length!==11||v[0]!==BROWSE_SCHEMA||
+ if(!Array.isArray(v)||(v.length!==11&&v.length!==13)||v[0]!==BROWSE_SCHEMA||
     typeof v[9]!=="boolean"||!Array.isArray(v[10])||
     v[10].length>features.OPTIONS.length||
     ![0,1,2,3,4,6,7,8].every(i=>safeBrowseText(v[i]))||
@@ -170,6 +238,11 @@ function validBrowsePayload(v){
   if(![...$(id).options].some(o=>o.value===val))return false;
  }
  if(v[5]&&!state.sets.has(v[5]))return false;
+ if(v.length===13){
+  if(!safeBrowseText(v[11])||!safeBrowseText(v[12]))return false;
+  if(v[11]&&!state.cards.some(c=>(!v[2]||c.sport===v[2])&&c.team===v[11]))return false;
+  if(v[12]&&!state.cards.some(c=>(!v[2]||c.sport===v[2])&&publicPosition(c)===v[12]))return false;
+ }
  const allowed=new Set(features.OPTIONS.map(f=>f.key));
  return v[10].every(f=>allowed.has(f)&&
   !document.querySelector('input[data-feature][value="'+f+'"]')?.disabled)&&
@@ -245,6 +318,10 @@ function restoreBrowseFromHash(){
     ["year",p[4]],["set",p[5]],["set-finder",p[6]],["set-sort",p[7]],["sort",p[8]]]){
   $(id).value=value;
  }
+ // Old 11-item shared links remain valid, with both new facets reset.
+ refreshTeamAndPositionOptions();
+ $("team").value=p.length===13?p[11]:"";
+ $("position").value=p.length===13?p[12]:"";
  $("offers").checked=p[9];
  document.querySelectorAll("input[data-feature]").forEach(el=>{
   el.checked=p[10].includes(el.value)&&!el.disabled;
@@ -257,7 +334,7 @@ function restoreBrowseFromHash(){
 }
 // Mobile visitor clarity: account for ALL browse controls, while respecting Low-data view.
 function customizedBrowseCount(){
- const ids=["search","sport","review","year","set","set-finder"];
+ const ids=["search","sport","review","year","set","set-finder","team","position"];
  let count=ids.filter(id=>String($(id).value).trim()!=="").length;
  count+=selectedFeatures().length;
  if($("offers").checked)count++;
@@ -280,7 +357,7 @@ function updateBrowseSummary(){
 }
 function clearBrowseControls(){
  if(customizedBrowseCount()===0)return;
- for(const id of ["search","sport","review","year","set","set-finder"])$(id).value="";
+ for(const id of ["search","sport","review","year","set","set-finder","team","position"])$(id).value="";
  $("sort").value="name";
  $("set-sort").value="year";
  $("offers").checked=false;
@@ -290,21 +367,29 @@ function clearBrowseControls(){
 }
 function filtered() {
  clearBrowseLinkFeedback();
+ refreshTeamAndPositionOptions();
  const q = $("search").value.trim().toLocaleLowerCase(),
        sport=$("sport").value, review=$("review").value, year=$("year").value,
-       ownedSet=$("set").value, offers=$("offers").checked;
+       ownedSet=$("set").value, offers=$("offers").checked,
+       team=$("team").value,position=$("position").value;
  const anyFeatures=selectedFeatures();
  const selected=state.cards.filter(c =>
    (!sport || c.sport===sport) && (!review || c.review_status===review) &&
    (!year || String(c.year||"")===year) && (!ownedSet || setKey(c)===ownedSet) &&
+   (!team || c.team===team) && (!position || publicPosition(c)===position) &&
    (!offers || c.for_sale) &&
    features.matchesAny(c,anyFeatures) &&
-   [c.player,c.team,c.brand,c.set,c.year,c.number,c.parallel].join(" ").toLowerCase().includes(q));
+   [c.player,c.team,c.brand,c.set,c.year,c.number,c.parallel,publicPosition(c)].join(" ").toLowerCase().includes(q));
  switch($("sort").value){
   case "value-high":selected.sort((a,b)=>value(b)-value(a));break;
   case "value-low":selected.sort((a,b)=>(value(a)<0?Infinity:value(a))-(value(b)<0?Infinity:value(b)));break;
   case "new":selected.sort((a,b)=>parseInt(b.year||"0",10)-parseInt(a.year||"0",10));break;
   case "old":selected.sort((a,b)=>parseInt(a.year||"0",10)-parseInt(b.year||"0",10));break;
+  case "team":selected.sort((a,b)=>String(a.team||"").localeCompare(String(b.team||""))||
+    String(a.player||"").localeCompare(String(b.player||"")));break;
+  case "position":selected.sort((a,b)=>(publicPosition(a)||"ZZZ").localeCompare(publicPosition(b)||"ZZZ")||
+    String(a.team||"").localeCompare(String(b.team||""))||
+    String(a.player||"").localeCompare(String(b.player||"")));break;
   default:selected.sort((a,b)=>(a.player||"").localeCompare(b.player||""));
  }
  state.results=selected;
@@ -432,6 +517,7 @@ function details(c){
  const featureNames=features.OPTIONS.filter(f=>features.classify(c)[f.key]).map(f=>f.label);
  const serial=features.serialInfo(c);
  const pairs=[["Features",featureNames.join(", ")||"Not tagged"],["Year",c.year],["Team",c.team],["Set",[c.brand,c.set].filter(Boolean).join(" / ")],["Card #",c.number],["Parallel",c.parallel],["Owned",String(c.quantity)],["Available",c.for_sale?"Open to offers":"Not listed"]];
+ if(publicPosition(c))pairs.splice(3,0,["Position",publicPosition(c)+" · "+(POSITION_NAMES[publicPosition(c)]||publicPosition(c))]);
  if(serial.numbered){
   pairs.splice(6,0,["Serial edition",serial.edition?"/"+serial.edition:"Numbered; run not confirmed"],
    ["Owned stamped copy",serial.needsReview?"Needs owner verification":serial.stamps.length?serial.stamps.join(", "):"Not published"]);
@@ -451,75 +537,76 @@ function details(c){
  }
  const report=text(info,"div","","feedback-panel");
  text(report,"h3","Help verify this card","chart-heading");
- text(report,"p","Suggest a correction or say this card looks correct. This prepares an email draft; you must SEND that email yourself. Only the owner can approve, reject or edit a card.","detail-copy");
+ text(report,"p","Found a wrong player, set, parallel, or card number? Send a suggestion directly from this page. No email app or account is needed. Only the owner can approve card changes.","detail-copy");
  const form=document.createElement("form");form.className="feedback-form";report.appendChild(form);
  const question=document.createElement("label");
  text(question,"span","Your assessment");
- const assessment=document.createElement("select");assessment.required=true;
+ const assessment=document.createElement("select");assessment.required=true;assessment.name="assessment";
  for(const [v,t] of [["correct","Looks correct"],["incorrect","Needs correction"]]){
    const opt=document.createElement("option");opt.value=v;opt.textContent=t;assessment.appendChild(opt);
  }
  question.appendChild(assessment);form.appendChild(question);
  const fieldlabel=document.createElement("label");text(fieldlabel,"span","What needs checking?");
- const category=document.createElement("select");
+ const category=document.createElement("select");category.name="field";
  for(const [v,t] of [["other","Other / general"],["player","Player"],["team","Team"],["year","Year"],["set","Brand or set"],["parallel","Parallel"],["number","Card number"],["serial","Stamped serial number"],["photo","Photo"]]){
    const opt=document.createElement("option");opt.value=v;opt.textContent=t;category.appendChild(opt);
  }
  fieldlabel.appendChild(category);form.appendChild(fieldlabel);
  const detailLabel=document.createElement("label");text(detailLabel,"span","Suggested correction or explanation");
- const textarea=document.createElement("textarea");textarea.maxLength=450;textarea.rows=3;textarea.placeholder="Example: This looks like the silver parallel, not gold.";detailLabel.appendChild(textarea);form.appendChild(detailLabel);
- const honeypot=document.createElement("input");honeypot.name="website";honeypot.tabIndex=-1;honeypot.autocomplete="off";honeypot.setAttribute("aria-hidden","true");honeypot.className="honey";form.appendChild(honeypot);
- const send=text(form,"button","Prepare correction email","feedback-submit");send.type="submit";
+ const textarea=document.createElement("textarea");textarea.maxLength=450;textarea.rows=3;textarea.name="suggestion";
+ textarea.placeholder="Example: This is the silver parallel, not gold.";detailLabel.appendChild(textarea);form.appendChild(detailLabel);
+ const honeypot=document.createElement("input");honeypot.name="_honey";honeypot.type="text";honeypot.tabIndex=-1;
+ honeypot.autocomplete="off";honeypot.setAttribute("aria-hidden","true");honeypot.className="honey";form.appendChild(honeypot);
+ const send=text(form,"button","Submit suggestion","feedback-submit");send.type="submit";
  const response=text(form,"p","","feedback-message");response.setAttribute("role","status");
+ response.setAttribute("aria-live","polite");
+ text(report,"p","Your suggestion is sent through FormSubmit to the collection owner for private review; it is not a newsletter signup or an automatic card edit. Please don't include personal information.","feedback-message");
  assessment.addEventListener("change",()=>{category.disabled=assessment.value==="correct";});
  category.disabled=true;
- form.addEventListener("submit",(ev)=>{
-  ev.preventDefault();
-  if(honeypot.value)return;
-  if(assessment.value==="incorrect"&&textarea.value.trim().length<8){
-   response.textContent="Please describe what is wrong (at least eight characters).";return;
-  }
-  const subject="JayTree Card Vault identification suggestion: "+c.id;
-  const message=[
-   "Card: "+(c.player||"Unknown")+" ("+c.id+")",
-   "Gallery: "+location.origin+location.pathname+"#card="+c.id,
-   "Current status: "+(c.review_status||"Needs review"),
-   "Assessment: "+(assessment.value==="correct"?"Looks correct":"Needs correction"),
-   "Field: "+(assessment.value==="correct"?"other":category.value),
-   "Details: "+textarea.value.trim(),
-   "",
-   "Visitor suggestion only; not an automatic card verification."
-  ].join("\n");
-  const email="mailto:jaytreebooks@gmail.com?subject="+encodeURIComponent(subject)
-   +"&body="+encodeURIComponent(message);
-  response.textContent="An email draft should open. Please press Send in your email app; this website has not submitted anything automatically.";
-  window.location.href=email;
- });
- const reportIssue=text(report,"a","Submit a GitHub card report (account required)","github-report");
- reportIssue.target="_blank";reportIssue.rel="noopener noreferrer";
- const reportLink=()=> {
-  const subject="[Card suggestion] "+c.id;
-  const cardUrl=location.origin+location.pathname+"#card="+c.id;
-  const reportCategory=assessment.value==="correct"?"Other / general":category.value;
-  const description=textarea.value.trim()||(assessment.value==="correct"?"Looks correct to me.":"");
-  return "https://github.com/jaytreeranch/JayTree-Card-Vault-Public/issues/new"
-   +"?template=card-correction.yml"
-   +"&title="+encodeURIComponent(subject)
-   +"&card-link="+encodeURIComponent(cardUrl)
-   +"&assessment="+encodeURIComponent(assessment.value==="correct"?"Looks correct":"Needs correction")
-   +"&field="+encodeURIComponent(reportCategory)
-   +"&correction-details="+encodeURIComponent(description);
- };
- reportIssue.href=reportLink();
- reportIssue.addEventListener("click",(ev)=>{
-  if(assessment.value==="incorrect"&&textarea.value.trim().length<8){
+ let submitting=false;
+ form.addEventListener("submit",async(ev)=>{
    ev.preventDefault();
-   response.textContent="Please describe the suspected error before opening GitHub.";
-   return;
-  }
-  reportIssue.href=reportLink();
+   if(submitting||honeypot.value)return;
+   const details=textarea.value.trim();
+   if(assessment.value==="incorrect"&&details.length<8){
+     response.textContent="Please describe what is wrong (at least eight characters).";return;
+   }
+   if(details.length>450){response.textContent="Please shorten your suggestion.";return;}
+   submitting=true;send.disabled=true;send.textContent="Submitting...";
+   response.textContent="Sending your suggestion...";
+   const cardUrl=location.origin+location.pathname+"#card="+c.id;
+   const payload={
+     name:"JayTree Card Vault visitor",
+     _subject:"Card Vault correction — "+String(c.number||"card"),
+     _captcha:"true",_honey:"",
+     "Card link":cardUrl,
+     "Published player":String(c.player||"Unknown").slice(0,120),
+     "Published set":[c.brand,c.set].filter(Boolean).join(" / ").slice(0,160),
+     "Printed card number":String(c.number||"").slice(0,35),
+     "Current review status":String(c.review_status||"Needs review").slice(0,35),
+     Assessment:assessment.value==="correct"?"Looks correct":"Needs correction",
+     "Field to check":assessment.value==="correct"?"Other / general":category.selectedOptions[0].textContent,
+     "Suggested correction":details||(assessment.value==="correct"?"Looks correct to me.":""),
+     "Owner review only":"This submission does not modify the collection."
+   };
+   try{
+     const result=await fetch("https://formsubmit.co/ajax/jaytreebooks@gmail.com",{
+       method:"POST",
+       headers:{"Content-Type":"application/json","Accept":"application/json"},
+       body:JSON.stringify(payload),cache:"no-store"
+     });
+     const data=await result.json();
+     if(!result.ok||!(data&&String(data.success).toLowerCase()==="true")){
+       throw new Error("Form provider did not accept submission");
+     }
+     response.textContent="Suggestion submitted. Thank you! The owner will review it before any change is made.";
+     form.reset();category.disabled=true;
+   }catch(_error){
+     response.textContent="We couldn't submit the suggestion. Your text is still here; please try again later.";
+   }finally{
+     submitting=false;send.disabled=false;send.textContent="Submit suggestion";
+   }
  });
- text(report,"p","GitHub requires signing in. Submitted reports and usernames are public. Do not include personal details; reports are only suggestions and cannot change the private collection.","feedback-message");
  $("details").showModal();
 }
 async function load(){
@@ -556,6 +643,8 @@ async function load(){
    }))
   }));
   refreshSetOptionLabels();
+  await loadPublicPositions(data);
+  refreshTeamAndPositionOptions();
   refreshFeatureCounts();
   if(!restoreBrowseFromHash())filtered();
   const deepLink=location.hash.match(/^#card=([a-f0-9]{24})$/);
@@ -637,7 +726,7 @@ $("collection-view-link").addEventListener("click",copyBrowseViewLink);
 window.addEventListener("hashchange",()=>{
  if(state.cards.length&&location.hash.startsWith("#browse="))restoreBrowseFromHash();
 });
-["search","sport","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
+["search","sport","team","position","review","year","set","sort","offers"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",filtered));
 $("load-more").addEventListener("click",()=>{state.visibleCount+=PAGE_SIZE;renderCards();});
 function updateLowDataView(announce=false){
  // Re-render only existing visible results; retain search/filter and Show More state.

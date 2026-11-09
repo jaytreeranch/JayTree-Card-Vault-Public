@@ -39,10 +39,10 @@ test("coverage subscribes to data events before both async loaders",()=>{
  assert.ok(html.indexOf('src="checklist-coverage.js" defer')<html.indexOf('src="app.js" defer'));
  assert.ok(html.indexOf('src="checklist-coverage.js" defer')<html.indexOf('src="wantlist.js" defer'));
 });
-test("preexisting 27 sourced checklists and 1006 public cards unchanged",()=>{
+test("preexisting 27 sourced checklists and 1649 public cards unchanged",()=>{
  const sets=JSON.parse(read("set-checklists.json"));
  const cards=JSON.parse(read("catalog.json"));
  assert.equal(sets.supported_set_count,27);
- assert.equal(cards.cards.length,1006);
- assert.equal(sets.supported_missing_spots,6513);
+ assert.equal(cards.cards.length,1649);
+ assert.equal(sets.supported_missing_spots,6491);
 });

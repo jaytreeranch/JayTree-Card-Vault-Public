@@ -29,12 +29,12 @@ test("existing filter events and source-backed set choices remain intact",()=>{
  assert.ok(js.includes('const selected=state.cards.filter(c =>'));
  const catalog=JSON.parse(read("catalog.json"));
  const lists=JSON.parse(read("set-checklists.json"));
- assert.equal(catalog.cards.length,1006);
+ assert.equal(catalog.cards.length,1649);
  assert.equal(lists.supported_set_count,27);
 });
 test("no new public write endpoints, tracking, background service or private IDs",()=>{
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
  assert.ok(!js.includes("localStorage")&&!js.includes("sessionStorage"));
- assert.ok(!js.includes('method:"POST"')&&!js.includes("/api/cards"));
+ assert.ok(js.includes('method:"POST"')&&js.includes('https://formsubmit.co/ajax/jaytreebooks@gmail.com')&&!js.includes("/api/cards"));
  assert.ok(html.includes('id="gallery-low-data-toggle"'));
 });

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0a1929">
   <meta name="robots" content="noindex,nofollow">
   <meta name="description" content="Browse the JayTree trading card collection: football, baseball, cards and owner price estimates.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://formsubmit.co; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>JayTree Card Vault · The Collection</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="wantlist.css">
@@ -60,7 +60,9 @@
     <div class="toolbar">
       <label class="search"><span class="sr-only">Search cards</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" type="search" maxlength="100" placeholder="Search player, team, brand, set…" autocomplete="off"></label>
       <label class="select"><span class="sr-only">Filter sport</span><select id="sport"><option value="">All sports</option></select></label>
-      <label class="select"><span class="sr-only">Sort collection</span><select id="sort"><option value="name">Name A–Z</option><option value="value-high">Highest estimate</option><option value="value-low">Lowest estimate</option><option value="new">Newest cards</option><option value="old">Oldest cards</option></select></label>
+      <label class="select"><span class="sr-only">Filter team</span><select id="team"><option value="">All teams</option></select></label>
+      <label class="select"><span class="sr-only">Filter player position</span><select id="position"><option value="">All positions</option></select></label>
+      <label class="select"><span class="sr-only">Sort collection</span><select id="sort"><option value="name">Name A–Z</option><option value="value-high">Highest estimate</option><option value="value-low">Lowest estimate</option><option value="new">Newest cards</option><option value="old">Oldest cards</option><option value="team">Team A-Z</option><option value="position">Position A-Z</option></select></label>
       <label class="select"><span class="sr-only">Filter review status</span><select id="review"><option value="">All review statuses</option><option value="Verified">Verified</option><option value="Needs review">Needs review</option></select></label>
       <label class="select"><span class="sr-only">Filter year</span><select id="year"><option value="">All years</option></select></label>
       <label class="select"><span class="sr-only">Filter owned set</span><select id="set"><option value="">All cataloged sets</option></select></label>
@@ -68,6 +70,7 @@
       <label class="select set-finder-sort"><span class="sr-only">Sort cataloged set choices</span><select id="set-sort"><option value="year">Newest sets first</option><option value="closest">Fewest missing first</option><option value="percent">Highest completion %</option><option value="az">Set name A-Z</option></select></label>
       <label class="offercheck"><input id="offers" type="checkbox"><span>Open to offers</span></label>
     </div>
+    <p id="position-filter-help" class="position-filter-help" role="status" aria-live="polite">Team filters use the published catalog. Player positions are checked against an independent public football-player reference; unmatched names remain unclassified.</p>
     <div class="collection-browse-tools">
       <p id="collection-browse-status" role="status" aria-live="polite">Loading collection controls?</p>
       <button id="collection-browse-reset" type="button" aria-disabled="true" aria-describedby="collection-browse-status">Clear all filters</button>

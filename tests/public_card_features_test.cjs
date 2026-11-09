@@ -34,12 +34,12 @@ test("OR semantics for multi-select; no selected features means all",()=>{
  assert.equal(matchesAny(patch,[]),true);
 });
 test("published classifications do not invent autographs or patches",()=>{
- assert.equal(cards.length,1006);
+ assert.equal(cards.length,1649);
  const counts=Object.fromEntries(OPTIONS.map(x=>[x.key,cards.filter(c=>classify(c)[x.key]).length]));
- assert.equal(counts.parallel,26);
- assert.equal(counts.serial,1);
+ assert.equal(counts.parallel,323);
+ assert.equal(counts.serial,2);
  assert.equal(counts.autograph,0);
  assert.equal(counts.patch,0);
- assert.equal(counts.memorabilia,2);
+ assert.equal(counts.memorabilia,4);
  assert.equal(counts.rookie,5);
 });

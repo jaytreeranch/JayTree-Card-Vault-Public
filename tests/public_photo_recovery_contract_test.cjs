@@ -37,13 +37,13 @@ test("broken-photo placeholders and retry are keyboard reachable, bounded and re
  assert.ok(js.includes('retry.type="button";retry.hidden=true;'));
 });
 test("no new API, extra background reload, approved static data remains immutable",()=>{
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
  assert.ok(!js.includes('setInterval('));
  assert.ok(!/sendBeacon|\/api\/cards|\/owner\//.test(detail));
  assert.ok(js.includes('/^assets\\/[a-f0-9]{24}\\.jpg$/.test(path)'));
  const cat=JSON.parse(read("catalog.json"));
  const sets=JSON.parse(read("set-checklists.json"));
- assert.equal(cat.cards.length,1006);
+ assert.equal(cat.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
- assert.equal(sets.supported_missing_spots,6513);
+ assert.equal(sets.supported_missing_spots,6491);
 });

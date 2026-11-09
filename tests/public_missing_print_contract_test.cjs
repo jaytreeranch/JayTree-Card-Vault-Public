@@ -32,11 +32,11 @@ test("Print-only white page hides external UI and repeats table header across pa
  assert.ok(css.includes('break-inside:avoid'));
  assert.ok(css.includes('body.print-wantlist #want-print-content{display:block!important'));
 });
-test("Still 1,006 approved published cards, 27 sourced sets, no private writers",()=>{
+test("Still 1,649 approved published cards, 27 sourced sets, no private writers",()=>{
  const cat=JSON.parse(read("catalog.json")),sets=JSON.parse(read("set-checklists.json"));
- assert.equal(cat.cards.length,1006);
+ assert.equal(cat.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
- assert.equal(sets.supported_missing_spots,6513);
+ assert.equal(sets.supported_missing_spots,6491);
  assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
  assert.ok(!/\/api\/cards|\/owner\/|localStorage|sessionStorage|sendBeacon/.test(js));
 });

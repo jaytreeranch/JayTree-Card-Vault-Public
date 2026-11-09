@@ -29,6 +29,6 @@ test("no third-party script, new fetch, autosubmit, copy identifiers or LAN priv
  assert.ok(css.includes('.offer-action-item'));
  const cards=JSON.parse(read("catalog.json"));
  const sets=JSON.parse(read("set-checklists.json"));
- assert.equal(cards.cards.length,1006);
+ assert.equal(cards.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
 });

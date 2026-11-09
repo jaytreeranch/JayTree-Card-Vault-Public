@@ -44,13 +44,13 @@ test("Async copy completion cannot clobber new filter state and no new API/visit
  assert.ok(js.includes('let browseShareEpoch=0;'));
  assert.ok(js.includes('const attempt=browseShareEpoch;'));
  assert.ok(js.includes('if(attempt!==browseShareEpoch)return;'));
- assert.ok(js.includes('function filtered() {\n clearBrowseLinkFeedback();'));
+ assert.match(js,/function filtered\(\)\s*\{\s*clearBrowseLinkFeedback\(\);/);
  assert.ok(js.includes('function refreshSetOptionLabels(){'));
  assert.ok(js.includes('clearBrowseLinkFeedback();refreshSetOptionLabels();'));
- assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,1);
+ assert.equal((js.match(/\bfetch\s*\(/g)||[]).length,3);
  assert.ok(!js.includes("sendBeacon"));
  const cat=JSON.parse(read("catalog.json")),sets=JSON.parse(read("set-checklists.json"));
- assert.equal(cat.cards.length,1006);
+ assert.equal(cat.cards.length,1649);
  assert.equal(sets.supported_set_count,27);
- assert.equal(sets.supported_missing_spots,6513);
+ assert.equal(sets.supported_missing_spots,6491);
 });

@@ -8,7 +8,7 @@ GitHub Pages deploys from main / (root). The configured public domain is cards.j
 
 ## Corrections
 
-The static gallery prepares an email to jaytreebooks@gmail.com containing the card link and correction. The visitor must send it from their email app. No public submission is treated as an automatic card approval, and no email subscription is required.
+The card-detail correction form now sends an AJAX submission to the free FormSubmit.co email relay, directly on the page with no visitor email application or GitHub account. FormSubmit must send an activation email to the owner at jaytreebooks@gmail.com, and the owner must activate it before delivery will work. A successful response does not prove that the message actually arrived. No automatic edits to private inventory or Kit newsletter signups are made. The publicly published card number/name/set and the visitor's typed suggestion are sent to a third-party form service over HTTPS; no owner originals, IDs or private records are sent.
 
 Only approved front-card photos and public fields are in this repo. Private database, card originals, editing UI and credentials remain on the owner LAN. No license is granted to redistribute the card images or reuse the scans commercially.
 
@@ -123,3 +123,7 @@ If a published card's front image fails to load, the gallery displays **Photo te
 The collection shows public catalog publication time (UTC), its computed Verified and Needs review totals, and whether the separately published numbered-checklist JSON reports the same snapshot timestamp and card count. The notice distinguishes the public static export from the private authoritative LAN. A mismatch warns about data differences without silently changing approved files.
 
 **Read-only Gate A before approving the next PUBLIC export:** run node validate_public_snapshot.cjs. For staged public JSON fixtures, run node validate_public_snapshot.cjs --catalog path/to/catalog.json --checklists path/to/set-checklists.json --json. The tool checks public schemas, exact review totals, unique published IDs/front image paths, checklist arithmetic, distinct missing numbers and timestamp, prints SHA-256 and exits nonzero on failure. It validates internal public-file consistency, not live owner sync or physical card identification. No new API or publisher action was added.
+
+
+## Public football positions (v0.9.24)
+Team selection uses the approved published catalog; player-positions.json is a separately source-checked public nflverse name-to-position reference for 1,032 of 1,159 football card entries. Unknown and ambiguous historical names deliberately remain unclassified. This is not physical card identification proof. Issuer published Justin Herbert Blue /150 is classified only as an edition, not a verified owner stamp. See docs/HANDOFF_20261109_PUBLIC_DIRECT_CORRECTIONS_POSITION_SERIAL_V0924.md.
