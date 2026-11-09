@@ -1,4 +1,4 @@
-# JayTree Card Vault PUBLIC v0.9.24 — Stage SOURCE handoff (2026-11-09)
+# JayTree Card Vault PUBLIC v0.9.24 — SOURCE + LIVE production handoff (2026-11-09)
 Public-only isolated feature worktree (private machine path omitted), repo jaytreeranch/JayTree-Card-Vault-Public, branch feature/public-inline-card-corrections-v0924-20261109, parent authoritative remote main 3aeddd32fd6943b32e6beabe72ef95b58a8d0bf2.
 
 ## Changes
@@ -14,7 +14,10 @@ Public-only isolated feature worktree (private machine path omitted), repo jaytr
 - Protected CURRENT public 1649 main source SHA manifest FA215E77FF75DA1DEFFA32A31E80886E849460CC5BBE5CD7C5FD98D7402B5285 is stored on private JayTree LAN; exact rollback path stays in private coordination. The separately older 1006-checkout backup is obsolete as a rollback; NEVER restore it to live.
 
 ## Gate / rollback / next
-- Gate SOURCE tested, GitHub feature branch SHA must be independently verified after any source changes. Gate PROD requires manager signoff and separate live Pages/HTTPS/browser/privacy checks; do not claim the form/filter fixes are live before actual verified deployment.
+- Gate SOURCE and production Pages/HTTPS/browser/privacy checks are now completed and verified (merge 7ea199fd53bc2103dde8e0b27b27e3ed9cfce7e4; run 42645169994 SUCCESS). The owner requested continuation of this specific public UI release. No independent manager decision was found and no manager register was modified. See the dated live acceptance handoff for exact checks.
 - No private SQL or Android edits; no source data, serial stamps, physical approvals or image writes.
 - Rollback by reverting only this public UI commit; preserve 1649 existing catalog, checklists and assets.
-- Next: (1) feature commit and remote verification + dated immutable PUBLIC workstream and manager request, (2) manager Gate PROD approval, public main fast-forward only if unchanged and live Pages/browser checks, (3) private LAN worker physical review ticket #3 and 0 confirmed autographs; 1028 Needs Review remain until actual owner original photos.
+- Next: (1) private LAN worker physically reviews Justin Herbert Blue /150 original owned stamped back, (2) continue 1,028 Needs Review cards with actual evidence, (3) coordinate authenticated future public exports and Android real-device capture.
+
+## 2026-11-09 PROD acceptance
+PR #4 merge 7ea199fd53bc2103dde8e0b27b27e3ed9cfce7e4 and GitHub Pages run 42645169994 SUCCESS; 9/9 public HTTPS files identical to Git blobs. Chrome 390px/1366px live test PASS, private API routes both 404. One actual marked QA correction form browser submission accepted and found in owner's inbox. Private inventory not modified. See docs/HANDOFF_20261109_PUBLIC_V0924_LIVE_ACCEPTANCE.md.
