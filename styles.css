@@ -160,3 +160,6 @@ dialog{border:1px solid #517185;border-radius:13px;padding:0;background:#0c2131;
 .duplicate-photo-controls button{border:1px solid #7c9ba9;border-radius:6px;
  background:#153b53;color:#e1f1f5;padding:8px 10px;font-size:12px;cursor:pointer}
 .duplicate-photo-progress{font-size:13px;font-weight:700;color:#ecd3a0;min-width:82px;text-align:center}
+
+/* Provisional price badges apply only when a priced Needs Review card is published. */
+.review-value-note{font-size:11px;color:#f0c68c;font-weight:700}
