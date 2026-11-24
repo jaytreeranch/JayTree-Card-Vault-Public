@@ -10,7 +10,7 @@ test("source-only grouping hides only already Verified identical non-serialized 
  assert.equal(catalog.cards.length,1649);assert.equal(groups.groupCount,30);
  assert.equal(groups.copyCount,61);assert.equal(groups.byId.size,61);
  for(const g of groups.groups){
-  assert.ok(g.length>1);
+  assert.ok(dup.countPhysical(g)>1);
   assert.equal(new Set(g.map(x=>dup.key(x))).size,1);
   assert.equal(new Set(g.map(x=>x.id)).size,g.length);
   assert.ok(g.every(x=>x.review_status==="Verified"&&!x.identity_unconfirmed));
@@ -41,8 +41,8 @@ test("public browse has combine, duplicate-only, copy count and per-copy photo c
  for(const id of ["combine-copies","duplicates-only","duplicate-filter-help"])
   assert.ok(html.includes('id="'+id+'"'));
  for(const str of ["state.duplicateGroups=duplicateIndex.byId",
-  "(!onlyDuplicates || confirmedCopies(c)!==null)","state.resultPhysicalCount=selected.length",
-  'group.length+" copies"','duplicate-photo-next','duplicate-photo-prev',
+  "(!onlyDuplicates || confirmedCopies(c)!==null)","state.resultPhysicalCount=countPhysical(selected);",
+  'displayCopies(c)+" copies"','duplicate-photo-next','duplicate-photo-prev',
   '["Owned",String(displayCopies(c))]','if(!$("details").open)$("details").showModal()'])
    assert.ok(app.includes(str),str);
  assert.ok(!app.includes("/api/cards"));

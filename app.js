@@ -5,12 +5,14 @@ const features=window.JayTreeCardFeatures;
 const duplicates=window.JayTreePublicDuplicates||{
  build:()=>({byId:new Map(),groupCount:0,copyCount:0})
 };
+const physicalQuantity=duplicates.quantity||(card=>Number.isSafeInteger(card?.quantity)&&card.quantity>0?card.quantity:1);
+const countPhysical=duplicates.countPhysical||(cards=>cards.reduce((n,c)=>n+physicalQuantity(c),0));
 function confirmedCopies(card){
  return state.duplicateGroups.get(card?.id)||null;
 }
 function displayCopies(card){
  const group=confirmedCopies(card);
- return group?.length||Math.max(1,Number(card?.quantity)||1);
+ return countPhysical(group||[card]);
 }
 // Public-only snapshot fidelity: use published metadata; NEVER query private LAN state.
 const publishedSnapshot={catalog:null,checklists:null};
@@ -277,9 +279,9 @@ async function nativeShareBrowseView(){
  }
  const count=state.results.length;
  const total=state.cards.length;
- const message=count.toLocaleString("en-US")+" matching published card"+
-  (count===1?"":"s")+" out of "+total.toLocaleString("en-US")+
-  ". Public, read-only collection snapshot; Needs review identifications are provisional. "+
+ const message=count.toLocaleString("en-US")+" matching listing"+
+   (count===1?"":"s")+" ("+state.resultPhysicalCount.toLocaleString("en-US")+" matching physical copies) out of "+countPhysical(state.cards).toLocaleString("en-US")+" physical cards across "+total.toLocaleString("en-US")+" published records"+
+   ". Public, read-only collection snapshot; Needs review identifications are provisional. "+
   "This view may change when new owner-approved cards are published.";
  clearBrowseLinkFeedback();
  const attempt=browseShareEpoch;
@@ -412,9 +414,9 @@ function filtered() {
     String(a.player||"").localeCompare(String(b.player||"")));break;
   default:selected.sort((a,b)=>(a.player||"").localeCompare(b.player||""));
  }
- // Physical rows remain independent in the 1,649-card catalog.
+ // Published records remain independent; physical quantity is a separate total.
  // Only verified, same-issue identity records are visually collapsed.
- state.resultPhysicalCount=selected.length;
+ state.resultPhysicalCount=countPhysical(selected);
  if(combine){
   const seen=new Set();
   state.results=selected.filter(c=>{
@@ -439,7 +441,7 @@ function renderCards(){
  if(state.rendered===0)grid.replaceChildren();
  const showCount=Math.min(cards.length,state.visibleCount);
  $("result-count").textContent=showCount+" of "+cards.length+" listings shown | "+
-  state.resultPhysicalCount+" matching physical copies | "+state.cards.length+" total cards";
+  state.resultPhysicalCount+" matching physical copies | "+countPhysical(state.cards)+" total physical cards ("+state.cards.length+" published records)";
  $("empty").hidden=cards.length>0;
  $("load-more").hidden=showCount>=cards.length;
  for(const c of cards.slice(state.rendered,showCount)){
@@ -471,7 +473,7 @@ function renderCards(){
   if(c.identity_unconfirmed)text(pic,"span","NEEDS REVIEW","card-tag review-tag");
   else if(c.for_sale)text(pic,"span","OPEN TO OFFERS","card-tag");
   const group=confirmedCopies(c);
-  if(group)text(pic,"span",group.length+" copies","card-copy-count");
+  if(displayCopies(c)>1)text(pic,"span",displayCopies(c)+" copies","card-copy-count");
   const meta=text(btn,"div","","card-meta");
   text(meta,"span",String(c.sport||"").toUpperCase(),"kicker");
   text(meta,"h3",c.player||"Unnamed card");
@@ -548,17 +550,19 @@ function details(c){
  renderDetailPhoto(picture,c);
  const info=text(wrap,"div","");
  const group=confirmedCopies(c);
- if(group){
+ if(group&&group.length>1){
   const current=group.findIndex(x=>x.id===c.id);
   const nav=text(info,"div","","duplicate-photo-controls");
   const back=text(nav,"button","Previous photo","duplicate-photo-prev");back.type="button";
-  const progress=text(nav,"span","Copy "+(current+1)+" of "+group.length,"duplicate-photo-progress");
+  const progress=text(nav,"span","Record "+(current+1)+" of "+group.length,"duplicate-photo-progress");
   const next=text(nav,"button","Next photo","duplicate-photo-next");next.type="button";
   back.setAttribute("aria-label","Previous verified physical card photo");
   next.setAttribute("aria-label","Next verified physical card photo");
   back.addEventListener("click",()=>details(group[(current+group.length-1)%group.length]));
   next.addEventListener("click",()=>details(group[(current+1)%group.length]));
-  text(info,"p","These "+group.length+" separately cataloged verified copies share the same printed card identity. Their original records and photos remain separate.","detail-copy");
+ }
+ if(group){
+  text(info,"p",displayCopies(c)+" verified physical copies across "+group.length+" published record"+(group.length===1?"":"s")+". Photos represent records, not necessarily separate photos of every copy.","detail-copy");
  }
  text(info,"p",String(c.sport||"").toUpperCase(),"kicker");
  text(info,"h2",c.player||"Unnamed card","detail-title");
@@ -677,8 +681,8 @@ async function load(){
   state.duplicateCopyCount=duplicateIndex.copyCount;
   $("duplicate-filter-help").textContent=duplicateIndex.groupCount+" confirmed duplicate groups ("+
    duplicateIndex.copyCount+" verified physical copies). Unverified matches, relics and numbered variants stay separate.";
-  $("stat-count").textContent=state.cards.length.toLocaleString("en-US");
-  const sum=state.cards.reduce((acc,c)=>acc+(Number.isFinite(c.estimate_usd)?c.estimate_usd*Math.max(1,c.quantity||1):0),0);
+  $("stat-count").textContent=countPhysical(state.cards).toLocaleString("en-US");
+  const sum=state.cards.reduce((acc,c)=>acc+(Number.isFinite(c.estimate_usd)?c.estimate_usd*physicalQuantity(c):0),0);
   $("stat-estimate").textContent=fmtUSD(sum);
   $("stat-sale").textContent=state.cards.filter(c=>c.for_sale).length.toLocaleString("en-US");
   $("stat-update").textContent=cleanDate(data.generated_at_utc);

@@ -15,6 +15,12 @@
   // Unverified identity, stamps, signatures and unique relic swatches stay separate.
   return !(serial.numbered||meta.serial||meta.autograph||meta.patch||meta.memorabilia);
  }
+ function quantity(card){
+  return Number.isSafeInteger(card?.quantity)&&card.quantity>0?card.quantity:1;
+ }
+ function countPhysical(cards){
+  return (Array.isArray(cards)?cards:[]).reduce((n,c)=>n+quantity(c),0);
+ }
  function build(cards,features){
   const map=new Map(),byId=new Map(),seen=new Set();
   for(const c of Array.isArray(cards)?cards:[]){
@@ -25,12 +31,12 @@
   }
   const groups=[];
   for(const arr of map.values()){
-   if(arr.length<2)continue;
+   if(countPhysical(arr)<2)continue;
    const group=Object.freeze(arr.slice());
    groups.push(group);for(const c of group)byId.set(c.id,group);
   }
   return Object.freeze({groups,byId,groupCount:groups.length,
-   copyCount:groups.reduce((n,g)=>n+g.length,0)});
+   copyCount:groups.reduce((n,g)=>n+countPhysical(g),0)});
  }
- window.JayTreePublicDuplicates=Object.freeze({build,key,eligible});
+ window.JayTreePublicDuplicates=Object.freeze({build,key,eligible,quantity,countPhysical});
 })();
